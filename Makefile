@@ -6,7 +6,7 @@
 #    By: mvalk <mvalk@student.codam.nl>               +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/01/09 14:04:26 by mvalk         #+#    #+#                  #
-#    Updated: 2023/06/27 14:46:36 by mvalk         ########   odam.nl          #
+#    Updated: 2023/06/27 15:17:40 by cbijman       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,9 +15,9 @@
 NAME := minishell
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra
-HEADER = 
+HEADER = include/minishell.h
 OBJ_DIR = obj
-SRCFILES = 	main.c \
+SRCFILES = 	main.c
 
 vpath %.c	src
 OBJFILES = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRCFILES))
