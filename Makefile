@@ -6,7 +6,7 @@
 #    By: mvalk <mvalk@student.codam.nl>               +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/01/09 14:04:26 by mvalk         #+#    #+#                  #
-#    Updated: 2023/06/27 15:17:40 by cbijman       ########   odam.nl          #
+#    Updated: 2023/06/27 16:19:53 by cbijman       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,12 +35,15 @@ all: $(NAME)
 $(NAME): $(OBJFILES) $(HEADER)
 	@echo "$(BLUE)compiling $(NAME) $(COLOR_END)"
 	@$(MAKE) -C ./libft
-	@$(CC) $(CFLAGS) $(OBJFILES) libft/libft.a -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJFILES) libft/libft.a -lreadline -o $(NAME)
 	@echo "$(GREEN)compilation complete!$(COLOR_END)"
 	
 $(OBJ_DIR)/%.o: %.c $(HEADER)
 	@mkdir -p $(OBJ_DIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
+
+dev:
+	@$(MAKE) default -f ./Makefile_dev
 
 clean:
 	@rm -f $(OBJFILES)

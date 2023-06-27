@@ -1,0 +1,10 @@
+NAME = -o Minishell
+LIBRL = -lreadline
+LIBFT = -L./libft -lft
+INCLUDE = -I./include
+
+default: $(NAME)
+
+$(NAME):
+	@$(CC) src/*.c -DDEBUG $(INCLUDE) $(LIBRL) $(LIBFT) $(NAME)
+	@echo "Compiling Minishell"

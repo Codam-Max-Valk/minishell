@@ -1,0 +1,21 @@
+{
+	"files.associations": {
+		"readline.h": "c",
+		"minishell.h": "c"
+	},
+	"files.exclude": {
+		"**/.git": true,
+		"**/.svn": true,
+		"**/.hg": true,
+		"**/CVS": true,
+		"**/.DS_Store": true,
+		"**/Thumbs.db": true,
+		"**/.vscode": true,
+		"obj": true,
+		"libft": false,
+		".gitignore": true,
+		".gitmodules": true,
+		"README.md": true
+	},
+	"explorerExclude.backup": {}
+}
