@@ -25,6 +25,19 @@ typedef struct s_environment
 	struct s_environment	*next;
 }	t_env;
 
+typedef	struct s_tokens
+{
+	char	**split_input;
+	char	*command;
+	char	**arguments;
+	bool	redirect_in;
+	bool	redirect_out;
+	bool	append;
+	bool	here_doc;
+	bool	pipe;
+}	t_tokens;
+
+
 typedef struct s_shell
 {
 	char	*last_read_line;
