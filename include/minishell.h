@@ -18,19 +18,19 @@
 # include "libft.h"
 # include "colors.h"
 
-typedef struct s_environment
+typedef struct s_env_key
 {
-	char					*key;
-	char					*value;
-	struct s_environment	*next;
-}	t_env;
+	char	*key;
+	char	*value;
+}	t_env_key;
 
 typedef struct s_shell
 {
 	char	*last_read_line;
-	t_env	*environment;
+	t_list	*environment;
 }	t_shell;
 
-t_env	*setup_environment(char **envp);
+t_list		*setup_environment(char **envp);
+t_env_key	*find_environment_key(t_list **env, char *key);
 
 #endif

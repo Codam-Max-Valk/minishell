@@ -1,10 +1,11 @@
-NAME = -o Minishell
+NAME = Minishell
+EXEC = -o $(NAME)
 LIBRL = -lreadline
 LIBFT = -L./libft -lft
 INCLUDE = -I./include
+FILES = ${shell find ./src -type f -name "*.c" }
 
-default: $(NAME)
-
-$(NAME):
-	@$(CC) src/*.c -DDEBUG $(INCLUDE) $(LIBRL) $(LIBFT) $(NAME)
-	@echo "Compiling Minishell"
+default:
+	@$(CC) $(FILES) -DDEBUG $(INCLUDE) $(LIBRL) $(LIBFT) $(EXEC)
+	@./$(NAME)
+	
