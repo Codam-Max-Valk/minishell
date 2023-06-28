@@ -18,6 +18,14 @@
 # include "libft.h"
 # include "colors.h"
 
+enum tags
+{
+	REDIRECTION_INPUT = (int) '<',
+	REDIRECTION_OUTPUT = (int) '>',
+
+
+};
+
 typedef struct s_env_key
 {
 	char	*key;

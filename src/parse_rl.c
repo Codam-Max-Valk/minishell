@@ -16,9 +16,45 @@ bool	find_special_char(t_tokens *tokens, char *spec_char)
 	return (false);
 }
 
-char	*quote_token(t_tokens *tokens)
+char	**append_token(char	**tokens, char *new_tok)
 {
-	 return (NULL);
+	size_t	array_len;
+	
+	if (!new_tok)
+		return (NULL);
+	if (!tokens)
+		return (ft_calloc(2, sizeof(char *)));
+	while (tokens[array_len] != NULL)
+		array_len++;
+	tokens = ft_realloc(tokens, (array_len + 2) * sizeof(char *));
+	if (!tokens)
+		return (NULL);
+	tokens[array_len] = new_tok;
+	tokens[array_len + 1] = NULL;
+	return(tokens);
+}
+
+char	*tokenize_quote(char *line, u_int32_t start, char quote_type)
+{
+	char	*token;
+
+	u_int32_t	end;
+	end = start + 1;
+	while (line[end] != quote_type)
+		end++;
+	return (ft_substr(line, start, end - start));
+}
+
+char	**tmp_token(char *line)
+{
+	char	**tokens;
+	u_int32_t i;
+
+	while (line[i])
+	{
+		if (line[i] == '\"' || line[i] == '\'')
+			append_token(tokens, tokenize_quote(line, i, line[i]));
+	}
 }
 
 t_tokens	*tokenizer(char *read_line)
