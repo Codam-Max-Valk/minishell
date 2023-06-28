@@ -44,8 +44,8 @@ t_list	*setup_environment(char **envp)
 {
 	t_list		*env;
 	t_env_key	*key;
+	u_int32_t	i;
 	char		**index;
-	int			i;
 
 	env = NULL;
 	key = NULL;

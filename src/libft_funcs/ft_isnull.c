@@ -6,13 +6,13 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/28 13:33:24 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/06/28 13:51:32 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/06/28 15:22:59 by mvalk         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_isnull(char *s)
+int32_t	ft_isnull(char *s)
 {
 	if (!s || !*s)
 		return (1);
