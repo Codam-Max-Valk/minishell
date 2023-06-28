@@ -1,11 +1,6 @@
 #include "../include/minishell.h"
 #include "../include/libft.h"
 
-void	handle_signals()
-{
-	rl_on_new_line();
-}
-
 char	*ft_readline(const char *s)
 {
 	static char	*line;
@@ -23,15 +18,16 @@ char	*ft_readline(const char *s)
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell	shell;
-	t_env	*env;
+	t_list	*env;
 
 	(void) argc;
 	(void) argv;
 	env = setup_environment(envp);
+	printf("Welcome back %s, to your personal terminal!\n",
+		&(find_environment_key(&env, "LOGNAME")->value)[1]);
 	while (true)
 	{
 		shell.last_read_line = ft_readline(">>");
 	}
-
 	return (EXIT_SUCCESS);
 }
