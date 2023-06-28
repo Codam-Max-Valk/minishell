@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/03 17:52:19 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/06/28 15:40:40 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/06/28 16:00:52 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,5 +163,7 @@ void	ft_lstiter(t_list *lst, void (*f)(void *));
 /// the content of a node if needed.
 /// @return The new list, NULL if the allocation fails.
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+
+char	*ft_strstr(char *str, char *to_find);
 
 #endif
