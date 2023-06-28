@@ -6,13 +6,14 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/03 17:52:19 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/06/28 15:14:49 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/06/28 15:40:40 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 # include <stddef.h>
+# include <stdint.h>
 # include <stdbool.h>
 
 # ifndef BUFFER_SIZE

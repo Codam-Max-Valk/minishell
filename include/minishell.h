@@ -1,4 +1,3 @@
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -36,7 +35,6 @@ typedef struct s_tokens
 	bool	here_doc;
 	bool	pipe;
 }	t_tokens;
-
 
 typedef struct s_shell
 {

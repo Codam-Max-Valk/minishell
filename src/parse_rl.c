@@ -18,7 +18,7 @@ bool	find_special_char(t_tokens *tokens, char *spec_char)
 
 char	*quote_token(t_tokens *tokens)
 {
-	 
+	 return (NULL);
 }
 
 t_tokens	*tokenizer(char *read_line)
@@ -46,7 +46,7 @@ t_tokens	*tokenizer(char *read_line)
 	return (tokens);
 }
 
-int	main()
+int	maino()
 {
 	char a[] = "heya heyb heyc > out";
 	t_tokens	*tokens;

@@ -19,7 +19,7 @@ static int	push(t_list **env, char **s)
 	if (!env_key)
 		return (0);
 	if (!ft_lstadd_back_content(env, (t_env_key *)env_key))
-		return (free_envkey(env_key), 0);
+		return (free_envkey((t_env_key *)env_key), 0);
 	return (1);
 }
 

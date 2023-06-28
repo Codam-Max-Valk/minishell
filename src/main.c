@@ -11,7 +11,6 @@ char	*ft_readline(const char *s)
 	line = readline(s);
 	if (line && *line)
 		add_history(line);
-	rl_on_new_line();
 	return (line);
 }
 

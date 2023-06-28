@@ -3,7 +3,7 @@ EXEC = -o $(NAME)
 LIBRL = -lreadline
 LIBFT = -L./libft -lft
 INCLUDE = -I./include
-FILES = ${shell find ./src -type f -name "*.c" }
+FILES = ${shell find ./src -name "*.c" }
 
 default:
 	@$(CC) $(FILES) -DDEBUG $(INCLUDE) $(LIBRL) $(LIBFT) $(EXEC)
