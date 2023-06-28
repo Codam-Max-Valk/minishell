@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/03 17:52:19 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/06/28 15:40:40 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/06/28 16:34:26 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ int		ft_toupper(int c);
 //Memory
 void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t count, size_t size);
+void	*ft_realloc(void *ptr, size_t size);
 void	*ft_memchr(const void *s, int c, size_t n);
 int		ft_memcmp(const void *s1, const void *s2, size_t n);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
@@ -163,5 +164,7 @@ void	ft_lstiter(t_list *lst, void (*f)(void *));
 /// the content of a node if needed.
 /// @return The new list, NULL if the allocation fails.
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+
+char	*ft_strstr(char *str, char *to_find);
 
 #endif

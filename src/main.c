@@ -23,7 +23,7 @@ int	main(int argc, char **argv, char **envp)
 	(void) argv;
 	env = setup_environment(envp);
 	printf("Welcome back, to your personal terminal %s!\n",
-		&(find_environment_key(&env, "LOGNAME")->value)[1]);
+		&(find_environment_key(&env, "USER")->value)[1]);
 	while (true)
 	{
 		shell.last_read_line = ft_readline(">>");
