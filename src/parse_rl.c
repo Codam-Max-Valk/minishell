@@ -16,6 +16,11 @@ bool	find_special_char(t_tokens *tokens, char *spec_char)
 	return (false);
 }
 
+char	*quote_token(t_tokens *tokens)
+{
+	 
+}
+
 t_tokens	*tokenizer(char *read_line)
 {
 	t_tokens	*tokens;
