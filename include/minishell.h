@@ -2,19 +2,20 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <unistd.h>
-# include <stdlib.h>
 # include <stdio.h>
+# include <stdlib.h>
 # include <stdarg.h>
+# include <stddef.h>
+# include <stdbool.h>
+# include <unistd.h>
 # include <signal.h>
 # include <string.h>
-# include <stdbool.h>
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <sys/errno.h>
-# include <stddef.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+
 # include "libft.h"
 # include "colors.h"
 
@@ -24,7 +25,7 @@ typedef struct s_env_key
 	char	*value;
 }	t_env_key;
 
-typedef	struct s_tokens
+typedef struct s_tokens
 {
 	char	**split_input;
 	char	*command;

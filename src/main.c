@@ -23,7 +23,7 @@ int	main(int argc, char **argv, char **envp)
 	(void) argc;
 	(void) argv;
 	env = setup_environment(envp);
-	printf("Welcome back %s, to your personal terminal!\n",
+	printf("Welcome back, to your personal terminal %s!\n",
 		&(find_environment_key(&env, "LOGNAME")->value)[1]);
 	while (true)
 	{
