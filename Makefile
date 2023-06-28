@@ -6,7 +6,7 @@
 #    By: mvalk <mvalk@student.codam.nl>               +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/01/09 14:04:26 by mvalk         #+#    #+#                  #
-#    Updated: 2023/06/27 16:19:53 by cbijman       ########   odam.nl          #
+#    Updated: 2023/06/28 15:20:23 by cbijman       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,7 +51,7 @@ clean:
 	@$(MAKE) clean -C ./libft
 	@echo "$(CYAN)clean complete!$(COLOR_END)"
 
-fclean: clean
+fclean: clean∫
 	@rm -f $(NAME)
 	@$(MAKE) fclean -C ./libft
 

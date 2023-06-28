@@ -12,22 +12,15 @@ static t_env_key	*add(char *key, char *value)
 	return (env_key);
 }
 
-static int	push(t_list **env, char *key, char *value)
+static int	push(t_list **env, char **s)
 {
-	const t_env_key	*env_key = add(key, value);
+	const t_env_key	*env_key = add(s[0], s[1]);
 
-	if (!key)
+	if (!env_key)
 		return (0);
 	if (!ft_lstadd_back_content(env, (t_env_key *)env_key))
-		return (0);
+		return (free_envkey(env_key), 0);
 	return (1);
-}
-
-static void	free_keys(char **s)
-{
-	free(s[0]);
-	free(s[1]);
-	free(s);
 }
 
 t_env_key	*find_environment_key(t_list **env, char *key)
@@ -55,6 +48,7 @@ t_list	*setup_environment(char **envp)
 	int			i;
 
 	env = NULL;
+	key = NULL;
 	i = 0;
 	while (envp[i])
 	{
@@ -64,11 +58,18 @@ t_list	*setup_environment(char **envp)
 			i++;
 			continue ;
 		}
-		push(&env, index[0], index[1]);
-		free_keys(index);
+		push(&env, index);
+		free_double_array(index);
 		i++;
 	}
 	return (env);
+}
+
+void	free_envkey(t_env_key *ek)
+{
+	free(ek->key);
+	free(ek->value);
+	free(ek);
 }
 
 //Krijgt een opschoning nog.

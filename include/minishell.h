@@ -45,5 +45,6 @@ typedef struct s_shell
 
 t_list		*setup_environment(char **envp);
 t_env_key	*find_environment_key(t_list **env, char *key);
+void		free_envkey(t_env_key *ek);
 
 #endif
