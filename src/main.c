@@ -1,26 +1,37 @@
 #include "../include/minishell.h"
 #include "../include/libft.h"
 
-int	read_input(char *name)
+void	handle_signals()
 {
-	char *str;
+	rl_on_new_line();
+}
 
-	while (*name != '=')
-		name++;
-	name++;
-	name = ft_strjoin(name, " >> ");
-	while (1)
-	{
-		str = readline(name);
-		if (!str)
-			return (EXIT_FAILURE); //Tijdelijk.
-		free(str);
-	}
+char	*ft_readline(const char *s)
+{
+	static char	*line;
+
+	line = NULL;
+	if (line)
+		free(line);
+	line = readline(s);
+	if (line && *line)
+		add_history(line);
+	rl_on_new_line();
+	return (line);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	while (ft_strncmp(*envp, "LOGNAME", 7))
-		envp++;
-	return (read_input(*envp));
+	t_shell	shell;
+	t_env	*env;
+
+	(void) argc;
+	(void) argv;
+	env = setup_environment(envp);
+	while (true)
+	{
+		shell.last_read_line = ft_readline(">>");
+	}
+
+	return (EXIT_SUCCESS);
 }
