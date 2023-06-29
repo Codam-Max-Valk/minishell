@@ -14,16 +14,38 @@ char	*ft_readline(const char *s)
 	return (line);
 }
 
+t_env	*initialize_environment(char **envp)
+{
+	size_t		i;
+	t_env		*env;
+	char		**line;
+
+	i = 0;
+	env = NULL;
+	while (envp[i])
+	{
+		line = ft_split_first_occurrence(envp[i], '=');
+		if (!line)
+		{
+			i++;
+			continue ;
+		}
+		add_environment_variable(&env, line[0], line[1]);
+		free_double_array(line);
+		i++;
+	}
+	return (env);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell	shell;
-	t_list	*env;
+	t_env	*env;
 
 	(void) argc;
 	(void) argv;
-	env = setup_environment(envp);
-	printf("Welcome back, to your personal terminal %s!\n",
-		&(find_environment_key(&env, "USER")->value)[1]);
+	env = initialize_environment(envp);
+	ft_printf("%s\n", *find_environment_key_as_2d(&env, "PATH"));
 	while (true)
 	{
 		shell.last_read_line = ft_readline(">>");

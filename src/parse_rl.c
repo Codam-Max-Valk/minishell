@@ -69,7 +69,7 @@ t_tokens	**tokenizer(char *read_line)
 		if (tag == here_doc)
 			here_handling();
 		if (tag == redirect_in || tag == redirect_out)
-			
+
 
 			
 	}
