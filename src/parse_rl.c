@@ -37,8 +37,8 @@ char	**append_token(char	**tokens, char *new_tok)
 char	*tokenize_quote(char *line, u_int32_t start, char quote_type)
 {
 	char	*token;
-
 	u_int32_t	end;
+
 	end = start + 1;
 	while (line[end] != quote_type)
 		end++;
@@ -48,12 +48,14 @@ char	*tokenize_quote(char *line, u_int32_t start, char quote_type)
 char	**tmp_token(char *line)
 {
 	char	**tokens;
+	int		*token_tag;
 	u_int32_t i;
 
+	i = 0;
 	while (line[i])
 	{
 		if (line[i] == '\"' || line[i] == '\'')
-			append_token(tokens, tokenize_quote(line, i, line[i]));
+			tokens = append_token(tokens, tokenize_quote(line, i, line[i]));
 	}
 }
 

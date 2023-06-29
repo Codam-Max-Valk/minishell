@@ -18,13 +18,23 @@
 # include "libft.h"
 # include "colors.h"
 
-enum tags
+typedef	enum e_tag
 {
-	REDIRECTION_INPUT = (int) '<',
-	REDIRECTION_OUTPUT = (int) '>',
+	file,
+	command,
+	redirect_in,
+	redirect_out,
+	append,
+	here_doc,
+	pipe
+} t_tag;
 
+typedef	struct s_token
+{
+	char	*token;
+	t_tag	tag;
+}	t_token;
 
-};
 
 typedef struct s_env_key
 {
