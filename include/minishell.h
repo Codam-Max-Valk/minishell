@@ -22,6 +22,7 @@ typedef	enum e_tag
 {
 	file,
 	command,
+	argument,
 	redirect_in,
 	redirect_out,
 	append,
@@ -45,8 +46,8 @@ typedef struct s_env_key
 typedef struct s_tokens
 {
 	char	**split_input;
-	char	*command;
-	char	**arguments;
+	t_token	**redirect;
+	t_token	**commands;
 	bool	redirect_in;
 	bool	redirect_out;
 	bool	append;
