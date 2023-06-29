@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/28 16:00:22 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/06/28 16:05:23 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/06/29 15:29:19 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 char	*ft_strstr(char *str, char *to_find)
 {
-	int		i;
-	int		c1;
-	int		pos;
+	size_t	i;
+	size_t	c1;
+	size_t	pos;
 
 	if (!*to_find)
 		return (str);

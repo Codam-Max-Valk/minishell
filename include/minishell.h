@@ -18,11 +18,12 @@
 # include "libft.h"
 # include "colors.h"
 
-typedef struct s_env_key
+typedef struct s_environment
 {
-	char	*key;
-	char	*value;
-}	t_env_key;
+	char					*key;
+	char					*value;
+	struct s_environment	*next;
+}	t_env;
 
 typedef struct s_tokens
 {
@@ -42,8 +43,9 @@ typedef struct s_shell
 	t_list	*environment;
 }	t_shell;
 
-t_list		*setup_environment(char **envp);
-t_env_key	*find_environment_key(t_list **env, char *key);
-void		free_envkey(t_env_key *ek);
+int		add_environment_variable(t_env **env, char *key, char *value);
+int		get_environment_size(t_env **env);
+t_env	*find_environment_key(t_env **env, char *key);
+char	**find_environment_key_as_2d(t_env **env, char *key);
 
 #endif

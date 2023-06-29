@@ -1,28 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_freedoublearray.c                               :+:    :+:            */
+/*   ft_split_first_occurence.c                         :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/06/28 15:13:52 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/06/29 17:09:30 by cbijman       ########   odam.nl         */
+/*   Created: 2023/06/29 17:30:43 by cbijman       #+#    #+#                 */
+/*   Updated: 2023/06/29 18:01:48 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdlib.h>
 
-void	free_double_array(char **s)
+char	**ft_split_first_occurrence(char *line, char delimiter)
 {
-	u_int32_t	i;
+	size_t	i;
+	char	**s;
 
+	s = malloc(sizeof(char *) * 3);
+	if (!s)
+		return (NULL);
 	i = 0;
-	while (s[i])
-	{
-		if (s[i])
-			free(s[i]);
+	while (line[i] != delimiter)
 		i++;
-	}
-	free(s);
+	s[0] = ft_substr(line, 0, i++);
+	if (ft_isnull(s[0]))
+		return (free(s), NULL);
+	s[1] = ft_strdup(&line[i + 1]);
+	if (ft_isnull(s[1]))
+		return (free(s[0]), free(s), NULL);
+	s[2] = NULL;
+	return (s);
 }

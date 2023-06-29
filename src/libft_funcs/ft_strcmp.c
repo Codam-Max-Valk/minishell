@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_freedoublearray.c                               :+:    :+:            */
+/*   ft_strcmp.c                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/06/28 15:13:52 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/06/29 17:09:30 by cbijman       ########   odam.nl         */
+/*   Created: 2023/06/29 18:03:32 by cbijman       #+#    #+#                 */
+/*   Updated: 2023/06/29 18:04:05 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdlib.h>
 
-void	free_double_array(char **s)
+int	ft_strcmp(char *s1, char *s2)
 {
-	u_int32_t	i;
+	int	i;
 
 	i = 0;
-	while (s[i])
-	{
-		if (s[i])
-			free(s[i]);
+	if (ft_isnull(s1) || ft_isnull(s2))
+		return (1);
+	while ((s1[i] && s2[i]) != '\0' && s1[i] == s2[i])
 		i++;
-	}
-	free(s);
+	return (s1[i] - s2[i]);
 }

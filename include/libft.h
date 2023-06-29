@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/03 17:52:19 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/06/28 16:34:26 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/06/29 18:04:23 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,5 +166,7 @@ void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
 char	*ft_strstr(char *str, char *to_find);
+char	**ft_split_first_occurrence(char *line, char delimiter);
+int		ft_strcmp(char *s1, char *s2);
 
 #endif

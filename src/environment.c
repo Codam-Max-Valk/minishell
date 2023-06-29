@@ -1,75 +1,90 @@
 #include "../include/minishell.h"
+#include "../include/libft.h"
 
-static t_env_key	*add(char *key, char *value)
+static t_env	*create_new_env_node(char *key, char *value)
 {
-	t_env_key	*env_key;
+	t_env	*env;
 
-	env_key = ft_calloc(1, sizeof(t_env_key));
-	if (!env_key)
+	if (ft_isnull(key) && ft_isnull(value))
 		return (NULL);
-	env_key->key = ft_strdup(key);
-	env_key->value = ft_strdup(value);
-	return (env_key);
+	env = ft_calloc(1, sizeof(t_env));
+	if (!env)
+		return (NULL);
+	env->key = ft_strdup(key);
+	if (ft_isnull(env->key))
+		return (free(env), NULL);
+	env->value = ft_strdup(value);
+	if (ft_isnull(env->value))
+		return (free(env->key), free(env), NULL);
+	return (env);
 }
 
-static int	push(t_list **env, char **s)
+int	add_environment_variable(t_env **env, char *key, char *value)
 {
-	const t_env_key	*env_key = add(s[0], s[1]);
+	t_env	*node;
+	t_env	*nnode;
 
-	if (!env_key)
+	nnode = create_new_env_node(key, value);
+	if (!nnode)
 		return (0);
-	if (!ft_lstadd_back_content(env, (t_env_key *)env_key))
-		return (free_envkey((t_env_key *)env_key), 0);
+	if (!*env)
+	{
+		*env = nnode;
+		return (1);
+	}
+	node = *env;
+	while (node->next)
+		node = node->next;
+	node->next = nnode;
 	return (1);
 }
 
-t_env_key	*find_environment_key(t_list **env, char *key)
+int	get_environment_size(t_env **env)
 {
-	t_list		*node;
-	t_env_key	*envkey;
+	size_t	i;
+	t_env	*node;
 
+	i = 0;
+	if (!env || !*env)
+		return (0);
 	node = *env;
-	envkey = NULL;
 	while (node)
 	{
-		envkey = (t_env_key *)node->content;
-		if (ft_strncmp(envkey->key, key, ft_strlen(key)) == 0)
-			return (envkey);
+		node = node->next;
+		i++;
+	}
+	return (i);
+}
+
+t_env	*find_environment_key(t_env **env, char *key)
+{
+	t_env	*node;
+
+	if (!env || !*env)
+		return (NULL);
+	node = *env;
+	while (node)
+	{
+		if (strcmp(node->key, key) == 0)
+			return (node);
 		node = node->next;
 	}
 	return (NULL);
 }
 
-t_list	*setup_environment(char **envp)
+char	**find_environment_key_as_2d(t_env **env, char *key)
 {
-	t_list		*env;
-	t_env_key	*key;
-	u_int32_t	i;
-	char		**index;
+	const t_env	*node = find_environment_key(env, key);
+	char		*s;
+	char		*s2;
 
-	env = NULL;
-	key = NULL;
-	i = 0;
-	while (envp[i])
-	{
-		index = ft_split(envp[i], '=');
-		if (ft_isnull(index[1]))
-		{
-			i++;
-			continue ;
-		}
-		push(&env, index);
-		free_double_array(index);
-		i++;
-	}
-	return (env);
+	if (!node)
+		return (NULL);
+	s = ft_strjoin(node->key, "=");
+	if (!s)
+		return (NULL);
+	s2 = ft_strjoin_free(s, node->value);
+	if (!s2)
+		return (free(s), NULL);
+	return ((char *[2]){s2, NULL});
 }
-
-void	free_envkey(t_env_key *ek)
-{
-	free(ek->key);
-	free(ek->value);
-	free(ek);
-}
-
-//Krijgt een opschoning nog.
