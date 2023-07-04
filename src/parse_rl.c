@@ -7,17 +7,17 @@ t_tag	char_tag(char *input)
 	t_tag		tag;
 
 	tag = 0;
-	if (strnstr(input, ">>", 3))
-		tag = append;
-	else if (strnstr(input, "<<", 3))
-		tag = here_doc;
-	else if (strnstr(input, "<", 2))
+	// if (strncmp(input, ">>", 2))
+	// 	tag = append;
+	// else if (strncmp(input, "<<", 2))
+	// 	tag = here_doc;
+	if (strncmp(input, "<", 1) == 0)
 		tag = redirect_in;
-	else if (strnstr(input, ">", 2))
+	else if (strncmp(input, ">", 1) == 0)
 		tag = redirect_out;
-	else if (strnstr(input, "|", 2))
+	else if (strncmp(input, "|", 1) == 0)
 		tag = pipe_icon;
-	printf("tag: %c\n", tag);
+	// printf("tag: %i\n", tag);
 	return (tag);
 }
 
@@ -70,10 +70,15 @@ t_token	*tokenize_quote(char *line, u_int32_t start, char quote_type)
 	end = start + 1;
 	while (line[end] != quote_type)
 		end++;
+	end++;
+	token = ft_calloc(1, sizeof(t_token));
+	if (!token)
+		return (NULL);
 	token->token = ft_substr(line, start, end - start);
 	if (!token->token)
 		return (NULL);
-	token->tag = argument;
+	printf("token quote: %s\n", token->token);
+	token->tag = quote_type;
 	return (token);
 }
 
@@ -103,7 +108,7 @@ t_token	*custom_token(char *string, t_tag tag)
 		return (NULL);
 	token->token = string;
 	token->tag = tag;
-	printf("token %s\n", token->token);
+	// printf("token %s\n", token->token);
 	return (token);
 }
 
@@ -119,33 +124,37 @@ t_token	**tokenizer(char *read_line)
 	tokens = NULL;
 	while (i < j)
 	{
-		// printf("loop 1, round:%zu\n", i);
-		tag = char_tag(&read_line[i]);
+		tag = 0;
 		// if (tag == append)
 		// 	append_handling();
 		// if (tag == here_doc)
 		// 	here_handling();
-		if (read_line[i] == '<')
-			append_token_len(&tokens, custom_token("<", tag));
+		if (read_line[i] == '\'' || read_line[i] == '\"')
+			i += append_token_len(&tokens, tokenize_quote(read_line, i, read_line[i]));
+		else if (read_line[i] == '<')
+			i += append_token_len(&tokens, custom_token("<", char_tag(&read_line[i])));
 		else if (read_line[i] == '>')
-			append_token_len(&tokens, custom_token(">", tag));
+			i += append_token_len(&tokens, custom_token(">", char_tag(&read_line[i])));
 		else if (read_line[i] == '|')
-			append_token_len(&tokens, custom_token("|", tag));
-		else if (ft_isprint(read_line[i]))
-			i += append_token_len(&tokens, tokenize_string(&read_line[i], tag));
-		i++;
+			i += append_token_len(&tokens, custom_token("|", char_tag(&read_line[i])));
+		else if (ft_isprint(read_line[i]) && !ft_isspace(read_line[i]))
+			i += append_token_len(&tokens, tokenize_string(&read_line[i], char_tag(&read_line[i])));
+		else if (ft_isspace(read_line[i]))
+			i++;
 	}
 	return (tokens);
 }
 
-int main()
-{
-	char	*test = "ls -la|grep Mak|cat>o -e";
-	t_token	**tokens = NULL;
-	int i = 0;
+// int main()
+// {
+// 	char	*test = "ls -la |'grep' Mak\"e|\"cat>o0 -e";
+// 	t_token	**tokens = NULL;
+// 	int i = 0;
 
-	tokens = tokenizer(test);
-	for (int i = 0; tokens[i]; i++)
-		printf("token %d: %s\n", i, tokens[i]->token);
-	return (0);
-}
+// 	tokens = tokenizer(test);
+// 	for (int i = 0; tokens[i]; i++){
+// 		printf("token %d: %s\t", i, tokens[i]->token);
+// 		printf("tag %c\n", tokens[i]->tag);
+// 		}
+// 	return (0);
+// }
