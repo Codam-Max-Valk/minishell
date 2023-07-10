@@ -17,7 +17,6 @@ t_tag	char_tag(char *input)
 		tag = redirect_out;
 	else if (strncmp(input, "|", 1) == 0)
 		tag = pipe_icon;
-	// printf("tag: %i\n", tag);
 	return (tag);
 }
 
@@ -40,27 +39,8 @@ size_t append_token_len(t_token ***token_arr, t_token *new_tok)
 		return 0;
 	(*token_arr)[arr_len] = new_tok;
 	(*token_arr)[arr_len + 1] = NULL;
-	return ft_strlen((*token_arr)[arr_len]->token);
+	return (ft_strlen((*token_arr)[arr_len]->token));
 }
-
-
-// size_t append_token_len(t_token **token_arr, t_token *new_tok)
-// {
-// 	size_t	arr_len;
-	
-// 	if (!new_tok)
-// 		return (0);
-// 	if (!token_arr)
-// 		token_arr = ft_calloc(2, sizeof(t_token));
-// 	while (token_arr[arr_len] != NULL)
-// 		arr_len++;
-// 	token_arr = realloc(token_arr, (arr_len + 2) * sizeof(t_token));
-// 	if (!token_arr)
-// 		return (0);
-// 	token_arr[arr_len] = new_tok;
-// 	token_arr[arr_len + 1] = NULL;
-// 	return(ft_strlen(token_arr[arr_len]->token));
-// }
 
 t_token	*tokenize_quote(char *line, u_int32_t start, char quote_type)
 {
@@ -77,7 +57,6 @@ t_token	*tokenize_quote(char *line, u_int32_t start, char quote_type)
 	token->token = ft_substr(line, start, end - start);
 	if (!token->token)
 		return (NULL);
-	printf("token quote: %s\n", token->token);
 	token->tag = quote_type;
 	return (token);
 }
@@ -95,7 +74,6 @@ t_token	*tokenize_string(char *read_line, t_tag tag)
 		len++;
 	token->token = ft_substr(read_line, 0, len);
 	token->tag = tag;
-	// printf("token %s\n", token->token);
 	return (token);
 }
 
@@ -108,7 +86,6 @@ t_token	*custom_token(char *string, t_tag tag)
 		return (NULL);
 	token->token = string;
 	token->tag = tag;
-	// printf("token %s\n", token->token);
 	return (token);
 }
 
@@ -144,17 +121,3 @@ t_token	**tokenizer(char *read_line)
 	}
 	return (tokens);
 }
-
-// int main()
-// {
-// 	char	*test = "ls -la |'grep' Mak\"e|\"cat>o0 -e";
-// 	t_token	**tokens = NULL;
-// 	int i = 0;
-
-// 	tokens = tokenizer(test);
-// 	for (int i = 0; tokens[i]; i++){
-// 		printf("token %d: %s\t", i, tokens[i]->token);
-// 		printf("tag %c\n", tokens[i]->tag);
-// 		}
-// 	return (0);
-// }

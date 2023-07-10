@@ -18,12 +18,12 @@
 # include "libft.h"
 # include "colors.h"
 
-# define DELIM "><| \t\n"
+# define DELIM "><| \t\n\v\f\r"
 
 typedef enum e_tag
 {
-	single_quote = '\'',
 	double_quote = '\"',
+	single_quote = '\'',
 	redirect_in = '<',
 	redirect_out = '>',
 	pipe_icon = '|',
