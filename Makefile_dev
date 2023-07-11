@@ -4,8 +4,11 @@ LIBRL = -lreadline
 LIBFT = -L./libft -lft
 INCLUDE = -I./include
 FILES = ${shell find ./src -name "*.c" }
+EXTRA_LIBFT_FUNCS = ${shell find ./src/libft_funcs/ -name "ft_*.c"}
 
 default:
 	@$(CC) $(FILES) -DDEBUG $(INCLUDE) $(LIBRL) $(LIBFT) $(EXEC)
 	@./$(NAME)
 	
+tokens:
+	$(CC) ${shell find ./src -name "tokens*.c"} $(EXTRA_LIBFT_FUNCS) $(INCLUDE) $(LIBRL) $(LIBFT) -o tokens.out

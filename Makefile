@@ -6,7 +6,7 @@
 #    By: mvalk <mvalk@student.codam.nl>               +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/01/09 14:04:26 by mvalk         #+#    #+#                  #
-#    Updated: 2023/06/28 15:20:23 by cbijman       ########   odam.nl          #
+#    Updated: 2023/07/11 17:13:08 by cbijman       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,6 +45,9 @@ $(OBJ_DIR)/%.o: %.c $(HEADER)
 dev:
 	@$(MAKE) default -f ./Makefile_dev
 
+dev_tokens:
+	$(MAKE) tokens -f ./Makefile_dev
+
 clean:
 	@rm -f $(OBJFILES)
 	@rm -rf $(OBJ_DIR)
@@ -57,4 +60,4 @@ fclean: clean∫
 
 re: fclean all
 
-.PHONY: clean all fclean re bonus
+.PHONY: clean all fclean re bonus dev_tokens dev

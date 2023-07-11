@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/03 17:52:19 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/07/03 15:59:47 by mvalk         ########   odam.nl         */
+/*   Updated: 2023/07/11 17:18:48 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,5 +172,6 @@ char	**ft_split_first_occurrence(char *line, char delimiter);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_isspace(char c);
 char	**ft_split_space(char const *s);
+int		ft_isquote(char c);
 
 #endif

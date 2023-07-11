@@ -17,29 +17,7 @@
 
 # include "libft.h"
 # include "colors.h"
-
-# define DELIM "><| \t\n\v\f\r"
-
-# define PIPE "|"
-# define DOUBLE_QUOTE "\""
-# define SINGLE_QUOTE "\'"
-# define REDIRECT_IN "<"
-# define REDIRECT_OUT ">"
-# define APPEND ">>"
-# define ARGUMENT "-"
-# define HERE_DOC "<<"
-
-typedef enum e_tag
-{
-	double_quote,
-	single_quote,
-	redirect_in,
-	redirect_out,
-	pipe_icon,
-	append,
-	here_doc,
-	argument,
-}	t_tag;
+# include "tokens.h"
 
 typedef struct s_token
 {
@@ -53,18 +31,6 @@ typedef struct s_environment
 	char					*value;
 	struct s_environment	*next;
 }	t_env;
-
-// typedef struct s_tokens
-// {
-// 	char	**split_input;
-// 	t_token	**redirect;
-// 	t_token	**commands;
-// 	bool	redirect_in;
-// 	bool	redirect_out;
-// 	bool	append;
-// 	bool	here_doc;
-// 	bool	pipe;
-// }	t_tokens;
 
 typedef struct s_shell
 {
