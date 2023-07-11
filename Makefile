@@ -1,17 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         ::::::::             #
-#    Makefile                                           :+:    :+:             #
-#                                                      +:+                     #
-#    By: mvalk <mvalk@student.codam.nl>               +#+                      #
-#                                                    +#+                       #
-#    Created: 2023/01/09 14:04:26 by mvalk         #+#    #+#                  #
-#    Updated: 2023/07/11 17:13:08 by cbijman       ########   odam.nl          #
-#                                                                              #
-# **************************************************************************** #
-
-# Variable definitions
-
 NAME := minishell
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra
@@ -54,7 +40,7 @@ clean:
 	@$(MAKE) clean -C ./libft
 	@echo "$(CYAN)clean complete!$(COLOR_END)"
 
-fclean: clean∫
+fclean: clean
 	@rm -f $(NAME)
 	@$(MAKE) fclean -C ./libft
 
