@@ -2,22 +2,25 @@
 #include "../include/minishell.h"
 #include "../include/libft.h"
 
-t_tag	char_tag(char *input)
+t_tag	guess_tag(char *s)
 {
-	t_tag		tag;
-
-	tag = 0;
-	// if (strncmp(input, ">>", 2))
-	// 	tag = append;
-	// else if (strncmp(input, "<<", 2))
-	// 	tag = here_doc;
-	if (strncmp(input, "<", 1) == 0)
-		tag = redirect_in;
-	else if (strncmp(input, ">", 1) == 0)
-		tag = redirect_out;
-	else if (strncmp(input, "|", 1) == 0)
-		tag = pipe_icon;
-	return (tag);
+	if (ft_strncmp(s, APPEND, 2) == 0)
+		return (append);
+	else if (ft_strncmp(s, HERE_DOC, 2) == 0)
+		return (here_doc);
+	else if (ft_strncmp(s, PIPE, 1) == 0)
+		return (pipe_icon);
+	else if (ft_strncmp(s, DOUBLE_QUOTE, 1) == 0)
+		return (double_quote);
+	else if (ft_strncmp(s, SINGLE_QUOTE, 1) == 0)
+		return (single_quote);
+	else if (ft_strncmp(s, REDIRECT_IN, 1) == 0)
+		return (redirect_in);
+	else if (ft_strncmp(s, REDIRECT_OUT, 1) == 0)
+		return (redirect_out);
+	else if (ft_strncmp(s, ARGUMENT, 1) == 0)
+		return (argument);
+	return (0);
 }
 
 size_t append_token_len(t_token ***token_arr, t_token *new_tok)
@@ -93,31 +96,31 @@ t_token	**tokenizer(char *read_line)
 {
 	t_token		**tokens;
 	size_t		i;
-	size_t		j;
 	t_tag		tag;
 
 	i = 0;
-	j = ft_strlen(read_line);
 	tokens = NULL;
-	while (i < j)
+	while (read_line[i])
 	{
-		tag = 0;
-		// if (tag == append)
-		// 	append_handling();
-		// if (tag == here_doc)
-		// 	here_handling();
-		if (read_line[i] == '\'' || read_line[i] == '\"')
+		tag = guess_tag(&read_line[i]);
+		ft_printf("char line %d: %c\n", i, read_line[i]);
+		if (tag == append)
+		 	i += append_token_len(&tokens, custom_token(">>", tag));
+		else if (tag == here_doc)
+		 	i += append_token_len(&tokens, custom_token("<<", tag));
+		else if (tag == single_quote || tag == double_quote)
 			i += append_token_len(&tokens, tokenize_quote(read_line, i, read_line[i]));
-		else if (read_line[i] == '<')
-			i += append_token_len(&tokens, custom_token("<", char_tag(&read_line[i])));
-		else if (read_line[i] == '>')
-			i += append_token_len(&tokens, custom_token(">", char_tag(&read_line[i])));
-		else if (read_line[i] == '|')
-			i += append_token_len(&tokens, custom_token("|", char_tag(&read_line[i])));
+		else if (tag == redirect_in)
+			i += append_token_len(&tokens, custom_token("<", tag));
+		else if (tag == redirect_out)
+			i += append_token_len(&tokens, custom_token(">", tag));
+		else if (tag == pipe_icon)
+			i += append_token_len(&tokens, custom_token("|", tag));
 		else if (ft_isprint(read_line[i]) && !ft_isspace(read_line[i]))
-			i += append_token_len(&tokens, tokenize_string(&read_line[i], char_tag(&read_line[i])));
+			i += append_token_len(&tokens, tokenize_string(&read_line[i], tag));
 		else if (ft_isspace(read_line[i]))
 			i++;
+		ft_printf("Tag: %d\n", tag);
 	}
 	return (tokens);
 }

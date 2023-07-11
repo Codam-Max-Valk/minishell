@@ -20,16 +20,25 @@
 
 # define DELIM "><| \t\n\v\f\r"
 
+# define PIPE "|"
+# define DOUBLE_QUOTE "\""
+# define SINGLE_QUOTE "\'"
+# define REDIRECT_IN "<"
+# define REDIRECT_OUT ">"
+# define APPEND ">>"
+# define ARGUMENT "-"
+# define HERE_DOC "<<"
+
 typedef enum e_tag
 {
-	double_quote = '\"',
-	single_quote = '\'',
-	redirect_in = '<',
-	redirect_out = '>',
-	pipe_icon = '|',
+	double_quote,
+	single_quote,
+	redirect_in,
+	redirect_out,
+	pipe_icon,
 	append,
 	here_doc,
-	argument
+	argument,
 }	t_tag;
 
 typedef struct s_token
@@ -67,5 +76,7 @@ int		add_environment_variable(t_env **env, char *key, char *value);
 int		get_environment_size(t_env **env);
 t_env	*find_environment_key(t_env **env, char *key);
 char	**find_environment_key_as_2d(t_env **env, char *key);
+
+t_token	**tokenizer(char *read_line);
 
 #endif

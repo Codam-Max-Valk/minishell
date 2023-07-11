@@ -49,6 +49,12 @@ int	main(int argc, char **argv, char **envp)
 	while (true)
 	{
 		shell.last_read_line = ft_readline(">>");
+		t_token **tokens = tokenizer(shell.last_read_line);
+		for (int i = 0; tokens[i] != NULL; i++)
+		{
+			ft_printf("%s\t(%d)\n", tokens[i]->token, tokens[i]->tag);
+		}
+		ft_printf("\n");
 	}
 	return (EXIT_SUCCESS);
 }
