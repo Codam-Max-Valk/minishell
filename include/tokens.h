@@ -6,13 +6,15 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/07/11 17:57:17 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/07/12 16:54:37 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOKENS_H
 # define TOKENS_H
 # include <stdbool.h>
+# include <stdio.h>
+
 # define DELIM "><| \t\n\v\f\r"
 
 # define PIPE "|"
@@ -21,8 +23,8 @@
 # define REDIRECT_IN "<"
 # define REDIRECT_OUT ">"
 # define APPEND ">>"
-# define ARGUMENT "-"
 # define HERE_DOC "<<"
+# define ARGUMENT "-"
 
 typedef enum e_tag
 {
@@ -38,20 +40,19 @@ typedef enum e_tag
 
 typedef struct s_token
 {
+	char			*content;
 	t_tag			tag;
 	bool			is_token;
 	bool			is_command;
-	char			*content;
-	void			*command;
-	char 			**redir_in;
-	char 			**redir_out;
+	char			*redirect_out_file;
+	char			*redirect_in_file;
 	struct s_token	*next;
 	struct s_token	*prev;
 }	t_token;
 
-void	*create_token(char *token, t_tag tag);
-
 //Checkers
-int	tag_isquote(t_tag tag);
+int		tag_isquote(t_tag tag);
+t_tag	guess_tag(char *s);
+int		get_token_length(t_tag tag);
 
 #endif

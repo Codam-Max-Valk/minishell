@@ -22,7 +22,7 @@ t_tag	guess_tag(char *s)
 	return (0);
 }
 
-void	*create_token(char *arg, t_tag tag)
+t_token	*create_token(char *arg, t_tag tag)
 {
 	t_token	*token;
 
@@ -30,38 +30,89 @@ void	*create_token(char *arg, t_tag tag)
 	if (!token)
 		return (NULL);
 	if (tag != argument)
-	{
 		token->is_token = true;
-	}
-
-	if (tag == argument)
-	{
+	else
 		token->is_command = true;
-	}
+	token->content = ft_strdup(arg);
+	token->tag = tag;
 	return (token);
 }
 
-int		split_quote(char *s)
+void	token_addback(t_token **tokens, t_token *token)
 {
-	size_t	len;
+	t_token	*node;
 
-	len = 0;
-	ft_printf("Quote: %s\n", s);
-	while (s[len] != ft_isquote(s[len]) && s[len])
-		len++;
-	ft_printf("Length is: %d\n", len);
-	return (len);
+	if (!*tokens)
+	{
+		*tokens = node;
+		return ;
+	}
+	node = *tokens;
+	while (node->next)
+		node = node->next;
+	node->next = token;
 }
 
 int	ft_istoken(char *s)
 {
-	const int tag = guess_tag(s);
+	const int	tag = guess_tag(s);
 
 	if (!ft_isquote(*s))
 		return (1);
-	if (tag != 0 || tag >= 9)
+	if (tag >= 1 || tag <= 8)
 		return (1);
 	return (0);
+}
+
+char	*substr_quote(char *s, int (*is_quote)(char))
+{
+	size_t	len;
+	char	*str;
+
+	len = 1;
+	while (!is_quote(s[len]) && s[len] != '\0')
+		len++;
+	if (is_quote(s[len]))
+		len++;
+	else
+		return (NULL);
+	str = ft_substr(s, 0, len);
+	return (str);
+}
+
+int	tokenize_quote(t_token **tokens, char *s)
+{
+	char	*str;
+	//Add the token to the back.
+
+	if (ft_issemiquote(*s))
+		str = substr_quote(s, ft_issemiquote);
+	else
+		str = substr_quote(s, ft_isdoublequote);
+	return (ft_strlen(str));
+}
+
+int	tokenize_symbol(t_token	*tokens, char *s)
+{
+	const t_tag	tag = guess_tag(s);
+	t_token	*new;
+	char	*str;
+	size_t	str_length;
+
+	if (!ft_istoken(s) || tag == 0 || tag >= 9)
+		return (-1);	
+	str_length = get_token_length(tag);
+	if (str_length == 0)
+		return (-1);
+	str = ft_substr(s, 0, str_length);
+	if (!str)
+		return (free(str), -1);
+	ft_printf("Substr: %s\n", str);
+	new = create_token(str, tag);
+	if (!new)
+		return (free(str), -1);
+	token_addback(&tokens, new);
+	return (free(str), str_length);
 }
 
 size_t	tokenize_command(char *s)
@@ -89,25 +140,6 @@ size_t	tokenize_command(char *s)
 	return (len);
 }
 
-int	ft_has_tokens(char *s)
-{
-	size_t	i;
-	bool	open;
-	bool	closed;
-
-	i = 0;
-	closed = false;
-	while (s[i] != ft_istoken(&s[i]) || s[i])
-	{
-		if (ft_isquote(s[i]) && !open)
-			open = true;
-		if (ft_isquote(s[i]) && !open)
-			closed = true;
-		i++;
-	}
-	return ((open & closed) == 1);
-}
-
 t_token	*tokenizer2(char *s)
 {
 	t_token	*tokens;
@@ -115,18 +147,23 @@ t_token	*tokenizer2(char *s)
 	size_t	index;
 
 	index = 0;
+	tokens = NULL;
 	while (s[index])
 	{
 		tag = guess_tag(&s[index]);
-		ft_printf("Guessed tag is: (%s) %d\n", &s[index], index);
-		if (ft_isprint(s[index]) && !ft_istoken(&s[index + 1]))
+		if (tag >= 1)
+			ft_printf("Guessed tag is: (%c) %d -> Tag: %d\n", s[index], index, tag);
+		if (tag == single_quote || tag == double_quote) //TODO Add more logic.
+			index += tokenize_quote(&tokens, &s[index]);
+		if (tag >= redirect_in && tag <= here_doc) //Maak het standaard dat het detect voor elke token behalve edge cases.
+			index += tokenize_symbol(tokens, &s[index]); //Tokenize symbol returns -1 if it fails.
+		else
 		{
-			ft_printf("Misschien wel een commando :O\n");
-			tokenize_command(&s[index]);
+			//ft_printf("%c", s[index]);
+			index++;
 		}
-		index++;
 	}
-
+	ft_printf("\n");
 	return (tokens);
 }
 
@@ -137,12 +174,10 @@ void	free_token(t_token	*token)
 
 int main()
 {
-	t_token *tokens = tokenizer2("echo \"LOL!\"");
-	bool test = false;
+	t_token *tokens = tokenizer2("echo \"Hello \'Boys\'\" |cat -e>out>>out2");
 
-	if (test)
-	{
-		for(t_token *node = tokens; node->next; node = node->next)
-			ft_printf("%s (%d)", node->content, node->tag);
-	}
+	if (!tokens)
+		return (printf("List is empty\n"));
+	for(tokens; tokens->next; tokens = tokens->next)
+		ft_printf("%s (%d)\n", tokens->content, tokens->tag);
 }

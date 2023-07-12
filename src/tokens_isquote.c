@@ -6,3 +6,4 @@ int	tag_isquote(t_tag tag)
 		return (1);
 	return (0);
 }
+
