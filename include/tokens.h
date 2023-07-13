@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/07/12 16:54:37 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/07/13 16:55:50 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,18 @@ typedef struct s_token
 	bool			is_command;
 	char			*redirect_out_file;
 	char			*redirect_in_file;
+	struct s_token	*next;
+	struct s_token	*prev;
+}	t_token;
+
+typedef struct s_token
+{
+	char			**command;
+	char			*heredoc;
+	char			**append_out_file;
+	char			**redirect_out_file;
+	char			**redirect_in_file; //[norminette] | [(grep -v "OK") > (out)] && [cat (out)] | [(grep -v "Error") (> out2 > out3)]
+	t_tag			tag;
 	struct s_token	*next;
 	struct s_token	*prev;
 }	t_token;

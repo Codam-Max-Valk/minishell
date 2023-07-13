@@ -115,7 +115,7 @@ int	tokenize_symbol(t_token	*tokens, char *s)
 	return (free(str), str_length);
 }
 
-size_t	tokenize_command(char *s)
+size_t	tokenize_command(t_token *tokens, char *s)
 {
 	char		*command;
 	size_t		i;
@@ -123,19 +123,10 @@ size_t	tokenize_command(char *s)
 
 	i = 0;
 	len = 0;
-	while (s[len] && !ft_istoken(&s[len]))
+	while (s[len] && !ft_isspace(s[len]))
 		len++;
-	while (s[i] && !ft_isquote(s[i]))
-		i++;
-	if (ft_istoken(&s[i]))
-		ft_printf("the command does not have quotes... 2 probabilities: Either - or it is an echo / grep.\n");
-	else
-	{
-		command = ft_substr(s, 0x00, len);
-		command = ft_strtrim(command, " \t\n\v\r\f");
-		ft_printf("Command: %s", command);
-		 //TODO Write a new split that splits till the token...
-	}
+	
+	ft_printf("%s => Command Length: %d\n", ft_substr(s, 0, len), len);
 	
 	return (len);
 }
@@ -157,11 +148,12 @@ t_token	*tokenizer2(char *s)
 			index += tokenize_quote(&tokens, &s[index]);
 		if (tag >= redirect_in && tag <= here_doc) //Maak het standaard dat het detect voor elke token behalve edge cases.
 			index += tokenize_symbol(tokens, &s[index]); //Tokenize symbol returns -1 if it fails.
+		else if (!tag && (s[index] >= 33 && s[index] <= 126))
+			index += tokenize_command(tokens, &s[index]);
+		else if (tag == argument)
+			//blablabla
 		else
-		{
-			//ft_printf("%c", s[index]);
 			index++;
-		}
 	}
 	ft_printf("\n");
 	return (tokens);
@@ -174,10 +166,23 @@ void	free_token(t_token	*token)
 
 int main()
 {
-	t_token *tokens = tokenizer2("echo \"Hello \'Boys\'\" |cat -e>out>>out2");
+	t_token *tokens = tokenizer2("echo \"Hello \'Boys\'\" |cat -e>out>>out2 ");
 
 	if (!tokens)
 		return (printf("List is empty\n"));
 	for(tokens; tokens->next; tokens = tokens->next)
 		ft_printf("%s (%d)\n", tokens->content, tokens->tag);
+}
+
+void pipe_check()
+{
+
+
+	t_token t;
+
+	if (t.tag == pipe)
+	{
+		
+	}
+
 }
