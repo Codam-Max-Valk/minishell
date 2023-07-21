@@ -88,3 +88,28 @@ char	**find_environment_key_as_2d(t_env **env, char *key)
 		return (free(s), NULL);
 	return ((char *[2]){s2, NULL});
 }
+
+void	delete_env_key(t_env **env, char *key)
+{
+	t_env *tmp_node;
+	t_env *node_prev;
+
+	tmp_node = *env;
+	node_prev = NULL;
+	while (tmp_node)
+	{
+		if (strcmp(tmp_node->key, key) == 0)
+		{
+			if (node_prev)
+				node_prev->next = tmp_node->next;
+			else
+				*env = tmp_node->next;
+			free(tmp_node->key);
+			free(tmp_node->value);
+			free(tmp_node);
+			break ;
+		}
+		node_prev = tmp_node;
+		tmp_node = tmp_node->next;
+	}
+}
