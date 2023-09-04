@@ -4,21 +4,21 @@
 t_tag	guess_tag(char *s)
 {
 	if (ft_strncmp(s, APPEND, 2) == 0)
-		return (append);
+		return (T_APPEND);
 	else if (ft_strncmp(s, HERE_DOC, 2) == 0)
-		return (here_doc);
+		return (T_HERE_DOC);
 	else if (ft_strncmp(s, PIPE, 1) == 0)
-		return (pipe_icon);
+		return (T_PIPE_ICON);
 	else if (ft_strncmp(s, DOUBLE_QUOTE, 1) == 0)
-		return (double_quote);
+		return (T_DOUBLE_QUOTE);
 	else if (ft_strncmp(s, SINGLE_QUOTE, 1) == 0)
-		return (single_quote);
+		return (T_SINGLE_QUOTE);
 	else if (ft_strncmp(s, REDIRECT_IN, 1) == 0)
-		return (redirect_in);
+		return (T_REDIRECT_IN);
 	else if (ft_strncmp(s, REDIRECT_OUT, 1) == 0)
-		return (redirect_out);
+		return (T_REDIRECT_OUT);
 	else if (ft_strncmp(s, ARGUMENT, 1) == 0)
-		return (argument);
+		return (T_ARGUMENT);
 	return (0);
 }
 
@@ -29,7 +29,7 @@ t_token	*create_token(char *arg, t_tag tag)
 	token = ft_calloc(1, sizeof(t_token));
 	if (!token)
 		return (NULL);
-	if (tag != argument)
+	if (tag != T_ARGUMENT)
 		token->is_token = true;
 	else
 		token->is_command = true;
@@ -118,6 +118,7 @@ int	tokenize_symbol(t_token	*tokens, char *s)
 size_t	tokenize_command(t_token *tokens, char *s)
 {
 	char		*command;
+	t_token		*token;
 	size_t		i;
 	size_t		len;
 
@@ -125,10 +126,20 @@ size_t	tokenize_command(t_token *tokens, char *s)
 	len = 0;
 	while (s[len] && !ft_isspace(s[len]))
 		len++;
-	
-	ft_printf("%s => Command Length: %d\n", ft_substr(s, 0, len), len);
-	
+	command = ft_substr(s, 0, len);
+	if (!command)
+		return (-1);
+	token = create_token(command, T_COMMAND);
+	if (!token)
+		return (free(command), -1);
+	token_addback(tokens, token);
 	return (len);
+}
+
+size_t	tokenize_argument(t_token *tokens, char *s)
+{
+
+	return (1);
 }
 
 t_token	*tokenizer2(char *s)
@@ -144,14 +155,14 @@ t_token	*tokenizer2(char *s)
 		tag = guess_tag(&s[index]);
 		if (tag >= 1)
 			ft_printf("Guessed tag is: (%c) %d -> Tag: %d\n", s[index], index, tag);
-		if (tag == single_quote || tag == double_quote) //TODO Add more logic.
+		if (tag == T_SINGLE_QUOTE || tag == T_DOUBLE_QUOTE) //TODO Add more logic.
 			index += tokenize_quote(&tokens, &s[index]);
-		if (tag >= redirect_in && tag <= here_doc) //Maak het standaard dat het detect voor elke token behalve edge cases.
+		if (tag >= T_REDIRECT_IN && tag <= T_REDIRECT_OUT) //Maak het standaard dat het detect voor elke token behalve edge cases.
 			index += tokenize_symbol(tokens, &s[index]); //Tokenize symbol returns -1 if it fails.
 		else if (!tag && (s[index] >= 33 && s[index] <= 126))
 			index += tokenize_command(tokens, &s[index]);
-		else if (tag == argument)
-			//blablabla
+		else if (tag == T_ARGUMENT)
+			index += tokenize_argument(tokens, &s[index]);
 		else
 			index++;
 	}
@@ -166,23 +177,10 @@ void	free_token(t_token	*token)
 
 int main()
 {
-	t_token *tokens = tokenizer2("echo \"Hello \'Boys\'\" |cat -e>out>>out2 ");
+	t_token *tokens = tokenizer2("echo \"Hello \'Boys\'\"|cat -e>out>>out2 ");
 
 	if (!tokens)
 		return (printf("List is empty\n"));
 	for(tokens; tokens->next; tokens = tokens->next)
 		ft_printf("%s (%d)\n", tokens->content, tokens->tag);
-}
-
-void pipe_check()
-{
-
-
-	t_token t;
-
-	if (t.tag == pipe)
-	{
-		
-	}
-
 }

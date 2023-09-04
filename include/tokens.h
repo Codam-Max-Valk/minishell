@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/07/13 16:55:50 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/09/04 14:25:32 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,16 @@
 
 typedef enum e_tag
 {
-	double_quote = 1,
-	single_quote = 2,
-	redirect_in = 3,
-	redirect_out = 4,
-	pipe_icon = 5,
-	append = 6,
-	here_doc = 7,
-	argument = 8,
-}	t_tag;
+	T_DOUBLE_QUOTE = 1,
+	T_SINGLE_QUOTE = 2,
+	T_REDIRECT_IN = 3,
+	T_REDIRECT_OUT = 4,
+	T_PIPE_ICON = 5,
+	T_APPEND = 6,
+	T_HERE_DOC = 7,
+	T_COMMAND = 8,
+	T_ARGUMENT = 9,
+}	`t_tag;
 
 typedef struct s_token
 {
@@ -50,7 +51,7 @@ typedef struct s_token
 	struct s_token	*prev;
 }	t_token;
 
-typedef struct s_token
+typedef struct s_tokens
 {
 	char			**command;
 	char			*heredoc;
@@ -60,7 +61,7 @@ typedef struct s_token
 	t_tag			tag;
 	struct s_token	*next;
 	struct s_token	*prev;
-}	t_token;
+}	t_tokens;
 
 //Checkers
 int		tag_isquote(t_tag tag);

@@ -3,15 +3,15 @@
 
 int	get_token_length(t_tag tag)
 {
-	if (tag == redirect_in)
+	if (tag == T_REDIRECT_IN)
 		return (1);
-	if (tag == redirect_out)
+	if (tag == T_REDIRECT_OUT)
 		return (1);
 	if (tag == pipe_icon)
 		return (1);
-	if (tag == append)
+	if (tag == T_APPEND)
 		return (2);
-	if (tag == here_doc)
+	if (tag == T_HERE_DOC)
 		return (2);
 
 	return (0);

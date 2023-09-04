@@ -2,7 +2,12 @@
 	"files.associations": {
 		"readline.h": "c",
 		"minishell.h": "c",
-		"libft.h": "c"
+		"history.h": "c",
+		"libft.h": "c",
+		"stdlib.h": "c",
+		"unistd.h": "c",
+		"colors.h": "c",
+		"tokens.h": "c"
 	},
 	"files.exclude": {
 		"**/.git": true,
@@ -16,7 +21,8 @@
 		"libft": false,
 		".gitignore": true,
 		".gitmodules": true,
-		"README.md": true
+		"README.md": true,
+		"docs": true
 	},
 	"explorerExclude.backup": {}
 }
