@@ -2,7 +2,7 @@
 
 int	tag_isquote(t_tag tag)
 {
-	if (tag == single_quote || tag == double_quote)
+	if (tag == T_SINGLE_QUOTE || tag == T_DOUBLE_QUOTE)
 		return (1);
 	return (0);
 }

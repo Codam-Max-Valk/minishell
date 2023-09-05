@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/09/04 14:25:32 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/09/05 15:29:57 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,21 +37,17 @@ typedef enum e_tag
 	T_HERE_DOC = 7,
 	T_COMMAND = 8,
 	T_ARGUMENT = 9,
-}	`t_tag;
+}	t_tag;
 
 typedef struct s_token
 {
 	char			*content;
 	t_tag			tag;
-	bool			is_token;
-	bool			is_command;
-	char			*redirect_out_file;
-	char			*redirect_in_file;
 	struct s_token	*next;
 	struct s_token	*prev;
 }	t_token;
 
-typedef struct s_tokens
+typedef struct s_zoekjijmaaruitmax
 {
 	char			**command;
 	char			*heredoc;
@@ -61,7 +57,7 @@ typedef struct s_tokens
 	t_tag			tag;
 	struct s_token	*next;
 	struct s_token	*prev;
-}	t_tokens;
+}	t_zoekjijmaaruitmax;
 
 //Checkers
 int		tag_isquote(t_tag tag);
