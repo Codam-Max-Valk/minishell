@@ -33,11 +33,7 @@ t_token	*tokenize_quote(char *line, u_int32_t start, char quote_type)
 		end++;
 	end++;
 	token = ft_calloc(1, sizeof(t_token));
-	if (!token)
-		return (NULL);
 	token->token = ft_substr(line, start, end - start);
-	if (!token->token)
-		return (NULL);
 	token->tag = quote_type;
 	return (token);
 }
@@ -53,7 +49,7 @@ t_token	*tokenize_string(char *read_line, t_tag tag)
 		return (NULL);
 	while (!ft_strchr(DELIM, read_line[len]))
 		len++;
-	token->token = ft_substr(read_line, 0, len);
+	token->token = ft_substr(read_line, 0, len); //Protect malloc.
 	token->tag = tag;
 	return (token);
 }

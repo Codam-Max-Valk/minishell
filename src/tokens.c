@@ -32,8 +32,6 @@ t_tag	guess_tag(char *s)
 		return (T_REDIRECT_IN);
 	else if (ft_strncmp(s, REDIRECT_OUT, 1) == 0)
 		return (T_REDIRECT_OUT);
-	else if (ft_strncmp(s, ARGUMENT, 1) == 0)
-		return (T_ARGUMENT);
 	return (0);
 }
 
@@ -48,28 +46,12 @@ int	ft_istoken(char *s)
 	return (0);
 }
 
-int	ft_isarrowtoken(t_tag tag)
+int	tag_isquote(t_tag tag)
 {
-	
+	if (tag == T_SINGLE_QUOTE || tag == T_DOUBLE_QUOTE)
 		return (1);
 	return (0);
 }
-
-//char	*substr_quote(char *s, int (*is_quote)(char))
-//{
-//	size_t	len;
-//	char	*str;
-
-//	len = 1;
-//	while (!is_quote(s[len]) && s[len] != '\0')
-//		len++;
-//	if (is_quote(s[len]))
-//		len++;
-//	else
-//		return (NULL);
-//	str = ft_substr(s, 0, len);
-//	return (str);
-//}
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -90,9 +72,10 @@ void	token_addback(t_token **tokens, t_token *token)
 {
 	t_token	*node;
 
+	node = NULL;
 	if (!*tokens)
 	{
-		*tokens = node;
+		*tokens = token;
 		return ;
 	}
 	node = *tokens;
@@ -103,24 +86,25 @@ void	token_addback(t_token **tokens, t_token *token)
 
 bool	try_addtoken(t_token **tokens, char *arg, t_tag tag)
 {
-	//t_token	*token;
+	t_token	*token;
 
-	//token = create_token(arg, tag);
-	//if (!token)
-	//	return (free(token->content), free(token), false);
-	//ft_printf("%s token_s\n", token->content);
-	//token_addback(tokens, token);
+	token = create_token(arg, tag);
+	if (!token)
+		return (free(token->content), free(token), false);
+	token_addback(tokens, token);
 	return (true);
 }
 
-static int	tokenize_quote(t_token **tokens, char *s, int type)
+static int	tokenize_quote(t_token **tokens, char *s, char type)
 {
 	char	*str;
 	int		length;
 	int		hit;
+	t_tag	tag;
 
 	length = 1;
 	hit = 0;
+	tag = guess_tag(&type);
 	while(s[length] && !hit)
 	{
 		if (s[length] == type)
@@ -128,12 +112,16 @@ static int	tokenize_quote(t_token **tokens, char *s, int type)
 		length++;
 	}
 	if (!hit)
-		return (ft_printf("> Unclosed quotes"), -1);
+		return (ft_printf("> Unclosed quotes"), 1);
 	str = ft_substr(s, 0, length);
+	if (!str)
+		return (free(str), -1);
+	if (!try_addtoken(tokens, str, tag))
+		return (free(str), -1);
 	return (length);
 }
 
-size_t	tokenize_symbol(t_token	**tokens, char *s)
+static size_t	tokenize_symbol(t_token	**tokens, char *s)
 {
 	const t_tag	tag = guess_tag(s);
 	t_token	*new;
@@ -142,20 +130,23 @@ size_t	tokenize_symbol(t_token	**tokens, char *s)
 
 	if (!ft_istoken(s) || tag == 0 || tag >= 9)
 		return (-1);	
+	
 	str_length = get_token_length(tag);
 	if (str_length == 0)
 		return (-1);
+	
 	str = ft_substr(s, 0, str_length);
 	if (!str)
 		return (-1);
+
 	if (!try_addtoken(tokens, str, tag))
 		return (free(str), -1);
 	return (free(str), str_length);
 }
 
-size_t	tokenize_command(t_token **tokens, char *s)
+static size_t	tokenize_content(t_token **tokens, char *s)
 {
-	char		*command;
+	char		*str;
 	size_t		i;
 	size_t		len;
 
@@ -163,20 +154,13 @@ size_t	tokenize_command(t_token **tokens, char *s)
 	len = 0;
 	while (s[len] && !ft_isspace(s[len]))
 		len++;
-	command = ft_substr(s, 0, len);
-	if (!command)
+	
+	str = ft_substr(s, 0, len);
+	if (!str)
 		return (0);
-	ft_printf("Command is: %s\n", command);
-	return (len);
-}
 
-size_t	tokenize_argument(t_token **tokens, char *s)
-{
-	size_t	len;
-
-	len = 0;
-	while (s[len] && !ft_isspace(s[len]))
-		len++;
+	if (!try_addtoken(tokens, str, T_COMMAND))
+		return (free(str), -1);
 	return (len);
 }
 
@@ -192,14 +176,14 @@ t_token	*tokenizer2(char *s)
 	while (s[index])
 	{
 		tag = guess_tag(&s[index]);
-		if (tag >= 1)
-			ft_printf("Guessed tag is: (%c) %d -> Tag: %d\n", s[index], index, tag);
+		//if (tag >= 1)
+		//	ft_printf("Guessed tag is: (%c) %d -> Tag: %d\n", s[index], index, tag);
 		if (tag == T_SINGLE_QUOTE || tag == T_DOUBLE_QUOTE)
 			result = tokenize_quote(&tokens, &s[index], s[index]);
 		else if (tag == T_REDIRECT_IN || tag == T_REDIRECT_OUT || tag == T_APPEND || tag == T_HERE_DOC)
 			result = tokenize_symbol(&tokens, &s[index]);
 		else if (tag == T_ARGUMENT || (s[index] >= 33 && s[index] <= 126))
-			result = tokenize_command(&tokens, &s[index]);
+			result = tokenize_content(&tokens, &s[index]);
 		else
 			result = 1;
 		if (result >= 1)
@@ -215,17 +199,17 @@ void	free_token(t_token	*token)
 	free(token);
 }
 
-int main()
-{
-	//t_token *tokens = tokenizer2("echo \"Hello \'Boys\'\" | cat -e > out >> out2");
-	t_token *tokens = tokenizer2("echo \"Hello \'Boys | cat -e > out >> out2");
+//int main()
+//{
+//	//t_token *tokens = tokenizer2("echo \"Hello \'Boys\'\" | cat -e > out >> out2");
+//	t_token *tokens = tokenizer2("echo \"Hello \'Boys\" | cat -e > out >> out2");
 
-	if (!tokens)
-		return (printf("List is empty\n"));
-	ft_printf("Content: %s\n", tokens->content);
-	while (tokens->next)
-	{
-		ft_printf("%s (%d)\n", tokens->content, tokens->tag);
-		tokens = tokens->next;
-	}
-}
+//	if (!tokens)
+//		return (printf("List is empty\n"));
+//	ft_printf("Content: %s\n", tokens->content);
+//	while (tokens->next)
+//	{
+//		ft_printf("TAG: %d\t=>\tCONTENT: %s\n", tokens->tag, tokens->content);
+//		tokens = tokens->next;
+//	}
+//}

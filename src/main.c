@@ -1,5 +1,6 @@
 #include "../include/minishell.h"
 #include "../include/libft.h"
+#include "../include/tokens.h"
 
 char	*ft_readline(const char *s)
 {
@@ -49,12 +50,20 @@ int	main(int argc, char **argv, char **envp)
 	while (true)
 	{
 		shell.last_read_line = ft_readline(">>");
-		t_token **tokens = tokenizer(shell.last_read_line);
-		for (int i = 0; tokens[i] != NULL; i++)
+		t_token *tokens = tokenizer2(shell.last_read_line);
+		if (!tokens)
 		{
-			ft_printf("%s\t(%d)\n", tokens[i]->token, tokens[i]->tag);
+			printf("List is empty\n");
+			continue ;
 		}
-		ft_printf("\n");
+		else
+		{
+			while (tokens)
+			{
+				ft_printf("TAG: %d\t=>\tCONTENT: %s\n", tokens->tag, tokens->content);
+				tokens = tokens->next;
+			}
+		}
 	}
 	return (EXIT_SUCCESS);
 }

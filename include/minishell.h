@@ -19,12 +19,6 @@
 # include "colors.h"
 # include "tokens.h"
 
-typedef struct s_token
-{
-	char	*token;
-	t_tag	tag;
-}	t_token;
-
 typedef struct s_environment
 {
 	char					*key;

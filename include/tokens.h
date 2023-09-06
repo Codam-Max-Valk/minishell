@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/09/05 15:29:57 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/09/06 17:08:10 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,6 @@ typedef struct s_zoekjijmaaruitmax
 }	t_zoekjijmaaruitmax;
 
 //Checkers
-int		tag_isquote(t_tag tag);
-t_tag	guess_tag(char *s);
-int		get_token_length(t_tag tag);
+t_token	*tokenizer2(char *s);
 
 #endif
