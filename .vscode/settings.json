@@ -39,13 +39,13 @@
 		"**/CVS": true,
 		"**/.DS_Store": true,
 		"**/Thumbs.db": true,
-		"**/.vscode": true,
-		"obj": true,
+		"**/.vscode": false,
+		"obj": false,
 		"libft": false,
-		".gitignore": true,
-		".gitmodules": true,
-		"README.md": true,
-		"docs": true
+		".gitignore": false,
+		".gitmodules": false,
+		"README.md": false,
+		"docs": false
 	},
 	"explorerExclude.backup": {}
 }

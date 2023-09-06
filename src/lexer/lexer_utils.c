@@ -27,7 +27,7 @@ int	get_symbol_length(char *s)
 	int		length;
 
 	length = 0;
-	if (!ft_istoken(s) || tag == 0 || tag >= 9)
+	if (!ft_istoken(s) || tag == 0 || tag >= 9) //TODO: Relook this code.
 		return (PARSE_FAILURE);
 	length = get_token_length(tag);
 	if (length <= 0)

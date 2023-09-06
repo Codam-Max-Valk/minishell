@@ -1,7 +1,7 @@
 #include "../include/tokens.h"
 #include "../include/libft.h"
 
-int	tokenize(t_token **tokens, char *s, t_tag tag, int (*f)(char *))
+static int	tokenize(t_token **tokens, char *s, t_tag tag, t_lengthfunc f)
 {
 	t_token	*token;
 	char	*str;
@@ -25,10 +25,9 @@ t_token	*tokenizer2(char *s)
 	t_token	*tokens;
 	t_tag	tag;
 	size_t	index;
-	int	result;
+	int		result;
 
 	index = 0;
-	result = 0;
 	tokens = NULL;
 	while (s[index]) //TODO: Add result checking and freeing.
 	{
@@ -48,23 +47,4 @@ t_token	*tokenizer2(char *s)
 		
 	}
 	return (tokens);
-}
-
-void	free_token(t_token	*token)
-{
-	free(token);
-}
-
-int main()
-{
-	//t_token *tokens = tokenizer2("echo \"Hello \'Boys\'\" | cat -e > out >> out2");
-	t_token *tokens = tokenizer2("echo\"Hello \'Boys|cat -e>out>>out2");
-
-	if (!tokens)
-		return (printf("List is empty\n"));
-	while (tokens->next)
-	{
-		ft_printf("TAG: %d\t\t:\tCONTENT: %s\n", tokens->tag, tokens->content);
-		tokens = tokens->next;
-	}
 }

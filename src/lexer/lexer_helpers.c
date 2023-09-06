@@ -46,10 +46,3 @@ int	ft_istoken(char *s)
 		return (1);
 	return (0);
 }
-
-int	tag_isquote(t_tag tag)
-{
-	if (tag == T_SINGLE_QUOTE || tag == T_DOUBLE_QUOTE)
-		return (1);
-	return (0);
-}

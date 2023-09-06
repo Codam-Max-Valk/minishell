@@ -24,7 +24,6 @@
 # define REDIRECT_OUT ">"
 # define APPEND ">>"
 # define HERE_DOC "<<"
-# define ARGUMENT "-"
 
 # define PARSE_FAILURE -1
 
@@ -61,23 +60,28 @@ typedef struct s_zoekjijmaaruitmax
 	struct s_token	*prev;
 }	t_zoekjijmaaruitmax;
 
-//BETA : Dit gaat nog veranderd worden qua indeling en benamingen.
+//TODO : Dit gaat nog veranderd worden qua indeling en benamingen.
+typedef int (*t_lengthfunc)(char *);
+typedef void (*t_token_clear_func)(t_token *);
 
 //lexer_lst.c
 t_token	*create_token(char *arg, t_tag tag);
 void	token_addback(t_token **tokens, t_token *token);
+size_t	token_lstsize(t_token *token);
+void	token_lstclear(t_token **tokens, t_token_clear_func func);
+void	token_free(t_token *token);
 
 //lexer_helpers.c
 int		get_token_length(t_tag tag);
 t_tag	guess_tag(char *s);
 int		ft_istoken(char *s);
-int		tag_isquote(t_tag tag);
 
 //lexer_utils.c * TODO: Add string checks.
 int	get_quote_length(char *s);
 int	get_symbol_length(char *s);
 int	get_content_length(char *s);
 
+//lexer.c
 t_token	*tokenizer2(char *s);
 
 
