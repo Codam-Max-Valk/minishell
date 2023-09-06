@@ -11,4 +11,4 @@ default:
 	@./$(NAME)
 	
 tokens:
-	$(CC) ${shell find ./src -name "tokens*.c"} $(EXTRA_LIBFT_FUNCS) $(INCLUDE) $(LIBRL) $(LIBFT) -o tokens.out
+	$(CC) ${shell find ./src -name "lexer*.c"} $(EXTRA_LIBFT_FUNCS) $(INCLUDE) $(LIBRL) $(LIBFT) -o tokens.out

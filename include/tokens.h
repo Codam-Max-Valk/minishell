@@ -26,6 +26,8 @@
 # define HERE_DOC "<<"
 # define ARGUMENT "-"
 
+# define PARSE_FAILURE -1
+
 typedef enum e_tag
 {
 	T_DOUBLE_QUOTE = 1,
@@ -53,13 +55,31 @@ typedef struct s_zoekjijmaaruitmax
 	char			*heredoc;
 	char			**append_out_file;
 	char			**redirect_out_file;
-	char			**redirect_in_file; //[norminette] | [(grep -v "OK") > (out)] && [cat (out)] | [(grep -v "Error") (> out2 > out3)]
+	char			**redirect_in_file;
 	t_tag			tag;
 	struct s_token	*next;
 	struct s_token	*prev;
 }	t_zoekjijmaaruitmax;
 
-//Checkers
+//BETA : Dit gaat nog veranderd worden qua indeling en benamingen.
+
+//lexer_lst.c
+t_token	*create_token(char *arg, t_tag tag);
+void	token_addback(t_token **tokens, t_token *token);
+
+//lexer_helpers.c
+int		get_token_length(t_tag tag);
+t_tag	guess_tag(char *s);
+int		ft_istoken(char *s);
+int		tag_isquote(t_tag tag);
+
+//lexer_utils.c * TODO: Add string checks.
+int	get_quote_length(char *s);
+int	get_symbol_length(char *s);
+int	get_content_length(char *s);
+
 t_token	*tokenizer2(char *s);
+
+
 
 #endif
