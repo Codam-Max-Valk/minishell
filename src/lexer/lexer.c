@@ -43,8 +43,7 @@ t_token	*tokenizer2(char *s)
 		if (result >= 1)
 			index += result;
 		else
-			return (NULL);
-		
+			return (token_lstclear(tokens, token_free), NULL);
 	}
 	return (tokens);
 }

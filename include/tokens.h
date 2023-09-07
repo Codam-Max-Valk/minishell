@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/09/06 17:08:10 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/09/07 15:06:41 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ typedef struct s_token
 	char			*content;
 	t_tag			tag;
 	struct s_token	*next;
-	struct s_token	*prev;
 }	t_token;
 
 typedef struct s_zoekjijmaaruitmax
@@ -61,14 +60,14 @@ typedef struct s_zoekjijmaaruitmax
 }	t_zoekjijmaaruitmax;
 
 //TODO : Dit gaat nog veranderd worden qua indeling en benamingen.
-typedef int (*t_lengthfunc)(char *);
-typedef void (*t_token_clear_func)(t_token *);
+typedef int		(*t_lengthfunc)(char *);
+typedef void	(*t_token_clearfunc)(t_token *);
 
 //lexer_lst.c
 t_token	*create_token(char *arg, t_tag tag);
 void	token_addback(t_token **tokens, t_token *token);
 size_t	token_lstsize(t_token *token);
-void	token_lstclear(t_token **tokens, t_token_clear_func func);
+void	token_lstclear(t_token **tokens, t_token_clearfunc func);
 void	token_free(t_token *token);
 
 //lexer_helpers.c
@@ -77,13 +76,11 @@ t_tag	guess_tag(char *s);
 int		ft_istoken(char *s);
 
 //lexer_utils.c * TODO: Add string checks.
-int	get_quote_length(char *s);
-int	get_symbol_length(char *s);
-int	get_content_length(char *s);
+int		get_quote_length(char *s);
+int		get_symbol_length(char *s);
+int		get_content_length(char *s);
 
 //lexer.c
 t_token	*tokenizer2(char *s);
-
-
 
 #endif

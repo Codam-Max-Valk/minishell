@@ -43,7 +43,7 @@ void	token_addback(t_token **tokens, t_token *token)
 	node->next = token;
 }
 
-void	token_lstclear(t_token **tokens, t_token_clear_func func)
+void	token_lstclear(t_token **tokens, t_token_clearfunc func)
 {
 	//Clear all tokens.
 	t_token	*index;
