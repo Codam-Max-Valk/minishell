@@ -60,10 +60,9 @@ t_token	*tokenizer2(char *s)
 	while (s[index])
 	{
 		tag = guess_tag(&s[index]);
-		
 		if (tag == T_SINGLE_QUOTE || tag == T_DOUBLE_QUOTE)
 			x = tokenize(&tokens, &s[index], tag, get_quote_length);
-		else if (tag == T_REDIRECT_IN || tag == T_REDIRECT_OUT || tag == T_APPEND || tag == T_HERE_DOC || tag == T_PIPE || tag == T_EQUALS)
+		else if (ft_issymbol(tag))
 			x = tokenize(&tokens, &s[index], tag, get_symbol_length);
 		else if (tag == T_EXPANSION)
 			x = tokenize(&tokens, &s[++index], T_EXPANSION, get_content_length);
@@ -71,7 +70,6 @@ t_token	*tokenizer2(char *s)
 			x = tokenize(&tokens, &s[index], T_COMMAND, get_content_length);
 		else
 			x = 1;
-
 		if (x >= 1)
 			index += x;
 		else

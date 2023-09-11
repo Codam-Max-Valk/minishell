@@ -31,10 +31,8 @@ static char	*ft_readline(const char *s)
 	line = NULL;
 	if (line)
 		free(line);
-#ifndef DEBUG
 	prefix = ft_strjoin(BOLD_GREEN, s);
 	prefix = ft_strjoin(prefix, RESET);
-#endif
 	line = readline(prefix);
 	if (line && *line)
 		add_history(line);
@@ -43,7 +41,7 @@ static char	*ft_readline(const char *s)
 
 static t_list	*parse_tokens(t_token **tokens)
 {
-	t_readline *readline;
+	t_readline	*readline;
 
 	readline = ft_calloc(1, sizeof(t_readline));
 	if (!readline)
@@ -61,7 +59,7 @@ t_list	*ms_readline(t_shell *shell, char *str)
 	list = NULL;
 	if (!str || !*str)
 		return (NULL);
-	
+
 	shell->last_command = ft_readline(str);
 	if (!shell->last_command)
 		return (ft_printf("^D\n"), NULL); //For signals eventually.
@@ -69,7 +67,7 @@ t_list	*ms_readline(t_shell *shell, char *str)
 	tokens = tokenizer2(shell->last_command);
 	if (!tokens)
 		return (NULL); //Free input
-		
+
 	list = parse_tokens(&tokens);
 	if (!list)
 		return (NULL); //Tokenizer freees the tokens themself and returns null.

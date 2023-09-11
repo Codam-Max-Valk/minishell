@@ -37,7 +37,10 @@ int	main(int argc, char **argv, char **envp)
 	while (true)
 	{
 		tokens = ms_readline(&shell, ">>");
-		if (strcmp(((t_readline *)tokens->content)->command[0], "exit") == 0) break ;
+		if (!tokens)
+			continue ;
+		if (strcmp(((t_readline *)tokens->content)->command[0], "exit") == 0)
+			break ;
 	}
 	return (EXIT_SUCCESS);
 }
