@@ -7,13 +7,28 @@
 
 #define HISTORY_FILE "~/.minishell_history"
 
-bool	initialize_history()
+int	open_historyfile()
 {
 	int	fd;
 
-	fd = open(HISTORY_FILE, O_RDONLY);
-	if (access(HISTORY_FILE, F_OK | R_OK | W_OK))
-		
+	if (access(HISTORY_FILE, F_OK))
+		fd = open(HISTORY_FILE, O_CREAT | O_RDWR);
+	if (access(HISTORY_FILE, R_OK | W_OK))
+		fd = open(HISTORY_FILE, O_RDWR);
 	if (!fd)
-		return (false); //History file failed to open...
+		return (-1); //History file failed to open...
+	return (fd);
+}
+
+//Add multiple checks
+//1. Add write protection
+//2. Add file descriptor protection
+//3. Add history protection
+void	ms_add_history(char	*str)
+{
+	//int	fd;
+
+	//fd = open_historyfile();
+	//write(fd, str, ft_strlen(str));
+	//add_history(str);
 }

@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/09/07 15:06:41 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/09/11 15:39:32 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # define DELIM "><| \t\n\v\f\r"
 
 # define PIPE "|"
+# define EQUALS "="
+# define EXPANSION "$"
 # define DOUBLE_QUOTE "\""
 # define SINGLE_QUOTE "\'"
 # define REDIRECT_IN "<"
@@ -29,15 +31,17 @@
 
 typedef enum e_tag
 {
-	T_DOUBLE_QUOTE = 1,
-	T_SINGLE_QUOTE = 2,
-	T_REDIRECT_IN = 3,
-	T_REDIRECT_OUT = 4,
-	T_PIPE_ICON = 5,
-	T_APPEND = 6,
-	T_HERE_DOC = 7,
-	T_COMMAND = 8,
-	T_ARGUMENT = 9,
+	T_DOUBLE_QUOTE	= 1,
+	T_SINGLE_QUOTE	= 2,
+	T_REDIRECT_IN	= 3,
+	T_REDIRECT_OUT	= 4,
+	T_PIPE			= 5,
+	T_APPEND		= 6,
+	T_HERE_DOC		= 7,
+	T_EQUALS		= 8,
+	T_EXPANSION		= 9,
+	T_COMMAND		= 10,
+	T_ARGUMENT		= 11,
 }	t_tag;
 
 typedef struct s_token
@@ -47,20 +51,8 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
-typedef struct s_zoekjijmaaruitmax
-{
-	char			**command;
-	char			*heredoc;
-	char			**append_out_file;
-	char			**redirect_out_file;
-	char			**redirect_in_file;
-	t_tag			tag;
-	struct s_token	*next;
-	struct s_token	*prev;
-}	t_zoekjijmaaruitmax;
-
-//TODO : Dit gaat nog veranderd worden qua indeling en benamingen.
-typedef int		(*t_lengthfunc)(char *);
+//Typedefs for function pointers.
+typedef int		(*t_token_lengthfunc)(char *);
 typedef void	(*t_token_clearfunc)(t_token *);
 
 //lexer_lst.c
@@ -71,7 +63,6 @@ void	token_lstclear(t_token **tokens, t_token_clearfunc func);
 void	token_free(t_token *token);
 
 //lexer_helpers.c
-int		get_token_length(t_tag tag);
 t_tag	guess_tag(char *s);
 int		ft_istoken(char *s);
 
@@ -79,8 +70,12 @@ int		ft_istoken(char *s);
 int		get_quote_length(char *s);
 int		get_symbol_length(char *s);
 int		get_content_length(char *s);
+int		get_token_length(t_tag tag);
 
 //lexer.c
 t_token	*tokenizer2(char *s);
+
+//Remove once done.
+const char	*get_tag_name(t_tag tag);
 
 #endif
