@@ -2,14 +2,40 @@
 #include "../include/minishell.h"
 #include "../include/tokens.h"
 
+static void print_tokens(t_token **tokens)
+{
+	t_token	*token;
+
+	if (!tokens || !*tokens)
+	{
+		printf("List is empty\n");
+		return ;
+	}
+	else
+	{
+		token = *tokens;
+
+		while (token)
+		{
+			ft_printf("TAG: %s\t\t=>\tCONTENT: %s\n", get_tag_name(token->tag), token->content);
+			token = token->next;
+		}
+	}
+}
+
 static char	*ft_readline(const char *s)
 {
 	static char	*line;
+	char *prefix;
 
 	line = NULL;
 	if (line)
 		free(line);
-	line = readline(s);
+#ifndef DEBUG
+	prefix = ft_strjoin(BOLD_GREEN, s);
+	prefix = ft_strjoin(prefix, RESET);
+#endif
+	line = readline(prefix);
 	if (line && *line)
 		add_history(line);
 	return (line);
@@ -24,9 +50,7 @@ static t_list	*parse_tokens(t_token **tokens)
 		return (NULL);
 	readline->command = ft_calloc(2, sizeof(char *));
 	readline->command[0] = ft_strdup((*tokens)->content);
-	return (
-		ft_printf("Warning: Parsing %d tokens in total\n",
-			token_lstsize(*tokens)), ft_lstnew(readline));
+	return (print_tokens(tokens), ft_lstnew(readline));
 }
 
 t_list	*ms_readline(t_shell *shell, char *str)
@@ -57,18 +81,6 @@ t_list	*ms_readline(t_shell *shell, char *str)
 
 	shell.last_read_line = ft_readline(">>");
 		t_token *tokens = tokenizer2(shell.last_read_line);
-		if (!tokens)
-		{
-			printf("List is empty\n");
-			continue ;
-		}
-		else
-		{
-			while (tokens)
-			{
-				ft_printf("TAG: %s\t\t=>\tCONTENT: %s\n", get_tag_name(tokens->tag), tokens->content);
-				tokens = tokens->next;
-			}
-		}
+		
 
 */

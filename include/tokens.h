@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/09/11 15:39:32 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/09/11 16:22:42 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 # define TOKENS_H
 # include <stdbool.h>
 # include <stdio.h>
-
-# define DELIM "><| \t\n\v\f\r"
 
 # define PIPE "|"
 # define EQUALS "="
