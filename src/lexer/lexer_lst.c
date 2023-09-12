@@ -19,7 +19,7 @@ size_t	token_lstsize(t_token *token)
 	size_t	size;
 
 	size = 0;
-	while (token->next)
+	while (token)
 	{
 		size++;
 		token = token->next;
@@ -45,7 +45,6 @@ void	token_addback(t_token **tokens, t_token *token)
 
 void	token_lstclear(t_token **tokens, t_token_clearfunc func)
 {
-	//Clear all tokens.
 	t_token	*index;
 	t_token	*temp;
 

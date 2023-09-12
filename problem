@@ -1,0 +1,4 @@
+lexer
+	=> Increment index before expansion because $ doesn't parse somehow.
+	=> Lexer is not protected at any level only allocation is protected.
+	=> NOT norm proof.
