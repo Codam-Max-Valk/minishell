@@ -1,13 +1,15 @@
 
 #include "minishell.h"
 
+typedef	struct s_file_node	t_file_node;
+
 typedef struct s_info
 {
 	char			**command;
-	char			**append_out_file;
-	char			**redirect_out_file;
-	char			*heredoc;
-	char			**redirect_in_file;
+	t_list			*inf;
+	t_list			*outf;
+	int				fd_in;
+	int				fd_out;
 	struct s_info	*next;
 	struct s_info	*prev;
 }	t_info;
@@ -16,89 +18,165 @@ typedef	struct s_file_node
 {
 	char 		*file_name;
 	t_tag 		type;
-	t_file_node *next;
 }	t_file_node;
 
-size_t	count_command(t_info *infos)
+int	handle_here()
 {
-	//gooi hier een count_cmd functie
-	return (3);
+	return (STDIN_FILENO);
 }
 
-void	execute_command_single(t_info *infos, char *envp[], int fd_in, int fd_out)
+void	set_start_fd(t_info *info)
+{
+	t_file_node	*tmp;
+
+	while (info->inf != NULL)
+	{
+		tmp = info->inf->content;
+		if (tmp->type == T_REDIRECT_IN)
+			info->fd_in = open(tmp->file_name, O_RDONLY);
+		else if (tmp->type == T_HERE_DOC)
+			info->fd_in = handle_here();
+		if (info->fd_in == -1)
+			perror("infile not open");
+		info->inf = info->inf->next;
+	}
+	while (info->outf != NULL)
+	{
+		tmp = info->outf->content;
+		if (tmp->type == T_APPEND)
+			info->fd_out = open(tmp->file_name, O_CREAT | O_RDWR | O_APPEND, 0644);
+		else if (tmp->type == T_REDIRECT_OUT)
+			info->fd_out = open(tmp->file_name, O_CREAT | O_RDWR | O_TRUNC, 0644);
+		if (info->fd_out == -1)
+			perror("outfile not open");
+		info->outf = info->outf->next;
+	}
+}
+
+char	**parse_env(char **envp)
+{
+	char	**split_path;
+	int		i;
+
+	i = 0;
+	while (envp[i] && ft_strncmp(envp[i], "PATH", 4))
+		i++;
+	split_path = ft_split(envp[i], ':');
+	return (split_path);
+}
+
+char	*cmd_path(char **paths, char *cmd, int path_f)
+{
+	char	*full_cmd;
+	char	*tmp;
+
+	if (!cmd)
+		return (NULL);
+	if (ft_strchr(cmd, '/'))
+		return (cmd);
+	if (path_f == -1)
+		return (NULL);
+	while (*paths)
+	{
+		tmp = ft_strjoin(*paths, "/");
+		full_cmd = ft_strjoin(tmp, cmd);
+		free (tmp);
+		if (access(full_cmd, F_OK) == 0)
+			return (full_cmd);
+		free (full_cmd);
+		paths++;
+	}
+	return (NULL);
+}
+
+void	error_exit(char *function, int error_num)
+{
+	perror(function);
+	exit(error_num);
+}
+
+void	execute_command(t_info *info, char *envp[])
 {
 	pid_t	pid;
+	char	*cmd_p;
 
 	pid = fork();
 	if (pid == -1)
 		exit(EXIT_FAILURE);
 	if (pid == 0)
 	{
-		if (fd_in != STDIN_FILENO)
+		set_start_fd(info);
+		if (info->fd_in != STDIN_FILENO)
 		{
-			if (dup2(fd_in, STDIN_FILENO) < 0)
+			if (dup2(info->fd_in, STDIN_FILENO) < 0)
 				error_exit("dup2", errno);
-			close(fd_in);
+			close(info->fd_in);
 		}		
-		if (fd_out != STDOUT_FILENO)
+		if (info->fd_out != STDOUT_FILENO)
 		{
-			if (dup2(fd_out, STDOUT_FILENO) < 0)
+			if (dup2(info->fd_out, STDOUT_FILENO) < 0)
 				error_exit("dup2", errno);
-			close(fd_out);
+			close(info->fd_out);
 		}
-		if (execve(infos->command[0], infos->command, envp) < 0)
+		cmd_p = cmd_path(parse_env(envp), info->command[0], 1);
+		if (execve(cmd_p, info->command, envp) < 0)
 			error_exit("execve", errno);
-		ft_putstr_fd(infos->command[0], 2);
-		ft_putendl_fd(": command not found", 2);
-		exit(127);
 	}
 	else
 		waitpid(pid, NULL, 0);
 }
 
-void	set_start_fd(int *fd_in, int *fd_out, t_info *info)
-{
-	if (info->heredoc != NULL)
-		handle_heredoc();
-	if (info->redirect_in_file != NULL)
-	{
-		while (*info->redirect_in_file != NULL)
-		{
-			fd_in = open(info->redirect_in_file, O_RDONLY);
-			if (fd_in == -1)
-				perror("infile not open");
-			info->redirect_in_file++;
-		}
-	}
-	if (info->redirect_out_file != NULL)
-	{
-		while (*info->redirect_out_file != NULL)
-		{
-			fd_in = open(info->redirect_out_file, O_CREAT | O_RDWR | O_TRUNC, 0644);
-			fd_in = open(info->redirect_out_file, O_CREAT | O_RDWR | O_APPEND, 0644);
-			if (fd_in == -1)
-				perror("outfile not open");
-			info->redirect_out_file++;
-		}
-	}
-}
-
-void	exec_loop(t_info *info)
+void	exec_loop(t_info *info, char *envp[])
 {
 	int		pipe_fd[2];
-	int		fd_in;
-	int		fd_out;
+	t_info	*current_cmd;
 
-	fd_in = STDIN_FILENO;
-	fd_out = STDOUT_FILENO;
-	while (info)
+	info->fd_in = STDIN_FILENO;
+	if (info && info->next != NULL)
+		if (pipe(pipe_fd) == -1)
+			perror("pipe");
+	while (info != NULL)
 	{
-		set_start_fd(&fd_in, &fd_out, info);
+		current_cmd = info;
+		info = info->next;
+		if (info != NULL)
+			current_cmd->fd_out = pipe_fd[1];
+		else
+			current_cmd->fd_out = STDOUT_FILENO;
+		execute_command(current_cmd, envp);
+		if (info != NULL)
+		{
+			close(current_cmd->fd_out);
+			info->fd_in = pipe_fd[0];
+		}
 	}
+	close(pipe_fd[0]);
 }
 
-int main()
-{
-	t_info a = calloc(1, sizeof(t_info));
-	t_info
-}
+// int main(int ac, char **av, char *envp[])
+// {
+// 	// t_file_node file1 = {"here", T_HERE_DOC};
+// 	// t_file_node file2 = {"in", T_REDIRECT_IN};
+// 	char	*s = "cat";
+// 	t_info *a = calloc(1, sizeof(t_info));
+// 	t_file_node file3 = {"out", T_REDIRECT_OUT};
+// 	t_file_node file4 = {"oapp", T_APPEND};
+
+// 	t_info *b = calloc(1, sizeof(t_info));
+// 	t_file_node file5 = {"out2", T_REDIRECT_OUT};
+// 	t_file_node file6 = {"oapp2", T_APPEND};
+// 	b->command = calloc(3, sizeof(char *));
+// 	b->command[0] = s;
+// 	b->outf = ft_lstnew(&file5);
+// 	ft_lstadd_back(&b->outf, ft_lstnew(&file6));
+// 	(void)ac;
+// 	// (void)av;
+// 	// a->inf = ft_lstnew(&file1);
+// 	// ft_lstadd_back(&a->inf, ft_lstnew(&file2));
+// 	a->command = &av[1];
+// 	a->next = b;
+// 	a->outf = ft_lstnew(&file3);
+// 	ft_lstadd_back(&a->outf, ft_lstnew(&file4));
+// 	exec_loop(a, envp);
+// 	return (0);
+// }
