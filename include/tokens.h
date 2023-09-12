@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/09/11 16:37:04 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/09/12 15:21:44 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # define PIPE "|"
 # define EQUALS "="
 # define EXPANSION "$"
+# define SEMICOLUMN ";"
 # define DOUBLE_QUOTE "\""
 # define SINGLE_QUOTE "\'"
 # define REDIRECT_IN "<"
@@ -38,8 +39,9 @@ typedef enum e_tag
 	T_HERE_DOC		= 7,
 	T_EQUALS		= 8,
 	T_EXPANSION		= 9,
-	T_COMMAND		= 10,
-	T_ARGUMENT		= 11,
+	T_SEMICOLUMN	= 10,
+	T_COMMAND		= 11,
+	T_ARGUMENT		= 12,
 }	t_tag;
 
 typedef struct s_token
@@ -69,6 +71,7 @@ int			ft_issymbol(t_tag tag);
 int			get_quote_length(char *s);
 int			get_symbol_length(char *s);
 int			get_content_length(char *s);
+int			get_redirect_length(char *s);
 int			get_token_length(t_tag tag);
 
 //lexer.c

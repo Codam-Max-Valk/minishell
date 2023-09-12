@@ -21,10 +21,11 @@ const char	*get_tag_name(t_tag tag)
 		return ("EQUALS");
 	else if (tag == T_EXPANSION)
 		return ("EXPANSION");
+	else if (tag == T_SEMICOLUMN)
+		return ("SEMICOLUMN");
 	else if (tag == T_COMMAND)
 		return ("COMMAND");
-	else
-		return ("NONE");
+	return ("NONE");
 }
 
 static int	tokenize(t_token **tokens, char *s, t_tag tag, t_token_lengthfunc f)
@@ -62,6 +63,8 @@ t_token	*tokenizer2(char *s)
 		tag = guess_tag(&s[index]);
 		if (tag == T_SINGLE_QUOTE || tag == T_DOUBLE_QUOTE)
 			x = tokenize(&tokens, &s[index], tag, get_quote_length);
+		else if (tag == T_APPEND || tag == T_REDIRECT_IN || tag == T_REDIRECT_OUT)
+			x = tokenize(&tokens, &s[index], tag, get_redirect_length);
 		else if (ft_issymbol(tag))
 			x = tokenize(&tokens, &s[index], tag, get_symbol_length);
 		else if (tag == T_EXPANSION)
