@@ -27,7 +27,7 @@ t_env	*initialize_environment(char **envp)
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell	shell;
-	t_list	*tokens;
+	t_info	*info;
 	t_env	*env;
 
 	(void) argc;
@@ -36,11 +36,10 @@ int	main(int argc, char **argv, char **envp)
 	ft_printf("%s\n", *find_environment_key_as_2d(&env, "PATH"));
 	while (true)
 	{
-		tokens = ms_readline(&shell, ">>");
-		if (!tokens)
+		info = ms_readline(&shell, ">>");
+		if (!info)
 			continue ;
-		if (strcmp(((t_readline *)tokens->content)->command[0], "exit") == 0)
-			break ;
+		exec_loop(info, envp);
 	}
 	return (EXIT_SUCCESS);
 }

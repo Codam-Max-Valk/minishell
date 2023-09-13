@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/09/13 13:39:16 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/09/13 14:45:19 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef enum e_tag
 	T_SEMICOLUMN	= 10,
 	T_COMMAND		= 11,
 	T_ARGUMENT		= 12,
+	T_END			= 13,
 }	t_tag;
 
 typedef struct s_token

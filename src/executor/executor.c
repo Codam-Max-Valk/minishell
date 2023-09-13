@@ -1,25 +1,6 @@
 
 #include "minishell.h"
 
-typedef	struct s_file_node	t_file_node;
-
-typedef struct s_info
-{
-	char			**command;
-	t_list			*inf;
-	t_list			*outf;
-	int				fd_in;
-	int				fd_out;
-	struct s_info	*next;
-	struct s_info	*prev;
-}	t_info;
-
-typedef	struct s_file_node
-{
-	char 		*file_name;
-	t_tag 		type;
-}	t_file_node;
-
 int	handle_here()
 {
 	return (STDIN_FILENO);
@@ -153,30 +134,30 @@ void	exec_loop(t_info *info, char *envp[])
 	close(pipe_fd[0]);
 }
 
-// int main(int ac, char **av, char *envp[])
-// {
-// 	// t_file_node file1 = {"here", T_HERE_DOC};
-// 	// t_file_node file2 = {"in", T_REDIRECT_IN};
-// 	char	*s = "cat";
-// 	t_info *a = calloc(1, sizeof(t_info));
-// 	t_file_node file3 = {"out", T_REDIRECT_OUT};
-// 	t_file_node file4 = {"oapp", T_APPEND};
+ int maain(int ac, char **av, char *envp[])
+ {
+ 	// t_file_node file1 = {"here", T_HERE_DOC};
+ 	// t_file_node file2 = {"in", T_REDIRECT_IN};
+ 	char	*s = "cat";
+ 	t_info *a = calloc(1, sizeof(t_info));
+ 	t_file_node file3 = {"out", T_REDIRECT_OUT};
+ 	t_file_node file4 = {"oapp", T_APPEND};
 
-// 	t_info *b = calloc(1, sizeof(t_info));
-// 	t_file_node file5 = {"out2", T_REDIRECT_OUT};
-// 	t_file_node file6 = {"oapp2", T_APPEND};
-// 	b->command = calloc(3, sizeof(char *));
-// 	b->command[0] = s;
-// 	b->outf = ft_lstnew(&file5);
-// 	ft_lstadd_back(&b->outf, ft_lstnew(&file6));
-// 	(void)ac;
-// 	// (void)av;
-// 	// a->inf = ft_lstnew(&file1);
-// 	// ft_lstadd_back(&a->inf, ft_lstnew(&file2));
-// 	a->command = &av[1];
-// 	a->next = b;
-// 	a->outf = ft_lstnew(&file3);
-// 	ft_lstadd_back(&a->outf, ft_lstnew(&file4));
-// 	exec_loop(a, envp);
-// 	return (0);
-// }
+ 	t_info *b = calloc(1, sizeof(t_info));
+ 	t_file_node file5 = {"out2", T_REDIRECT_OUT};
+ 	t_file_node file6 = {"oapp2", T_APPEND};
+ 	b->command = calloc(3, sizeof(char *));
+ 	b->command[0] = s;
+ 	//b->outf = ft_lstnew(&file5);/
+ 	//ft_lstadd_back(&b->outf, ft_lstnew(&file6));
+ 	(void)ac;
+ 	// (void)av;
+ 	// a->inf = ft_lstnew(&file1);
+ 	// ft_lstadd_back(&a->inf, ft_lstnew(&file2));
+ 	a->command = &av[1];
+ 	a->next = b;
+ 	//a->outf = ft_lstnew(&file3);
+ 	//ft_lstadd_back(&a->outf, ft_lstnew(&file4));
+ 	exec_loop(a, envp);
+ 	return (0);
+ }

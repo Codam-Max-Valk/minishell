@@ -82,5 +82,6 @@ t_token	*tokenizer2(char *s)
 		else
 			return (token_lstclear(&tokens, token_free), NULL);
 	}
+	token_addback(&tokens, create_token("NONE", T_END)); //Solid cliphanger to make this code function temporary
 	return (tokens);
 }

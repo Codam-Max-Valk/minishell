@@ -1,0 +1,39 @@
+total 88
+drwxr-xr-x 10 cbijman piscine   292 Sep 13 14:31 .
+drwxr-xr-x 10 cbijman piscine   261 Sep 13 13:15 ..
+-rwxr-xr-x  1 cbijman piscine 22144 Sep 13 14:31 a.out
+drwxr-xr-x  2 cbijman piscine    49 Sep  6 14:32 docs
+drwxr-xr-x  8 cbijman piscine   276 Sep 13 14:25 .git
+-rw-r--r--  1 cbijman piscine    55 Sep  7 13:36 .gitignore
+-rw-r--r--  1 cbijman piscine    83 Sep  6 14:32 .gitmodules
+drwxr-xr-x  2 cbijman piscine    34 Sep  7 13:35 hidden
+drwxr-xr-x  2 cbijman piscine    72 Sep 13 13:18 include
+drwxr-xr-x  6 cbijman piscine   104 Sep  7 12:22 libft
+-rw-r--r--  1 cbijman piscine   998 Sep 13 13:43 Makefile
+-rw-r--r--  1 cbijman piscine   534 Sep 13 13:43 Makefile_dev
+-rwxr-xr-x  1 cbijman piscine 37872 Sep 13 14:28 Minishell
+-rw-r--r--  1 cbijman piscine     0 Sep 13 14:31 oapp
+-rw-r--r--  1 cbijman piscine     0 Sep 13 14:31 oapp2
+drwxr-xr-x  2 cbijman piscine    20 Sep  7 12:21 obj
+-rw-r--r--  1 cbijman piscine     0 Sep 13 14:31 out
+-rw-r--r--  1 cbijman piscine     0 Sep 13 14:31 out2
+-rw-r--r--  1 cbijman piscine   165 Sep 11 16:39 problem
+-rw-r--r--  1 cbijman piscine  1047 Sep  6 14:32 README.md
+drwxr-xr-x  6 cbijman piscine   138 Sep 13 14:28 src
+drwxr-xr-x  2 cbijman piscine    75 Sep  7 12:15 .vscode
+a.out
+docs
+hidden
+include
+libft
+Makefile
+Makefile_dev
+Minishell
+oapp
+oapp2
+obj
+out
+out2
+problem
+README.md
+src
