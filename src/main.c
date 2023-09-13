@@ -24,12 +24,18 @@ t_env	*initialize_environment(char **envp)
 	return (env);
 }
 
+void	lk()
+{
+	system("leaks -q Minishell");
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell	shell;
 	t_list	*tokens;
 	t_env	*env;
 
+	atexit(&lk);
 	(void) argc;
 	(void) argv;
 	env = initialize_environment(envp);

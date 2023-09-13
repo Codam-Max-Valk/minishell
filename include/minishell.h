@@ -36,7 +36,7 @@ typedef struct s_shell
 typedef struct s_readline
 {
 	char			**command;
-	char			*heredoc;
+	char			**heredoc;
 	char			**append_out_file;
 	char			**redirect_out_file;
 	char			**redirect_in_file;

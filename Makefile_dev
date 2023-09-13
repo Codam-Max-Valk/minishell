@@ -11,6 +11,7 @@ EXTRA_LIBFT_FUNCS = ${shell find ./src/libft_funcs/ -name "ft_*.c"}
 .QUIET:
 
 default:
+	@$(MAKE) -C ./libft
 	@$(CC) $(FILES) -DDEBUG $(INCLUDE) $(LIBRL) $(LIBFT) $(EXEC)
 	@./$(NAME)
 	
