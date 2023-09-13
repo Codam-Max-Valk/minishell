@@ -26,7 +26,7 @@ static void print_tokens(t_token **tokens)
 static char	*ft_readline(const char *s)
 {
 	static char	*line;
-	char *prefix;
+	char		*prefix;
 
 	line = NULL;
 	if (line)

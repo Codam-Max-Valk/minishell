@@ -34,6 +34,9 @@ dev:
 dev_tokens:
 	$(MAKE) tokens -f ./Makefile_dev
 
+dev_exec:
+	$(MAKE) exec -f ./Makefile_dev
+
 clean:
 	@rm -f $(OBJFILES)
 	@rm -rf $(OBJ_DIR)

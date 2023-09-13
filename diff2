@@ -1,0 +1,8 @@
+>>cat < Makefile | grep > out -v "MAKE"
+TAG: COMMAND			=>      CONTENT: cat
+TAG: REDIRECT_IN		=>      CONTENT: Makefile
+TAG: PIPE               =>      CONTENT: |
+TAG: COMMAND            =>      CONTENT: grep
+TAG: REDIRECT_OUT		=>      CONTENT: out
+TAG: COMMAND            =>      CONTENT: -v
+TAG: DOUBLE_QUOTE		=>      CONTENT: MAKE

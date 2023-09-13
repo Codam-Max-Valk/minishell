@@ -41,14 +41,19 @@ int	get_symbol_length(char *s)
 
 int get_redirect_length(char *s)
 {
-	int	length;
+	t_tag	tag;
+	int		length;
 
-	length = 0;
 	if (!s || !*s)
 		return (PARSE_FAILURE);
-	while (s[length] && s[length] >= 32 && s[length] <= 126 && ft_istoken(&s[length]))
+	tag = guess_tag(s);
+	if (!tag)
+		return (PARSE_FAILURE);
+	length = get_token_length(tag);
+	if (ft_isspace(s[length]))
 		length++;
-	ft_printf("Length: %d\n", length);
+	while (s[length] && !guess_tag(&s[length]) && !ft_isspace(s[length]))
+		length++;
 	return (length);
 }
 
@@ -84,3 +89,16 @@ int	get_token_length(t_tag tag)
 		return (2);
 	return (0);
 }
+
+/*
+TAG: COMMAND            =>      CONTENT: cat
+TAG: REDIRECT_IN		=>      CONTENT: 
+TAG: COMMAND            =>      CONTENT: Makefile
+TAG: PIPE               =>      CONTENT: |
+TAG: COMMAND            =>      CONTENT: grep
+TAG: REDIRECT_OUT		=>      CONTENT: 
+TAG: COMMAND            =>      CONTENT: out
+TAG: COMMAND            =>      CONTENT: -v
+TAG: DOUBLE_QUOTE		=>      CONTENT: MAKE
+
+*/

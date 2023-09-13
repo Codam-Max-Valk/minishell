@@ -43,6 +43,8 @@ typedef struct s_readline
 	t_tag			tag;
 }	t_readline;
 
+//Typedefs
+
 int		add_environment_variable(t_env **env, char *key, char *value);
 int		get_environment_size(t_env **env);
 t_env	*find_environment_key(t_env **env, char *key);

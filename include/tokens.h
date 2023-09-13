@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/09/12 15:21:44 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/09/13 13:39:16 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define TOKENS_H
 # include <stdbool.h>
 # include <stdio.h>
+
+# define DELIMITOR "><\"\' \t\n\v\f\r"
 
 # define PIPE "|"
 # define EQUALS "="

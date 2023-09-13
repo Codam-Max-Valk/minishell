@@ -32,6 +32,7 @@ static int	tokenize(t_token **tokens, char *s, t_tag tag, t_token_lengthfunc f)
 {
 	t_token	*token;
 	char	*str;
+	char	*str1;
 	int		length;
 
 	length = f(s);
@@ -42,11 +43,14 @@ static int	tokenize(t_token **tokens, char *s, t_tag tag, t_token_lengthfunc f)
 	str = ft_substr(s, 0, length);
 	if (!str)
 		return (PARSE_FAILURE);
-	token = create_token(str, tag);
+	str1 = ft_strtrim(str, DELIMITOR);
+	if (!str1)
+		return (free(str), PARSE_FAILURE);
+	token = create_token(str1, tag);
 	if (!token)
 		return (PARSE_FAILURE);
 	token_addback(tokens, token);
-	return (length);
+	return (free(str), length);
 }
 
 t_token	*tokenizer2(char *s)
@@ -63,7 +67,7 @@ t_token	*tokenizer2(char *s)
 		tag = guess_tag(&s[index]);
 		if (tag == T_SINGLE_QUOTE || tag == T_DOUBLE_QUOTE)
 			x = tokenize(&tokens, &s[index], tag, get_quote_length);
-		else if (tag == T_APPEND || tag == T_REDIRECT_IN || tag == T_REDIRECT_OUT)
+		else if (tag == T_HERE_DOC || tag == T_APPEND || tag == T_REDIRECT_IN || tag == T_REDIRECT_OUT)
 			x = tokenize(&tokens, &s[index], tag, get_redirect_length);
 		else if (ft_issymbol(tag))
 			x = tokenize(&tokens, &s[index], tag, get_symbol_length);
