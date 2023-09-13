@@ -37,30 +37,50 @@ static char	*ft_readline(const char *s)
 	return (line);
 }
 
+static t_token	*emplace_tokens(t_info **info, t_token **tokens)
+{
+	t_info	*tmp;
+	t_info	*node;
+	t_token *token;
+	size_t	index;
+
+	index = 0;
+	token = *tokens;
+	node = ft_calloc(1, sizeof(t_info));
+	node->command = ft_calloc(16, sizeof(char *)); //Fix by calculating how many commands there are between the pipes. or Begin till (pipe / end)
+	while (token->tag != T_PIPE && token->tag != T_END)
+	{
+		if (token->tag == T_COMMAND)
+			node->command[index++] = ft_strdup(token->content);
+		token = token->next;
+	}
+	if (!*info)
+		*info = node;
+	else
+	{
+		tmp = *info;
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = node;
+	}
+	return (token);
+}
+
 static t_info	*parse_tokens(t_token **tokens)
 {
 	t_info		*info;
 	t_token		*token;
 	t_file_node *node;
-	size_t		index;
 
-	info = ft_calloc(1, sizeof(t_info));
-	if (!info)
-		return (NULL);	
 	node = NULL;
-	index = 0;
+	info = NULL;
 	token = *tokens;
-	
-	//BEGIN of "Fix this later."
-	info->command = ft_calloc(16, sizeof(char *));
-	//END of "Fix this later."
-
-	while (token->tag != T_PIPE && token->tag != T_END)
+	while (token)
 	{
-		if (token->tag == T_COMMAND)
-			info->command[index++] = ft_strdup(token->content);
+		token = emplace_tokens(&info, &token);
+		if (token->tag == T_PIPE || token->tag == T_END)
+			token = token->next;
 	}
-	ft_printf("Tokens parsed\n");
 	return (print_tokens(tokens), info);
 }
 
