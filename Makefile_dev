@@ -14,6 +14,9 @@ default:
 	@$(MAKE) -C ./libft
 	@$(CC) $(FILES) -DDEBUG $(INCLUDE) $(LIBRL) $(LIBFT) $(EXEC)
 	@./$(NAME)
+
+exec:
+	$(CC) ./src/executor/executor.c $(EXTRA_LIBFT_FUNCS) $(INCLUDE) $(LIBRL) $(LIBFT) -o executor.out
 	
 tokens:
 	$(CC) ${shell find ./src -name "lexer*.c"} $(EXTRA_LIBFT_FUNCS) $(INCLUDE) $(LIBRL) $(LIBFT) -o tokens.out
