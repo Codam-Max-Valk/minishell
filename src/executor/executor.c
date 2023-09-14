@@ -145,9 +145,4 @@ void	exec_loop(t_info *info, char *envp[])
 			current_cmd->fd_out = STDOUT_FILENO;
 		execute_command(current_cmd, envp);
 	}
-	// if (has_p == true)
-	// {
-	// 	close(current_cmd->pipe_fd[1]);
-	// 	close(current_cmd->pipe_fd[0]);
-	// }
 }
