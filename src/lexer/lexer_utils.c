@@ -42,19 +42,26 @@ int	get_symbol_length(char *s)
 int get_redirect_length(char *s)
 {
 	t_tag	tag;
+	int		index;
 	int		length;
 
+	length = 0;
 	if (!s || !*s)
 		return (PARSE_FAILURE);
 	tag = guess_tag(s);
 	if (!tag)
 		return (PARSE_FAILURE);
-	length = get_token_length(tag);
-	if (ft_isspace(s[length]))
+	index = get_token_length(tag);
+	while (ft_isspace(s[index]))
+		index++;
+	while (s[index] && ft_isalnum(s[index]))
+	{
 		length++;
-	while (s[length] && !guess_tag(&s[length]) && !ft_isspace(s[length]))
-		length++;
-	return (length);
+		index++;
+	}
+	if (!length)
+		return (PARSE_FAILURE);
+	return (index);
 }
 
 int	get_content_length(char *s)
@@ -64,7 +71,7 @@ int	get_content_length(char *s)
 	length = 0;
 	if (!s || !*s)
 		return (PARSE_FAILURE);
-	while (s[length] && !ft_isspace(s[length]) && !guess_tag(&s[length]))
+	while (s[length] && ft_isalnum(s[length]))
 		length++;
 	return (length);
 }

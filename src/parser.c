@@ -4,21 +4,21 @@
 
 static void print_tokens(t_token **tokens)
 {
-//	t_token	*token;
-//	if (!tokens || !*tokens)
-//	{
-//		printf("List is empty\n");
-//		return ;
-//	}
-//	else
-//	{
-//		token = *tokens;
-//		while (token)
-//		{
-//			ft_printf("TAG: %s\t\t=>\tCONTENT: %s\n", get_tag_name(token->tag), token->content);
-//			token = token->next;
-//		}
-//	}
+	t_token	*token;
+	if (!tokens || !*tokens)
+	{
+		printf("List is empty\n");
+		return ;
+	}
+	else
+	{
+		token = *tokens;
+		while (token)
+		{
+			ft_printf("TAG: %s\t\t=>\tCONTENT: %s\n", get_tag_name(token->tag), token->content);
+			token = token->next;
+		}
+	}
 }
 
 static char	*ft_readline(const char *s)

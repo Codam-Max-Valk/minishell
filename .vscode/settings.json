@@ -41,7 +41,7 @@
 		"**/Thumbs.db": true,
 		"**/.vscode": true,
 		"obj": true,
-		"libft": true,
+		"libft": false,
 		".gitignore": true,
 		".gitmodules": true,
 		"README.md": true,
