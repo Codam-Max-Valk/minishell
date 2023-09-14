@@ -35,7 +35,7 @@ int	main(int argc, char **argv, char **envp)
 	t_info	*info;
 	t_env	*env;
 
-	atexit(&lk);
+	// atexit(&lk);
 	(void) argc;
 	(void) argv;
 	env = initialize_environment(envp);
