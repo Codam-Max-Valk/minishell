@@ -4,21 +4,21 @@
 
 static void print_tokens(t_token **tokens)
 {
-	t_token	*token;
-	if (!tokens || !*tokens)
-	{
-		printf("List is empty\n");
-		return ;
-	}
-	else
-	{
-		token = *tokens;
-		while (token)
-		{
-			ft_printf("TAG: %s\t\t=>\tCONTENT: %s\n", get_tag_name(token->tag), token->content);
-			token = token->next;
-		}
-	}
+	//t_token	*token;
+	//if (!tokens || !*tokens)
+	//{
+	//	printf("List is empty\n");
+	//	return ;
+	//}
+	//else
+	//{
+	//	token = *tokens;
+	//	while (token)
+	//	{
+	//		ft_printf("TAG: %s\t\t=>\tCONTENT: %s\n", get_tag_name(token->tag), token->content);
+	//		token = token->next;
+	//	}
+	//}
 }
 
 static char	*ft_readline(const char *s)
@@ -39,9 +39,9 @@ static char	*ft_readline(const char *s)
 
 static t_token	*emplace_tokens(t_info **info, t_token **tokens)
 {
-	t_info	*tmp;
 	t_info	*node;
-	t_token *token;
+	t_info	*tmp_nod;
+	t_token	*token;
 	t_token	*tmp_tok;
 	size_t	index;
 
@@ -49,12 +49,25 @@ static t_token	*emplace_tokens(t_info **info, t_token **tokens)
 	token = *tokens;
 	node = ft_calloc(1, sizeof(t_info));
 	node->command = ft_calloc(16, sizeof(char *)); //Fix by calculating how many commands there are between the pipes. or Begin till (pipe / end)
-	while (token->tag != T_PIPE && token->tag != T_END)
+	while (token && token->tag != T_PIPE && token->tag != T_END)
 	{
-		if (token->tag == T_COMMAND
-			|| token->tag == T_DOUBLE_QUOTE || token->tag == T_SINGLE_QUOTE)
+		if (token->tag == T_COMMAND && token->next->tag == T_EQUALS)
+		{
+			if (token->next->next->tag != T_COMMAND)
+			{
+				token = token->next;
+				ft_printf("Not a valid key & value argument\n");
+				continue ;
+			}
+			ft_printf("[Key] = %s\n[Value] = %s\n",
+				token->content,
+				token->next->next->content);
+			token = token->next->next;
+		}
+		else if (token->tag == T_EXPANSION); //Lmaooo!
+		else if (token->tag == T_COMMAND || token->tag == T_DOUBLE_QUOTE || token->tag == T_SINGLE_QUOTE)
 			node->command[index++] = ft_strdup(token->content);
-		if (token->tag == T_REDIRECT_OUT || token->tag == T_APPEND)
+		else if (token->tag == T_REDIRECT_OUT || token->tag == T_APPEND)
 		{
 			tmp_tok = token_dup(token);
 			if (!tmp_tok)
@@ -62,7 +75,7 @@ static t_token	*emplace_tokens(t_info **info, t_token **tokens)
 			token_addback(&node->outf, tmp_tok);
 			tmp_tok = NULL;
 		}
-		if (token->tag == T_REDIRECT_IN)
+		else if (token->tag == T_REDIRECT_IN)
 		{
 			tmp_tok = token_dup(token);
 			if (!tmp_tok)
@@ -76,10 +89,10 @@ static t_token	*emplace_tokens(t_info **info, t_token **tokens)
 		*info = node;
 	else
 	{
-		tmp = *info;
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = node;
+		tmp_nod = *info;
+		while (tmp_nod->next)
+			tmp_nod = tmp_nod->next;
+		tmp_nod->next = node;
 	}
 	return (token);
 }
@@ -91,6 +104,8 @@ static t_info	*parse_tokens(t_token **tokens)
 
 	info = NULL;
 	token = *tokens;
+	if ((*tokens)->tag == T_END)
+		return (NULL);
 	while (token)
 	{
 		token = emplace_tokens(&info, &token);

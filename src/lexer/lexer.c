@@ -25,6 +25,8 @@ const char	*get_tag_name(t_tag tag)
 		return ("SEMICOLUMN");
 	else if (tag == T_COMMAND)
 		return ("COMMAND");
+	else if (tag == T_END)
+		return ("END");
 	return ("NONE");
 }
 
@@ -50,7 +52,7 @@ static int	tokenize(t_token **tokens, char *s, t_tag tag, t_token_lengthfunc f)
 	if (!token)
 		return (PARSE_FAILURE);
 	token_addback(tokens, token);
-	return (free(str), length);
+	return (free(str), free(str1), length);
 }
 
 t_token	*tokenizer2(char *s)
@@ -82,6 +84,12 @@ t_token	*tokenizer2(char *s)
 		else
 			return (token_lstclear(&tokens, token_free), NULL);
 	}
-	token_addback(&tokens, token_create("NONE", T_END)); //Solid cliphanger to make this code function temporary
+	token_addback(&tokens, token_create(NULL, T_END)); //Solid cliphanger to make this code function temporary
 	return (tokens);
+}
+
+void	token_free(t_token *token)
+{
+	free(token->content);
+	free(token);
 }

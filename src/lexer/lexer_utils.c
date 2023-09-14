@@ -23,7 +23,7 @@ int	get_quote_length(char *s)
 	return (length);
 }
 
-int get_redirect_length(char *s)
+int	get_redirect_length(char *s)
 {
 	t_tag	tag;
 	int		index;
@@ -71,7 +71,9 @@ int	get_content_length(char *s)
 	length = 0;
 	if (!s || !*s)
 		return (PARSE_FAILURE);
-	while (s[length] && ft_isalnum(s[length]))
+	while (s[length]
+		&& !ft_isspace(s[length])
+		&& !guess_tag(&s[length]))
 		length++;
 	return (length);
 }
