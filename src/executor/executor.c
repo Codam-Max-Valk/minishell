@@ -51,16 +51,16 @@ char	*cmd_path(char **paths, char *cmd, int path_f)
 
 void	set_start_fd(t_info *info)
 {
-	t_file_node	*tmp;
+	t_token	*tmp;
 
 	if (info->inf == NULL && info->fd_in == 0)
 		info->fd_in = STDIN_FILENO;
 	while (info->inf != NULL)
 	{
-		tmp = info->inf->content;
-		if (tmp->type == T_REDIRECT_IN)
-			info->fd_in = open(tmp->file_name, O_RDONLY);
-		else if (tmp->type == T_HERE_DOC)
+		tmp = info->inf;
+		if (tmp->tag == T_REDIRECT_IN)
+			info->fd_in = open(tmp->content, O_RDONLY);
+		else if (tmp->tag == T_HERE_DOC)
 			info->fd_in = handle_here();
 		if (info->fd_in == -1)
 			perror("infile not open");
@@ -70,11 +70,11 @@ void	set_start_fd(t_info *info)
 		info->fd_out = STDOUT_FILENO;
 	while (info->outf != NULL)
 	{
-		tmp = info->outf->content;
-		if (tmp->type == T_APPEND)
-			info->fd_out = open(tmp->file_name, O_CREAT | O_RDWR | O_APPEND, 0644);
-		else if (tmp->type == T_REDIRECT_OUT)
-			info->fd_out = open(tmp->file_name, O_CREAT | O_RDWR | O_TRUNC, 0644);
+		tmp = info->outf;
+		if (tmp->tag == T_APPEND)
+			info->fd_out = open(tmp->content, O_CREAT | O_RDWR | O_APPEND, 0644);
+		else if (tmp->tag == T_REDIRECT_OUT)
+			info->fd_out = open(tmp->content, O_CREAT | O_RDWR | O_TRUNC, 0644);
 		if (info->fd_out == -1)
 			perror("outfile not open");
 		info->outf = info->outf->next;

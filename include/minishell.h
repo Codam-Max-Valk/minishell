@@ -36,8 +36,8 @@ typedef struct s_shell
 typedef struct s_info
 {
 	char			**command;
-	t_list			*inf;
-	t_list			*outf;
+	t_token			*inf;
+	t_token			*outf;
 	int				pipe_fd[2];
 	int				fd_in;
 	int				fd_out;
