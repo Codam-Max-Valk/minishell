@@ -38,6 +38,7 @@ typedef struct s_info
 	char			**command;
 	t_list			*inf;
 	t_list			*outf;
+	int				pipe_fd[2];
 	int				fd_in;
 	int				fd_out;
 	struct s_info	*next;
