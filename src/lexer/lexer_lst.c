@@ -8,7 +8,12 @@ t_token	*token_create(char *arg, t_tag tag)
 	token = ft_calloc(1, sizeof(t_token));
 	if (!token)
 		return (NULL);
-	token->content = ft_strdup(arg);
+	if (arg)
+	{
+		token->content = ft_strdup(arg);
+		if (!token->content)
+			return (free(token), NULL);
+	}
 	token->tag = tag;
 	token->next = NULL;
 	return (token);
