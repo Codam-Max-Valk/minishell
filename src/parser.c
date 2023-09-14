@@ -50,7 +50,8 @@ static t_token	*emplace_tokens(t_info **info, t_token **tokens)
 	node->command = ft_calloc(16, sizeof(char *)); //Fix by calculating how many commands there are between the pipes. or Begin till (pipe / end)
 	while (token->tag != T_PIPE && token->tag != T_END)
 	{
-		if (token->tag == T_COMMAND)
+		if (token->tag == T_COMMAND
+			|| token->tag == T_DOUBLE_QUOTE || token->tag == T_SINGLE_QUOTE)
 			node->command[index++] = ft_strdup(token->content);
 		token = token->next;
 	}
@@ -97,10 +98,9 @@ t_info	*ms_readline(t_shell *shell, char *str)
 	shell->last_command = ft_readline(str);
 	if (!shell->last_command)
 		return (ft_printf("^D\n"), NULL); //For signals eventually.
-
 	tokens = tokenizer2(shell->last_command);
 	if (!tokens)
-		return (NULL); //Free input
+		return (ft_printf("List is empty!"), NULL); //Free input
 
 	info = parse_tokens(&tokens);
 	if (!info)
