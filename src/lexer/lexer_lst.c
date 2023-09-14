@@ -1,7 +1,7 @@
 #include "../include/tokens.h"
 #include "../include/libft.h"
 
-t_token	*create_token(char *arg, t_tag tag)
+t_token	*token_create(char *arg, t_tag tag)
 {
 	t_token	*token;
 
@@ -14,17 +14,21 @@ t_token	*create_token(char *arg, t_tag tag)
 	return (token);
 }
 
-size_t	token_lstsize(t_token *token)
+t_token	*token_dup(t_token *token)
 {
-	size_t	size;
+	t_token	*new;
 
-	size = 0;
-	while (token)
+	new = malloc(sizeof(t_token));
+	if (!new)
+		return (NULL);
+	if (token->content)
 	{
-		size++;
-		token = token->next;
+		new->content = ft_strdup(token->content);
+		if (!new->content)
+			return (NULL);
 	}
-	return (size);
+	new->tag = token->tag;
+	return (new);
 }
 
 void	token_addback(t_token **tokens, t_token *token)

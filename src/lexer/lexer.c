@@ -46,7 +46,7 @@ static int	tokenize(t_token **tokens, char *s, t_tag tag, t_token_lengthfunc f)
 	str1 = ft_strtrim(str, DELIMITOR);
 	if (!str1)
 		return (free(str), PARSE_FAILURE);
-	token = create_token(str1, tag);
+	token = token_create(str1, tag);
 	if (!token)
 		return (PARSE_FAILURE);
 	token_addback(tokens, token);
@@ -82,6 +82,6 @@ t_token	*tokenizer2(char *s)
 		else
 			return (token_lstclear(&tokens, token_free), NULL);
 	}
-	token_addback(&tokens, create_token("NONE", T_END)); //Solid cliphanger to make this code function temporary
+	token_addback(&tokens, token_create("NONE", T_END)); //Solid cliphanger to make this code function temporary
 	return (tokens);
 }

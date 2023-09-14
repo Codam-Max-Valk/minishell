@@ -42,6 +42,7 @@ static t_token	*emplace_tokens(t_info **info, t_token **tokens)
 	t_info	*tmp;
 	t_info	*node;
 	t_token *token;
+	t_token	*tmp_tok;
 	size_t	index;
 
 	index = 0;
@@ -53,6 +54,22 @@ static t_token	*emplace_tokens(t_info **info, t_token **tokens)
 		if (token->tag == T_COMMAND
 			|| token->tag == T_DOUBLE_QUOTE || token->tag == T_SINGLE_QUOTE)
 			node->command[index++] = ft_strdup(token->content);
+		if (token->tag == T_REDIRECT_OUT || token->tag == T_APPEND)
+		{
+			tmp_tok = token_dup(token);
+			if (!tmp_tok)
+				return (ft_printf("error: cannot duplicate token\n"), NULL); //Add error handling.
+			token_addback(&node->outf, tmp_tok);
+			tmp_tok = NULL;
+		}
+		if (token->tag == T_REDIRECT_IN)
+		{
+			tmp_tok = token_dup(token);
+			if (!tmp_tok)
+				return (ft_printf("error: cannot duplicate token\n"), NULL); //Add error handling.
+			token_addback(&node->inf, tmp_tok);
+			tmp_tok = NULL;
+		}
 		token = token->next;
 	}
 	if (!*info)
@@ -71,9 +88,7 @@ static t_info	*parse_tokens(t_token **tokens)
 {
 	t_info		*info;
 	t_token		*token;
-	t_file_node *node;
 
-	node = NULL;
 	info = NULL;
 	token = *tokens;
 	while (token)

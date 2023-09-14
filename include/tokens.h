@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/09/14 11:45:29 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/09/14 16:11:28 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ typedef int		(*t_token_lengthfunc)(char *);
 typedef void	(*t_token_clearfunc)(t_token *);
 
 //lexer_lst.c
-t_token		*create_token(char *arg, t_tag tag);
+t_token		*token_create(char *arg, t_tag tag);
+t_token		*token_dup(t_token	*token);
 void		token_addback(t_token **tokens, t_token *token);
-size_t		token_lstsize(t_token *token);
 void		token_lstclear(t_token **tokens, t_token_clearfunc func);
 void		token_free(t_token *token);
 
