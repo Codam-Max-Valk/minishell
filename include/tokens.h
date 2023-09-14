@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/09/14 16:11:28 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/09/14 17:01:53 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,6 @@ t_token		*token_create(char *arg, t_tag tag);
 t_token		*token_dup(t_token	*token);
 void		token_addback(t_token **tokens, t_token *token);
 void		token_lstclear(t_token **tokens, t_token_clearfunc func);
-void		token_free(t_token *token);
-
 //lexer_helpers.c
 t_tag		guess_tag(char *s);
 int			ft_istoken(char *s);
@@ -79,6 +77,7 @@ int			get_token_length(t_tag tag);
 
 //lexer.c
 t_token		*tokenizer2(char *s);
+void		token_free(t_token *token);
 
 //Remove once done.
 const char	*get_tag_name(t_tag tag);

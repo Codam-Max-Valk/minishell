@@ -66,9 +66,3 @@ void	token_lstclear(t_token **tokens, t_token_clearfunc func)
 	}
 	*tokens = NULL;
 }
-
-void	token_free(t_token *token)
-{
-	free(token->content);
-	free(token);
-}
