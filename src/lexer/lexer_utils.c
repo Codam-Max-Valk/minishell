@@ -89,16 +89,3 @@ int	get_token_length(t_tag tag)
 		return (2);
 	return (0);
 }
-
-/*
-TAG: COMMAND            =>      CONTENT: cat
-TAG: REDIRECT_IN		=>      CONTENT: 
-TAG: COMMAND            =>      CONTENT: Makefile
-TAG: PIPE               =>      CONTENT: |
-TAG: COMMAND            =>      CONTENT: grep
-TAG: REDIRECT_OUT		=>      CONTENT: 
-TAG: COMMAND            =>      CONTENT: out
-TAG: COMMAND            =>      CONTENT: -v
-TAG: DOUBLE_QUOTE		=>      CONTENT: MAKE
-
-*/
