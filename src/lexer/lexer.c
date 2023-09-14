@@ -66,7 +66,7 @@ t_token	*tokenizer2(char *s)
 	{
 		tag = guess_tag(&s[index]);
 		if (tag == T_SINGLE_QUOTE || tag == T_DOUBLE_QUOTE)
-			x = tokenize(&tokens, &s[index], T_COMMAND, get_quote_length);
+			x = tokenize(&tokens, &s[index], tag, get_quote_length);
 		else if (tag == T_HERE_DOC || tag == T_APPEND || tag == T_REDIRECT_IN || tag == T_REDIRECT_OUT)
 			x = tokenize(&tokens, &s[index], tag, get_redirect_length);
 		else if (ft_issymbol(tag))
