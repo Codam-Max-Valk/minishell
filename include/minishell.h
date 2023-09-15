@@ -19,6 +19,12 @@
 # include "colors.h"
 # include "tokens.h"
 
+# ifdef MAX_BUILTIN
+#  undef MAX_BUILTIN
+# endif
+
+# define MAX_BUILTIN 10
+
 typedef int	(*t_builtin_func)(int, char **);
 
 typedef struct s_builtin
