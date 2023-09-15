@@ -138,11 +138,3 @@ t_info	*ms_readline(t_shell *shell, char *str)
 	token_lstclear(&tokens, token_free);
 	return (free(shell->last_command), info);
 }
-
-/*
-
-	shell.last_read_line = ft_readline(">>");
-		t_token *tokens = tokenizer2(shell.last_read_line);
-		
-
-*/

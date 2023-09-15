@@ -2,6 +2,7 @@
 *.o
 *.a
 *.out
+.vscode
 bin/
 obj/
 Minishell

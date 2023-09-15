@@ -4,8 +4,8 @@
 int	get_quote_length(char *s)
 {
 	char	type;
+	short	hit;
 	int		length;
-	int		hit;
 
 	if (!s || !*s)
 		return (PARSE_FAILURE);
@@ -25,26 +25,24 @@ int	get_quote_length(char *s)
 
 int	get_redirect_length(char *s)
 {
-	t_tag	tag;
-	int		index;
-	int		length;
+	const t_tag	tag = guess_tag(s);
+	int			index;
+	size_t		length;
 
 	length = 0;
-	if (!s || !*s)
-		return (PARSE_FAILURE);
-	tag = guess_tag(s);
-	if (!tag)
+	if (!s || !*s || !tag)
 		return (PARSE_FAILURE);
 	index = get_token_length(tag);
-	while (ft_isspace(s[index]))
+	while (ft_isspace(s[index])) //Quote handling
 		index++;
-	while (s[index] && ft_isalnum(s[index]))
+	while (s[index] && !ft_isspace(s[index]) && !ft_issymbol(&s[index]))
 	{
 		length++;
 		index++;
 	}
 	if (!length)
-		return (ft_printf("> Missing file name\n"), PARSE_FAILURE);
+		return (ft_printf("> Missing file name\n"), PARSE_FAILURE);	
+	ft_printf("Length: %d\n", index);
 	return (index);
 }
 
@@ -56,7 +54,7 @@ int	get_symbol_length(char *s)
 	length = 0;
 	if (!s || !*s)
 		return (PARSE_FAILURE);
-	if (!ft_istoken(s) || !ft_issymbol(tag))
+	if (!ft_istoken(s) || !ft_issymbol(s))
 		return (PARSE_FAILURE);
 	length = get_token_length(tag);
 	if (length <= 0)

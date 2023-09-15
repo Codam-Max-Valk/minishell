@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/09/14 17:01:53 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/09/15 11:57:05 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void		token_lstclear(t_token **tokens, t_token_clearfunc func);
 //lexer_helpers.c
 t_tag		guess_tag(char *s);
 int			ft_istoken(char *s);
-int			ft_issymbol(t_tag tag);
+int			ft_issymbol(char *s);
 
 //lexer_utils.c * TODO: Add string checks.
 int			get_quote_length(char *s);

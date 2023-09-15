@@ -3,6 +3,8 @@
 
 t_tag	guess_tag(char *s)
 {
+	if (!s || !*s)
+		return (0);
 	if (ft_strncmp(s, APPEND, 2) == 0)
 		return (T_APPEND);
 	else if (ft_strncmp(s, HERE_DOC, 2) == 0)
@@ -39,8 +41,10 @@ int	ft_istoken(char *s)
 	return (0);
 }
 
-int	ft_issymbol(t_tag tag)
+int	ft_issymbol(char *s)
 {
+	const t_tag tag = guess_tag(s);
+	
 	if (tag == T_REDIRECT_IN || tag == T_REDIRECT_OUT
 		|| tag == T_APPEND || tag == T_HERE_DOC
 		|| tag == T_PIPE || tag == T_EQUALS

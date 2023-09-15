@@ -1,31 +1,11 @@
 
 #include "minishell.h"
-#include "executor.h"
 
-int	handle_here(const char *delim)
+int	handle_here()
 {
-	const char *tmp_file = "/tmp/.heredoc_tmp.txt";
-	int			fd;
-	char		*line;
-
-	fd = open(tmp_file, O_CREAT | O_RDWR | O_TRUNC, 0644);
-	if (fd == -1)
-		error_exit("open", errno);
-	while (1)
-	{
-		line = readline(">");
-		if (line == NULL)
-			error_exit("readline", errno);
-		
-	}
 	return (STDIN_FILENO);
 }
 
-void	error_exit(char *function, int error_num)
-{
-	perror(function);
-	exit(error_num);
-}
 
 char	**parse_env(char **envp)
 {
@@ -37,6 +17,12 @@ char	**parse_env(char **envp)
 		i++;
 	split_path = ft_split(envp[i], ':');
 	return (split_path);
+}
+
+void	error_exit(char *function, int error_num)
+{
+	perror(function);
+	exit(error_num);
 }
 
 char	*cmd_path(char **paths, char *cmd, int path_f)
