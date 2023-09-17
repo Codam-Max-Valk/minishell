@@ -18,7 +18,7 @@ bool	fire_builtin(t_shell *shell, char **argv)
 		return (false);
 	while (shell->builtins[i] && ft_strcmp(shell->builtins[i]->command, *argv) == 0)
 		i++;
-	status = shell->builtins[i]->__builtin_handler(10, &argv[1]);
+	status = shell->builtins[i]->__builtin_handler(shell, 10, &argv[1]);
 	return (status == 0);
 }
 

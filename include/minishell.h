@@ -24,13 +24,14 @@
 # endif
 
 # define MAX_BUILTIN 10
+typedef struct s_shell t_shell;
 
-typedef int	(*t_builtin_func)(int, char **);
+typedef int	(*t_builtin_func)(t_shell *, int, char **);
 
 typedef struct s_builtin
 {
 	char	*command;
-	int		(*__builtin_handler)(int, char **);
+	int		(*__builtin_handler)(t_shell *, int, char **);
 }	t_builtin;
 
 typedef struct s_environment
@@ -79,6 +80,6 @@ void	free_builtin(t_builtin *in);
 void	print_builtins(t_shell *shell);
 
 //Builtin functions
-int		ft_cd(int argc, char **argv);
+int		ft_cd(t_shell *shell, int argc, char **argv);
 
 #endif
