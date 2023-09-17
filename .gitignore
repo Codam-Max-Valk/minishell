@@ -2,9 +2,11 @@
 *.o
 *.a
 *.out
+Minishell
+*.out
+
+#Folders
+hidden
 .vscode
 bin/
 obj/
-Minishell
-out
-hidden
