@@ -75,7 +75,7 @@ static t_token	*emplace_tokens(t_info **info, t_token **tokens)
 			token_addback(&node->outf, tmp_tok);
 			tmp_tok = NULL;
 		}
-		else if (token->tag == T_REDIRECT_IN)
+		else if (token->tag == T_REDIRECT_IN || token->tag == T_HERE_DOC)
 		{
 			tmp_tok = token_dup(token);
 			if (!tmp_tok)
