@@ -9,12 +9,12 @@ static void	handle_control_c(int code)
 	rl_redisplay();
 }
 
-void handle_control_d(t_shell *shell)
+void	handle_control_d(t_shell *shell)
 {
-	shell->exited = 0;
+	//fire_builtin(shell, )
 }
 
-void	register_signals()
+void	register_signals(void)
 {
 	signal(SIGINT, handle_control_c);
 	signal(SIGQUIT, SIG_IGN);

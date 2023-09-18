@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/28 15:13:52 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/06/29 17:09:30 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/09/18 16:52:48 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 void	free_double_array(char **s)
 {
-	u_int32_t	i;
+	size_t	i;
 
 	i = 0;
 	while (s[i])

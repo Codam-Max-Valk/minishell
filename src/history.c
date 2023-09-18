@@ -7,7 +7,7 @@
 
 #define HISTORY_FILE "~/.minishell_history"
 
-int	open_historyfile()
+int	open_historyfile(void)
 {
 	int	fd;
 
@@ -30,5 +30,5 @@ void	ms_add_history(char	*str)
 
 	//fd = open_historyfile();
 	//write(fd, str, ft_strlen(str));
-	//add_history(str);
+	add_history(str);
 }

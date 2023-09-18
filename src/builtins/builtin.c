@@ -4,15 +4,19 @@
 bool	fire_builtin(t_shell *shell, char **argv)
 {
 	int	i;
+	int	argc;
 	int	status;
 
 	i = 0;
 	status = 0;
+	argc = 0;
 	if (!does_builtin_exist(shell, *argv))
 		return (false);
-	while (shell->builtins[i] && !ft_strcmp(shell->builtins[i]->command, *argv))
+	while (i < MAX_BUILTIN && ft_strcmp(shell->builtins[i]->command, *argv))
 		i++;
-	status = shell->builtins[i]->__builtin_handler(shell, 10, argv);
+	while (argv[argc])
+		argc++;
+	status = shell->builtins[i]->__builtin_handler(shell, argc, argv);
 	return (status == 0);
 }
 
@@ -26,8 +30,8 @@ bool	set_builtin(t_shell *shell, char *command, t_builtin_func func)
 	if (actual_size > MAX_BUILTIN)
 	{
 		return (ft_printf(
-			"error: attempted to register builtin \'%s\' but limit was exceeded",
-			command), false);
+			"error: attempted to register builtin \'%s\' but limit was exceeded", command),
+			false);
 	}
 	builtin = malloc(sizeof(t_builtin));
 	if (!builtin)
@@ -49,7 +53,7 @@ void	print_builtins(t_shell *shell)
 	while (shell->builtins[i])
 	{
 		ft_printf("[Builtin] (%d/%d) command: %s\n",
-			i,
+			i + 1,
 			shell->size,
 			shell->builtins[i]->command);
 		i++;

@@ -4,21 +4,21 @@
 
 static void print_tokens(t_token **tokens)
 {
-	t_token	*token;
-	if (!tokens || !*tokens)
-	{
-		printf("List is empty\n");
-		return ;
-	}
-	else
-	{
-		token = *tokens;
-		while (token)
-		{
-			ft_printf("TAG: %s\t\t=>\tCONTENT: %s\n", get_tag_name(token->tag), token->content);
-			token = token->next;
-		}
-	}
+	//t_token	*token;
+	//if (!tokens || !*tokens)
+	//{
+	//	printf("List is empty\n");
+	//	return ;
+	//}
+	//else
+	//{
+	//	token = *tokens;
+	//	while (token)
+	//	{
+	//		ft_printf("TAG: %s\t\t=>\tCONTENT: %s\n", get_tag_name(token->tag), token->content);
+	//		token = token->next;
+	//	}
+	//}
 }
 
 static char	*ft_readline(const char *s)
@@ -33,20 +33,18 @@ static char	*ft_readline(const char *s)
 	prefix = ft_strjoin(prefix, RESET); // Malloc protection?
 	line = readline(prefix);
 	if (line && *line)
-		add_history(line);
+		ms_add_history(line);
 	return (line);
 }
 
-static t_token	*emplace_tokens(t_info **info, t_token **tokens)
+static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 {
 	t_info	*node;
 	t_info	*tmp_nod;
-	t_token	*token;
 	t_token	*tmp_tok;
 	size_t	index;
 
 	index = 0;
-	token = *tokens;
 	node = ft_calloc(1, sizeof(t_info));
 	node->command = ft_calloc(16, sizeof(char *)); //Fix by calculating how many commands there are between the pipes. or Begin till (pipe / end)
 	while (token && token->tag != T_PIPE && token->tag != T_END)
@@ -64,7 +62,11 @@ static t_token	*emplace_tokens(t_info **info, t_token **tokens)
 				token->next->next->content);
 			token = token->next->next;
 		}
-		else if (token->tag == T_EXPANSION); //Lmaooo!
+		else if (token->tag == T_EXPANSION)
+		{
+
+			node->command[index++] = ft_strdup(token->content);
+		}
 		else if (token->tag == T_COMMAND || token->tag == T_DOUBLE_QUOTE || token->tag == T_SINGLE_QUOTE)
 			node->command[index++] = ft_strdup(token->content);
 		else if (token->tag == T_REDIRECT_OUT || token->tag == T_APPEND)
@@ -97,7 +99,7 @@ static t_token	*emplace_tokens(t_info **info, t_token **tokens)
 	return (token);
 }
 
-static t_info	*parse_tokens(t_token **tokens)
+static t_info	*parse_tokens(t_shell *shell, t_token **tokens)
 {
 	t_info		*info;
 	t_token		*token;
@@ -108,7 +110,7 @@ static t_info	*parse_tokens(t_token **tokens)
 		return (NULL);
 	while (token)
 	{
-		token = emplace_tokens(&info, &token);
+		token = emplace_tokens(shell, &info, token);
 		if (token->tag == T_PIPE || token->tag == T_END)
 			token = token->next;
 	}
@@ -127,12 +129,13 @@ t_info	*ms_readline(t_shell *shell, char *str)
 
 	shell->last_command = ft_readline(str);
 	if (!shell->last_command)
-		return (handle_control_d(shell), NULL); //For signals eventually.
+		return (handle_control_d(shell), NULL);
+
 	tokens = tokenizer2(shell->last_command);
 	if (!tokens)
 		return (ft_printf("List is empty!\n"), NULL); //Free input
 
-	info = parse_tokens(&tokens);
+	info = parse_tokens(shell, &tokens);
 	if (!info)
 		return (NULL); //Tokenizer freees the tokens themself and returns null.
 	token_lstclear(&tokens, token_free);
