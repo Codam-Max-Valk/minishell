@@ -1,6 +1,11 @@
 
 #include "minishell.h"
-#include "executor.h"
+
+void	error_exit(char *function, int error_num)
+{
+	perror(function);
+	exit(error_num);
+}
 
 int	handle_here(const char *delim)
 {
@@ -16,16 +21,20 @@ int	handle_here(const char *delim)
 		line = readline(">");
 		if (line == NULL)
 			error_exit("readline", errno);
-		
+		if (ft_strcmp(line, (char *)delim) == 0)
+		{
+			free(line);
+			break ;
+		}
+		line = ft_strjoin_free(line, "\n");
+		if (write(fd, line, ft_strlen(line)) == -1)
+			error_exit("write", errno);
+		free(line);
 	}
-	return (STDIN_FILENO);
+	close(fd);
+	return (open(tmp_file, O_RDONLY));
 }
 
-void	error_exit(char *function, int error_num)
-{
-	perror(function);
-	exit(error_num);
-}
 
 char	**parse_env(char **envp)
 {
@@ -75,7 +84,7 @@ void	set_start_fd(t_info *info)
 		if (tmp->tag == T_REDIRECT_IN)
 			info->fd_in = open(tmp->content, O_RDONLY);
 		else if (tmp->tag == T_HERE_DOC)
-			info->fd_in = handle_here();
+			info->fd_in = handle_here(tmp->content);
 		if (info->fd_in == -1)
 			perror("infile not open");
 		info->inf = info->inf->next;
@@ -120,9 +129,14 @@ void	execute_command(t_info *info, char *envp[])
 			close(info->fd_out);
 		}
 		cmd_p = cmd_path(parse_env(envp), info->command[0], 1);
-		if (execve(cmd_p, info->command, envp) < 0)
-			error_exit("execve", errno);
-		exit(1);
+		if (cmd_p != NULL)
+		{
+			if (execve(cmd_p, info->command, envp) < 0)
+				error_exit("execve", errno);
+		}
+		ft_putstr_fd(info->command[0], 2);
+		ft_putendl_fd(": command not found", 2);
+		exit(127);
 	}
 	else
 	{
