@@ -36,6 +36,7 @@ int	main(int argc, char **argv, char **envp)
 	shell = ft_calloc(1, sizeof(t_shell));
 	if (!shell)
 		return (EXIT_FAILURE);
+	shell->exited = 1; //We can change the namings in the future.
 
 	//Make seperate functions for each function.
 	set_builtin(shell, "cd", ft_cd);
@@ -51,11 +52,14 @@ int	main(int argc, char **argv, char **envp)
 	print_builtins(shell); //Builtins kunnen nu gehandeld worden Max.
 	env = initialize_environment(envp);
 	ft_printf("[Environment] %s\n", *find_environment_key_as_2d(&env, "PATH"));
-	while (true)
+	while (shell->exited)
 	{
+		register_signals();
 		info = ms_readline(shell, ">>");
 		if (!info)
+		{
 			continue ;
+		}
 		exec_loop(info, envp);
 	}
 	return (EXIT_SUCCESS);
