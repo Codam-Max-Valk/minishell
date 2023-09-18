@@ -3,6 +3,13 @@
 
 int	ft_env(t_shell *shell, int argc, char **argv)
 {
-	ft_printf("%s command brother\n", *argv);
+	t_env	*tmp;
+
+	tmp = *shell->environment;
+	while (tmp != NULL)
+	{
+		printf("%s=%s\n", tmp->key, tmp->value);
+		tmp = tmp->next;
+	}
 	return (EXIT_SUCCESS);
 }

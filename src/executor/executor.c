@@ -105,7 +105,7 @@ void	set_start_fd(t_info *info)
 
 }
 
-void	execute_command(t_info *info, char *envp[])
+void	execute_command(t_shell *shell, t_info *info, char *envp[])
 {
 	pid_t	pid;
 	char	*cmd_p;
@@ -128,6 +128,8 @@ void	execute_command(t_info *info, char *envp[])
 				error_exit("dup2-2", errno);
 			close(info->fd_out);
 		}
+		if (does_builtin_exist(shell, info->command[0]) == true)
+			exit(fire_builtin(shell, info->command));
 		cmd_p = cmd_path(parse_env(envp), info->command[0], 1);
 		if (cmd_p != NULL)
 		{
@@ -146,17 +148,18 @@ void	execute_command(t_info *info, char *envp[])
 	}
 }
 
-void	exec_loop(t_info *info, char *envp[])
+void	exec_loop(t_shell *shell, t_info *info, char *envp[])
 {
 	t_info	*current_cmd;
-	bool	has_p = false;
+	bool	has_p;
 
+	if (strcmp(info->command[0], "exit") == 0){
+		fire_builtin(shell, info->command);
+		return ;
+	}
 	while (info != NULL)
 	{
-		if (info->next)
-			has_p = true;
-		else
-			has_p = false;
+		has_p = (info->next != NULL);
 		current_cmd = info;
 		info = info->next;
 		if (has_p == true)
@@ -171,6 +174,6 @@ void	exec_loop(t_info *info, char *envp[])
 		}
 		else
 			current_cmd->fd_out = STDOUT_FILENO;
-		execute_command(current_cmd, envp);
+		execute_command(shell, current_cmd, envp);
 	}
 }

@@ -42,7 +42,6 @@ int	get_redirect_length(char *s)
 	}
 	if (!length)
 		return (ft_printf("> Missing file name\n"), PARSE_FAILURE);	
-	ft_printf("Length: %d\n", index);
 	return (index);
 }
 

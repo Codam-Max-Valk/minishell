@@ -3,6 +3,6 @@
 
 int	ft_exit(t_shell *shell, int argc, char **argv)
 {
-	ft_printf("%s command brother\n", *argv);
+	shell->exited = 0;
 	return (EXIT_SUCCESS);
 }

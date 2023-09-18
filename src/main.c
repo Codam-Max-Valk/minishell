@@ -37,6 +37,8 @@ int	main(int argc, char **argv, char **envp)
 	if (!shell)
 		return (EXIT_FAILURE);
 	shell->exited = 1; //We can change the namings in the future.
+	env = initialize_environment(envp);
+	shell->environment = &env;
 
 	//Make seperate functions for each function.
 	set_builtin(shell, "cd", ft_cd);
@@ -50,7 +52,6 @@ int	main(int argc, char **argv, char **envp)
 	fire_builtin(shell, &argv[1]); //Alleen deze func gebruiken met de command uit t_info struct.
 
 	print_builtins(shell); //Builtins kunnen nu gehandeld worden Max.
-	env = initialize_environment(envp);
 	ft_printf("[Environment] %s\n", *find_environment_key_as_2d(&env, "PATH"));
 	while (shell->exited)
 	{
@@ -60,7 +61,7 @@ int	main(int argc, char **argv, char **envp)
 		{
 			continue ;
 		}
-		exec_loop(info, envp);
+		exec_loop(shell, info, envp);
 	}
 	return (EXIT_SUCCESS);
 }
