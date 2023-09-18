@@ -1,12 +1,6 @@
 #include "../../include/libft.h"
 #include "../../include/minishell.h"
 
-// int	ft_echo(t_shell *shell, int argc, char **argv)
-// {
-// 	ft_printf("%s command brother\n", *argv);
-// 	return (EXIT_SUCCESS);
-// }
-
 static bool	is_option_n(char *arg)
 {
 	int	i;
