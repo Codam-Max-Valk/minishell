@@ -1,8 +1,8 @@
 NAME = Minishell
 EXEC = -o $(NAME)
-LIBRL = -lreadline
+LIBRL = -lreadline -L ~/.brew/opt/readline/lib
 LIBFT = -L./libft -lft
-INCLUDE = -I./include
+INCLUDE = -I./include -I ~/.brew/opt/readline/include
 FILES = ${shell find ./src -name "*.c" }
 EXTRA_LIBFT_FUNCS = ${shell find ./src/libft_funcs/ -name "ft_*.c"}
 

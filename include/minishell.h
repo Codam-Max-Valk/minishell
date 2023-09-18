@@ -86,13 +86,13 @@ void	free_builtin(t_builtin *in);
 void	print_builtins(t_shell *shell);
 
 //Builtin functions
-int		ft_cd(t_shell *shell, int argc, char **argv);
-int		ft_unset(t_shell *shell, int argc, char **argv);
-int		ft_export(t_shell *shell, int argc, char **argv);
-int		ft_env(t_shell *shell, int argc, char **argv);
-int		ft_pwd(t_shell *shell, int argc, char **argv);
-int		ft_exit(t_shell *shell, int argc, char **argv);
-int		ft_echo(t_shell *shell, int argc, char **argv);
+int		ft_cd(t_shell *shell, int ac, char **av);
+int		ft_unset(t_shell *shell, int ac, char **av);
+int		ft_export(t_shell *shell, int ac, char **av);
+int		ft_env(t_shell *shell, int ac, char **av);
+int		ft_pwd(t_shell *shell, int ac, char **av);
+int		ft_exit(t_shell *shell, int ac, char **av);
+int		ft_echo(t_shell *shell, int ac, char **av);
 
 //Signals
 void	handle_control_d(t_shell *shell);
