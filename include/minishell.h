@@ -44,7 +44,7 @@ typedef struct s_environment
 typedef struct s_shell
 {
 	char		*last_command;
-	t_builtin	*(builtins[10]);
+	t_builtin	*(builtins[MAX_BUILTIN]);
 	size_t		size;
 	t_list		*parsed_tokens;
 	t_list		*environment;
@@ -81,5 +81,11 @@ void	print_builtins(t_shell *shell);
 
 //Builtin functions
 int		ft_cd(t_shell *shell, int argc, char **argv);
+int		ft_unset(t_shell *shell, int argc, char **argv);
+int		ft_export(t_shell *shell, int argc, char **argv);
+int		ft_env(t_shell *shell, int argc, char **argv);
+int		ft_pwd(t_shell *shell, int argc, char **argv);
+int		ft_exit(t_shell *shell, int argc, char **argv);
+int		ft_echo(t_shell *shell, int argc, char **argv);
 
 #endif

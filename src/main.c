@@ -33,21 +33,20 @@ int	main(int argc, char **argv, char **envp)
 
 	(void) argc;
 	(void) argv;
-	argv++;
 	shell = ft_calloc(1, sizeof(t_shell));
 	if (!shell)
 		return (EXIT_FAILURE);
 
 	//Make seperate functions for each function.
 	set_builtin(shell, "cd", ft_cd);
-	set_builtin(shell, "pwd", ft_cd);
-	set_builtin(shell, "exit", ft_cd);
-	set_builtin(shell, "echo", ft_cd);
-	set_builtin(shell, "env", ft_cd);
-	set_builtin(shell, "export", ft_cd);
-	set_builtin(shell, "unset", ft_cd);
+	set_builtin(shell, "pwd", ft_pwd);
+	set_builtin(shell, "exit", ft_exit);
+	set_builtin(shell, "echo", ft_echo);
+	set_builtin(shell, "env", ft_env);
+	set_builtin(shell, "export", ft_export);
+	set_builtin(shell, "unset", ft_unset);
 
-	fire_builtin(shell, argv); //Alleen deze func gebruiken met de command uit t_info struct.
+	fire_builtin(shell, &argv[1]); //Alleen deze func gebruiken met de command uit t_info struct.
 
 	print_builtins(shell); //Builtins kunnen nu gehandeld worden Max.
 	env = initialize_environment(envp);
