@@ -25,4 +25,4 @@ bool	does_builtin_exist(t_shell *shell, char *command)
 		i++;
 	}
 	return (false);
-};
+}

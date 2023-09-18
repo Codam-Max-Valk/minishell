@@ -1,4 +1,11 @@
-#include "minishell.h"
+#include "../../include/libft.h"
+#include "../../include/minishell.h"
+
+// int	ft_echo(t_shell *shell, int argc, char **argv)
+// {
+// 	ft_printf("%s command brother\n", *argv);
+// 	return (EXIT_SUCCESS);
+// }
 
 static bool	is_option_n(char *arg)
 {
@@ -14,12 +21,12 @@ static bool	is_option_n(char *arg)
 	return (true);
 }
 
-int	command_echo(int ac, char **av)
+int	ft_echo(t_shell *shell, int ac, char **av)
 {
 	bool	option_n;
 	int		i;
 
-	i = 0;
+	i = 1;
 	option_n = false;
 	if (ft_strncmp(av[i], "-n", 2) == 0)
 	{
@@ -29,7 +36,7 @@ int	command_echo(int ac, char **av)
 			i++;
 		}
 	}
-	while (i < ac)
+	while (av[i])
 	{
 		printf("%s", av[i]);
 		if (i < (ac - 1))

@@ -43,8 +43,9 @@ typedef struct s_environment
 
 typedef struct s_shell
 {
+	int			exited;
 	char		*last_command;
-	t_builtin	*(builtins[10]);
+	t_builtin	*(builtins[MAX_BUILTIN]);
 	size_t		size;
 	t_list		*parsed_tokens;
 	t_list		*environment;
@@ -68,6 +69,7 @@ t_env	*find_environment_key(t_env **env, char *key);
 char	**find_environment_key_as_2d(t_env **env, char *key);
 
 t_info	*ms_readline(t_shell *shell, char *str);
+void	register_signals();
 void	exec_loop(t_info *info, char *envp[]);
 
 
@@ -80,6 +82,15 @@ void	free_builtin(t_builtin *in);
 void	print_builtins(t_shell *shell);
 
 //Builtin functions
-int		ft_cd(t_shell *shell, int argc, char **argv);
+int		ft_cd(t_shell *shell, int ac, char **av);
+int		ft_unset(t_shell *shell, int ac, char **av);
+int		ft_export(t_shell *shell, int ac, char **av);
+int		ft_env(t_shell *shell, int ac, char **av);
+int		ft_pwd(t_shell *shell, int ac, char **av);
+int		ft_exit(t_shell *shell, int ac, char **av);
+int		ft_echo(t_shell *shell, int ac, char **av);
+
+//Signals
+void	handle_control_d(t_shell *shell);
 
 #endif
