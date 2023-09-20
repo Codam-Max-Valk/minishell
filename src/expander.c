@@ -13,6 +13,33 @@ char *find_expansion(t_env **env, const char *key)
 	return (node->value);
 }
 
+bool	add_expansion(t_env **env, char *key, char *value)
+{
+	int		i;
+	t_env	*node;
+
+	i = 0;
+	node = *env;
+	if (!key || !*key)
+		return (false);
+	if (*key == '$')
+		add_environment_variable(env, key, find_expansion(env, value));
+	else
+		add_environment_variable(env, key, value);
+	return (true);
+	/*
+	if (token->next->next->tag != T_COMMAND)
+			{
+				token = token->next;
+				ft_printf("Not a valid key & value argument\n");
+				continue ;
+			}
+			ft_printf("[Key] = %s\n[Value] = %s\n",
+				token->content,
+				token->next->next->content);
+			token = token->next->next;*/
+}
+
 int test_case()
 {
 	t_env *env = ft_calloc(1, sizeof(t_env));

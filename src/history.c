@@ -5,19 +5,41 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-#define HISTORY_FILE "~/.minishell_history"
-
-int	open_historyfile(void)
+static int	open_or_create(void)
 {
 	int	fd;
 
-	if (access(HISTORY_FILE, F_OK))
-		fd = open(HISTORY_FILE, O_CREAT | O_RDWR);
-	if (access(HISTORY_FILE, R_OK | W_OK))
-		fd = open(HISTORY_FILE, O_RDWR);
-	if (!fd)
-		return (-1); //History file failed to open...
+	fd = 1000;
+	if (access(HISTORY_FILE, F_OK) == -1)
+		fd = open(HISTORY_FILE, O_CREAT | O_TRUNC | O_RDWR, 0600);
+	if (access(HISTORY_FILE, F_OK | R_OK | W_OK) == 0)
+		fd = open(HISTORY_FILE, O_RDWR | O_TRUNC);
 	return (fd);
+
+}
+
+int	open_historyfile(void)
+{
+	int		fd;
+	int		size;
+	char	*content;
+
+	fd = 0;
+	size = 0;
+	if (access(HISTORY_FILE, F_OK) == -1)
+		fd = open(HISTORY_FILE, O_CREAT | O_TRUNC | O_RDWR, 0600);
+	if (access(HISTORY_FILE, F_OK | R_OK | W_OK) >= 0)
+		fd = open(HISTORY_FILE, O_RDWR);
+	if (fd == -1)
+		return (-1);
+	content = get_next_line(fd);
+	while (content)
+	{
+		add_history(content);
+		size++;
+		content = ft_strtrim(get_next_line(fd), "\n");
+	}
+	return (close(fd), fd);
 }
 
 //Add multiple checks
@@ -26,7 +48,7 @@ int	open_historyfile(void)
 //3. Add history protection
 void	ms_add_history(char	*str)
 {
-	//int	fd;
+	int	fd;
 
 	//fd = open_historyfile();
 	//write(fd, str, ft_strlen(str));

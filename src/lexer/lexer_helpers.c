@@ -28,6 +28,27 @@ t_tag	guess_tag(char *s)
 	return (0);
 }
 
+int	get_token_length(t_tag tag)
+{
+	if (tag == T_REDIRECT_IN)
+		return (1);
+	if (tag == T_REDIRECT_OUT)
+		return (1);
+	if (tag == T_PIPE)
+		return (1);
+	if (tag == T_EQUALS)
+		return (1);
+	if (tag == T_EXPANSION)
+		return (1);
+	if (tag == T_SEMICOLUMN)
+		return (1);
+	if (tag == T_APPEND)
+		return (2);
+	if (tag == T_HERE_DOC)
+		return (2);
+	return (0);
+}
+
 int	ft_istoken(char *s)
 {
 	const int	tag = guess_tag(s);

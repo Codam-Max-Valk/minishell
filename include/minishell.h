@@ -23,7 +23,12 @@
 #  undef MAX_BUILTIN
 # endif
 
+# ifdef HISTORY_FILE
+#  undef HISTORY_FILE
+# endif
+
 # define PREFIX "\x1B[1;32m>> \x1B[0m"
+# define HISTORY_FILE ".minishell_history"
 # define MAX_BUILTIN 10
 
 typedef struct s_shell	t_shell;
@@ -77,6 +82,7 @@ void	exec_loop(t_shell *shell, t_info *info, char *envp[]);
 
 
 //History
+int		open_historyfile(void);
 void	ms_add_history(char	*str);
 
 //Builtins
@@ -101,5 +107,6 @@ void	handle_control_d(t_shell *shell);
 
 //Test
 char	*find_expansion(t_env **env, const char *key);
+bool	add_expansion(t_env **env, char *key, char *value);
 
 #endif

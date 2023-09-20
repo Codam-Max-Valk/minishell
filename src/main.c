@@ -45,8 +45,8 @@ int	main(int argc, char **argv, char **envp)
 	env = initialize_environment(envp);
 	shell->environment = &env;
 
-	// test_case();
-
+	open_historyfile();
+	
 	//Make seperate functions for each function.
 	set_builtin(shell, "cd", ft_cd);
 	set_builtin(shell, "pwd", ft_pwd);
