@@ -50,6 +50,7 @@ typedef struct s_shell
 	size_t		size;
 	t_list		*parsed_tokens;
 	t_env		**environment;
+	char		**envp;
 }	t_shell;
 
 typedef struct s_info
@@ -96,5 +97,8 @@ int		ft_echo(t_shell *shell, int ac, char **av);
 
 //Signals
 void	handle_control_d(t_shell *shell);
+
+//Test
+char	*find_expansion(t_env **env, const char *key);
 
 #endif
