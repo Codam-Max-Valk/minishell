@@ -64,7 +64,6 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 		}
 		else if (token->tag == T_EXPANSION)
 		{
-
 			node->command[index++] = ft_strdup(token->content);
 		}
 		else if (token->tag == T_COMMAND || token->tag == T_DOUBLE_QUOTE || token->tag == T_SINGLE_QUOTE)
