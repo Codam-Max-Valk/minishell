@@ -21,17 +21,15 @@ static void print_tokens(t_token **tokens)
 	//}
 }
 
-static char	*ft_readline(const char *s)
+static char	*ft_readline(void)
 {
-	static char	*line;
+	static char	*line = NULL;
 	char		*prefix;
 
-	line = NULL;
 	if (line)
 		free(line);
-	prefix = ft_strjoin(BOLD_GREEN, s);  // Malloc protection?
-	prefix = ft_strjoin(prefix, RESET); // Malloc protection?
-	line = readline(prefix);
+	line = NULL;
+	line = readline(PREFIX);
 	if (line && *line)
 		ms_add_history(line);
 	return (line);
@@ -126,7 +124,7 @@ t_info	*ms_readline(t_shell *shell, char *str)
 	if (!str || !*str)
 		return (NULL);
 
-	shell->last_command = ft_readline(str);
+	shell->last_command = ft_readline();
 	if (!shell->last_command)
 		return (handle_control_d(shell), NULL);
 
@@ -138,5 +136,5 @@ t_info	*ms_readline(t_shell *shell, char *str)
 	if (!info)
 		return (NULL); //Tokenizer freees the tokens themself and returns null.
 	token_lstclear(&tokens, token_free);
-	return (free(shell->last_command), info);
+	return (info);
 }

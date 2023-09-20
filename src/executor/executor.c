@@ -75,34 +75,42 @@ char	*cmd_path(char **paths, char *cmd, int path_f)
 void	set_start_fd(t_info *info)
 {
 	t_token	*tmp;
+	int		tmp_fd;
 
-	if (info->inf == NULL && info->fd_in == 0)
-		info->fd_in = STDIN_FILENO;
 	while (info->inf != NULL)
 	{
 		tmp = info->inf;
 		if (tmp->tag == T_REDIRECT_IN)
-			info->fd_in = open(tmp->content, O_RDONLY);
+			tmp_fd = open(tmp->content, O_RDONLY);
 		else if (tmp->tag == T_HERE_DOC)
-			info->fd_in = handle_here(tmp->content);
-		if (info->fd_in == -1)
+			tmp_fd = handle_here(tmp->content);
+		if (tmp_fd == -1)
 			perror("infile not open");
+		else 
+		{
+			close(info->fd_in);
+			dup2(tmp_fd, info->fd_in);
+			close(tmp_fd);
+		}
 		info->inf = info->inf->next;
 	}
-	if (info->outf == NULL && info->fd_out == 0)
-		info->fd_out = STDOUT_FILENO;
 	while (info->outf != NULL)
 	{
 		tmp = info->outf;
 		if (tmp->tag == T_APPEND)
-			info->fd_out = open(tmp->content, O_CREAT | O_RDWR | O_APPEND, 0644);
+			tmp_fd = open(tmp->content, O_CREAT | O_RDWR | O_APPEND, 0644);
 		else if (tmp->tag == T_REDIRECT_OUT)
-			info->fd_out = open(tmp->content, O_CREAT | O_RDWR | O_TRUNC, 0644);
-		if (info->fd_out == -1)
+			tmp_fd = open(tmp->content, O_CREAT | O_RDWR | O_TRUNC, 0644);
+		if (tmp_fd == -1)
 			perror("outfile not open");
+		else 
+		{
+			close(info->fd_out);
+			dup2(tmp_fd, info->fd_out);
+			close(tmp_fd);
+		}
 		info->outf = info->outf->next;
 	}
-
 }
 
 void	execute_command(t_shell *shell, t_info *info, char *envp[])
@@ -143,7 +151,9 @@ void	execute_command(t_shell *shell, t_info *info, char *envp[])
 	else
 	{
 		waitpid(pid, NULL, 0);
-		if (info->fd_out == info->pipe_fd[1])
+		if (info->fd_in != STDIN_FILENO)
+			close(info->fd_in);
+		if (info->fd_out != STDOUT_FILENO)
 			close(info->fd_out);
 	}
 }
@@ -153,6 +163,7 @@ void	exec_loop(t_shell *shell, t_info *info, char *envp[])
 	t_info	*current_cmd;
 	bool	has_p;
 
+	info->fd_in = STDIN_FILENO;
 	if (strcmp(info->command[0], "exit") == 0){
 		fire_builtin(shell, info->command);
 		return ;
