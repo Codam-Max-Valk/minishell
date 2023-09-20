@@ -6,10 +6,6 @@ INCLUDE = -I./include -I ~/.brew/opt/readline/include
 FILES = ${shell find ./src -name "*.c" }
 EXTRA_LIBFT_FUNCS = ${shell find ./src/libft_funcs/ -name "ft_*.c"}
 
-.SILENT:
-
-.QUIET:
-
 default:
 	@$(MAKE) -C ./libft
 	@$(CC) $(FILES) -DDEBUG $(INCLUDE) $(LIBRL) $(LIBFT) $(EXEC)

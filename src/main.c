@@ -45,9 +45,8 @@ int	main(int argc, char **argv, char **envp)
 	env = initialize_environment(envp);
 	shell->environment = &env;
 
-	test_case();
+	// test_case();
 
-	return (EXIT_SUCCESS);
 	//Make seperate functions for each function.
 	set_builtin(shell, "cd", ft_cd);
 	set_builtin(shell, "pwd", ft_pwd);
@@ -64,7 +63,7 @@ int	main(int argc, char **argv, char **envp)
 	while (shell->exited)
 	{
 		register_signals();
-		info = ms_readline(shell, ">>");
+		info = ms_readline(shell, ">> ");
 		if (!info)
 		{
 			continue ;

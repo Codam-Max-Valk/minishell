@@ -23,7 +23,7 @@
 #  undef MAX_BUILTIN
 # endif
 
-# define PREFIX "\x1B[1;32m>>\x1B[0m"
+# define PREFIX "\x1B[1;32m>> \x1B[0m"
 # define MAX_BUILTIN 10
 
 typedef struct s_shell	t_shell;

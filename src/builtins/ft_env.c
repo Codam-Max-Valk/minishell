@@ -5,6 +5,8 @@ int	ft_env(t_shell *shell, int argc, char **argv)
 {
 	t_env	*tmp;
 
+	if (!shell->environment || !*shell->environment)
+		return (EXIT_FAILURE);
 	tmp = *shell->environment;
 	while (tmp != NULL)
 	{

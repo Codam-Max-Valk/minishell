@@ -164,7 +164,8 @@ void	exec_loop(t_shell *shell, t_info *info, char *envp[])
 	bool	has_p;
 
 	info->fd_in = STDIN_FILENO;
-	if (strcmp(info->command[0], "exit") == 0){
+	if (strcmp(info->command[0], "exit") == 0 || strcmp(info->command[0], "cd") == 0)
+	{
 		fire_builtin(shell, info->command);
 		return ;
 	}
