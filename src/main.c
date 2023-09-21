@@ -56,8 +56,6 @@ int	main(int argc, char **argv, char **envp)
 	set_builtin(shell, "export", ft_export);
 	set_builtin(shell, "unset", ft_unset);
 
-	fire_builtin(shell, &argv[1]); //Alleen deze func gebruiken met de command uit t_info struct.
-
 	print_builtins(shell); //Builtins kunnen nu gehandeld worden Max.
 	ft_printf("[Environment] %s\n", *find_environment_key_as_2d(&env, "PATH"));
 	while (shell->exited)
@@ -68,7 +66,7 @@ int	main(int argc, char **argv, char **envp)
 		{
 			continue ;
 		}
-		exec_loop(shell, info, envp);
+		//exec_loop(shell, info, envp);
 	}
 	return (EXIT_SUCCESS);
 }

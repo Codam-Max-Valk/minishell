@@ -42,12 +42,12 @@ bool	add_expansion(t_env **env, char *key, char *value)
 
 int test_case()
 {
-	t_env *env = ft_calloc(1, sizeof(t_env));
-	t_env *env1 = ft_calloc(1, sizeof(t_env));
-	t_env *env2 = ft_calloc(1, sizeof(t_env));
-	t_env *env3 = ft_calloc(1, sizeof(t_env));
-	t_env *env4 = ft_calloc(1, sizeof(t_env));
-	
+	t_env	*env = ft_calloc(1, sizeof(t_env));
+	t_env	*env1 = ft_calloc(1, sizeof(t_env));
+	t_env	*env2 = ft_calloc(1, sizeof(t_env));
+	t_env	*env3 = ft_calloc(1, sizeof(t_env));
+	t_env	*env4 = ft_calloc(1, sizeof(t_env));
+
 	env->key = ft_strdup("env1");
 	env1->key = ft_strdup("env2");
 	env2->key = ft_strdup("env3");

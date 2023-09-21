@@ -77,6 +77,16 @@ int	get_content_length(char *s)
 
 int	get_expander_length(char *s)
 {
-	return (1); //We must recognize the expander somehow?
+	int	length;
+
+	length = 0;
+	if (!s || !*s)
+		return (PARSE_FAILURE);
+	while (s[length]
+		&& !ft_isspace(s[length])
+		&& !ft_issymbol(&s[length]))
+		length++;
+	ft_printf("Expander: %s\n", ft_substr(s, 0, length));
+	return (length);
 }
 

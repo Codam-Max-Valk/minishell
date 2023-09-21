@@ -68,8 +68,7 @@ int	ft_issymbol(char *s)
 	
 	if (tag == T_REDIRECT_IN || tag == T_REDIRECT_OUT
 		|| tag == T_APPEND || tag == T_HERE_DOC
-		|| tag == T_PIPE || tag == T_EQUALS
-		|| tag == T_SEMICOLUMN)
+		|| tag == T_PIPE || tag == T_SEMICOLUMN)
 		return (1);
 	return (0);
 }

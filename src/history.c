@@ -1,56 +1,56 @@
 #include "../include/minishell.h"
 #include "../include/libft.h"
 
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
-
 static int	open_or_create(void)
 {
 	int	fd;
 
-	fd = 1000;
+	fd = -1;
 	if (access(HISTORY_FILE, F_OK) == -1)
-		fd = open(HISTORY_FILE, O_CREAT | O_TRUNC | O_RDWR, 0600);
+		fd = open(HISTORY_FILE, O_CREAT | O_TRUNC | O_RDWR | O_APPEND, 0600);
 	if (access(HISTORY_FILE, F_OK | R_OK | W_OK) == 0)
-		fd = open(HISTORY_FILE, O_RDWR | O_TRUNC);
+		fd = open(HISTORY_FILE, O_RDWR | O_APPEND);
 	return (fd);
-
 }
 
 int	open_historyfile(void)
 {
 	int		fd;
-	int		size;
+	size_t	count;
 	char	*content;
+	char	*content1;
 
-	fd = 0;
-	size = 0;
-	if (access(HISTORY_FILE, F_OK) == -1)
-		fd = open(HISTORY_FILE, O_CREAT | O_TRUNC | O_RDWR, 0600);
-	if (access(HISTORY_FILE, F_OK | R_OK | W_OK) >= 0)
-		fd = open(HISTORY_FILE, O_RDWR);
+	fd = open_or_create();
 	if (fd == -1)
 		return (-1);
-	content = get_next_line(fd);
+	content = "\0";
+	count = 0;
 	while (content)
 	{
+		content = get_next_line(fd);
+		if (!content)
+			return (0);
+		content1 = ft_strtrim(content, "\n");
+		if (!content1)
+			return (free(content), 0);
 		add_history(content);
-		size++;
-		content = ft_strtrim(get_next_line(fd), "\n");
+		free(content);
+		free(content1);
+		count++;
 	}
-	return (close(fd), fd);
+	printf("[History] Added %zu lines to history\n", count);
+	return (close(fd), 1);
 }
 
-//Add multiple checks
-//1. Add write protection
-//2. Add file descriptor protection
-//3. Add history protection
 void	ms_add_history(char	*str)
 {
-	int	fd;
+	const int	fd = open_or_create();
 
-	//fd = open_historyfile();
-	//write(fd, str, ft_strlen(str));
+	if (fd != -1)
+	{
+		ft_putstr_fd(str, fd);
+		ft_putchar_fd('\n', fd);
+		close(fd);
+	}
 	add_history(str);
 }

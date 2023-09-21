@@ -10,6 +10,8 @@
 # include <signal.h>
 # include <string.h>
 # include <fcntl.h>
+# include <unistd.h>
+# include <sys/types.h>
 # include <sys/wait.h>
 # include <sys/errno.h>
 # include <readline/readline.h>

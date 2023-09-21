@@ -11,7 +11,8 @@ static void print_tokens(t_token **tokens)
 	token = *tokens;
 	while (token)
 	{
-		printf("Tag: %-16s : Content: %s\n", get_tag_name(token->tag), token->content);
+		printf("Tag: %-16s : Content: %s\n",
+			get_tag_name(token->tag), token->content);
 		token = token->next;
 	}
 }
@@ -37,7 +38,6 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 	t_token	*tmp_tok;
 	size_t	index;
 	char	*expander;
-	bool	expansion_added;
 
 	index = 0;
 	node = ft_calloc(1, sizeof(t_info));
@@ -74,10 +74,7 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 			index++;
 		}
 		else if (token->tag == T_COMMAND || token->tag == T_DOUBLE_QUOTE || token->tag == T_SINGLE_QUOTE)
-		{
-			printf("Done %s!\n", token->content);
 			node->command[index++] = ft_strdup(token->content);
-		}
 		else if (token->tag == T_REDIRECT_OUT || token->tag == T_APPEND)
 		{
 			tmp_tok = token_dup(token);
@@ -121,10 +118,7 @@ static t_info	*parse_tokens(t_shell *shell, t_token **tokens)
 	{
 		token = emplace_tokens(shell, &info, token);
 		if (token->tag == T_PIPE || token->tag == T_END)
-		{
-			printf("Token content: %s\n", token->content);
 			token = token->next;
-		}
 	}
 	return (print_tokens(tokens), info);
 }
