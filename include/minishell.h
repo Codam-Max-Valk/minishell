@@ -70,7 +70,6 @@ typedef struct s_info
 	int				fd_in;
 	int				fd_out;
 	struct s_info	*next;
-	struct s_info	*prev;
 }	t_info;
 
 int		add_environment_variable(t_env **env, char *key, char *value);
