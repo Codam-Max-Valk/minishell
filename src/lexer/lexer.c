@@ -64,7 +64,7 @@ size_t	add_tagged_token(t_token **tokens, char *s, int i, t_tag tag)
 		length = tokenize(tokens, &s[i], tag, get_symbol_length);
 	else if (tag == T_EXPANSION)
 		length = tokenize(tokens, &s[++i], tag, get_content_length) + 1;
-	else if ((s[i] >= 33 && s[i] <= 126) && s[i + 1] != '=' /* Beter checks */)
+	else if ((s[i] >= 33 && s[i] <= 126) && s[i + 1] != '=' /* Better checks */)
 		length = tokenize(tokens, &s[i], T_COMMAND, get_content_length);
 	last_index = i;
 	return (length);

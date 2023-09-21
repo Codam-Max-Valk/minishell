@@ -123,24 +123,19 @@ static t_info	*parse_tokens(t_shell *shell, t_token **tokens)
 	return (print_tokens(tokens), info);
 }
 
-t_info	*ms_readline(t_shell *shell, char *str)
+t_info	*ms_readline(t_shell *shell)
 {
 	t_info	*info;
 	t_token	*tokens;
 
 	info = NULL;
 	tokens = NULL;
-	if (!str || !*str)
-		return (NULL);
-
 	shell->last_command = ft_readline();
 	if (shell->last_command == NULL)
 		return (handle_control_d(shell), NULL);
-
 	tokens = tokenizer2(shell->last_command);
 	if (!tokens)
 		return (ft_printf("List is empty!\n"), NULL); //Free input
-
 	info = parse_tokens(shell, &tokens);
 	if (!info)
 		return (NULL); //Tokenizer freees the tokens themself and returns null.

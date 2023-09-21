@@ -24,11 +24,6 @@ t_env	*initialize_environment(char **envp)
 	return (env);
 }
 
-void	lk()
-{
-	system("leaks -q Minishell");
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell	*shell;
@@ -37,7 +32,6 @@ int	main(int argc, char **argv, char **envp)
 
 	(void) argc;
 	(void) argv;
-	// atexit(&lk);
 	shell = ft_calloc(1, sizeof(t_shell));
 	if (!shell)
 		return (EXIT_FAILURE);
@@ -61,7 +55,7 @@ int	main(int argc, char **argv, char **envp)
 	while (shell->exited)
 	{
 		register_signals();
-		info = ms_readline(shell, ">> ");
+		info = ms_readline(shell);
 		if (!info)
 		{
 			continue ;

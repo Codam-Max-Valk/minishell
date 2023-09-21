@@ -78,7 +78,7 @@ int		get_environment_size(t_env **env);
 t_env	*find_environment_key(t_env **env, char *key);
 char	**find_environment_key_as_2d(t_env **env, char *key);
 
-t_info	*ms_readline(t_shell *shell, char *str);
+t_info	*ms_readline(t_shell *shell);
 void	register_signals();
 void	exec_loop(t_shell *shell, t_info *info, char *envp[]);
 

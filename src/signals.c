@@ -11,7 +11,7 @@ static void	handle_control_c(int code)
 
 void	handle_control_d(t_shell *shell)
 {
-	//fire_builtin(shell, &"exit");
+	shell->exited = 0;
 }
 
 void	register_signals(void)
