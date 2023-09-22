@@ -11,7 +11,7 @@ int	ft_cd(t_shell *shell, int argc, char **argv)
 		target = argv[1];
 	if (chdir(target))
 	{
-		perror("chdir");
+		perror("cd");
 		return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);

@@ -60,7 +60,7 @@ int	main(int argc, char **argv, char **envp)
 		{
 			continue ;
 		}
-		//exec_loop(shell, info, envp);
+		exec_loop(shell, info, envp);
 	}
 	return (EXIT_SUCCESS);
 }
