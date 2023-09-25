@@ -51,7 +51,7 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 		if (token->tag == T_EQUALS)
 		{
 			key_value = ft_split(token->content, EQUALS);
-			add_expansion(shell->environment, key_value[0], key_value[1]);
+			add_expansion(shell->expansion, key_value[0], key_value[1]);
 			free_double_array(key_value);
 		}
 		else if (token->tag == T_EXPANSION)
