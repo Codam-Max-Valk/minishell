@@ -118,12 +118,17 @@ void	execute_command(t_shell *shell, t_info *info, char *envp[])
 	pid_t	pid;
 	char	*cmd_p;
 
+	set_start_fd(info);
+	if (info->is_builtin == true)
+	{
+		fire_builtin(shell, info->command);
+		return ;
+	}
 	pid = fork();
 	if (pid == -1)
 		exit(EXIT_FAILURE);
 	if (pid == 0)
 	{
-		set_start_fd(info);
 		if (info->fd_in != STDIN_FILENO)
 		{
 			if (dup2(info->fd_in, STDIN_FILENO) < 0)
@@ -136,8 +141,6 @@ void	execute_command(t_shell *shell, t_info *info, char *envp[])
 				error_exit("dup2-2", errno);
 			close(info->fd_out);
 		}
-		if (does_builtin_exist(shell, info->command[0]) == true)
-			exit(fire_builtin(shell, info->command));
 		cmd_p = cmd_path(parse_env(envp), info->command[0], 1);
 		if (cmd_p != NULL)
 		{
@@ -151,10 +154,18 @@ void	execute_command(t_shell *shell, t_info *info, char *envp[])
 	else
 	{
 		waitpid(pid, NULL, 0);
-		if (info->fd_in != STDIN_FILENO)
-			close(info->fd_in);
-		if (info->fd_out != STDOUT_FILENO)
-			close(info->fd_out);
+	}
+}
+
+void		check_builtin(t_shell *shell, t_info *info)
+{
+	t_info *tmp_info;
+
+	tmp_info = info;
+	while (tmp_info != NULL)
+	{
+		tmp_info->is_builtin = does_builtin_exist(shell, tmp_info->command[0]);
+		tmp_info = tmp_info->next;
 	}
 }
 
@@ -167,13 +178,7 @@ void	exec_loop(t_shell *shell, t_info *info, char *envp[])
 
 	// if (info->command && !*info->command)
 	// 	return ;
-	if ((info->command && *info->command)
-		&& (strcmp(info->command[0], "exit") == 0
-			|| strcmp(info->command[0], "cd") == 0))
-	{
-		fire_builtin(shell, info->command);
-		return ;
-	}
+	check_builtin(shell, info);
 	while (info != NULL)
 	{
 		has_p = (info->next != NULL);
@@ -192,5 +197,9 @@ void	exec_loop(t_shell *shell, t_info *info, char *envp[])
 		else
 			current_cmd->fd_out = STDOUT_FILENO;
 		execute_command(shell, current_cmd, envp);
+		if (current_cmd->fd_in != STDIN_FILENO)
+			close(current_cmd->fd_in);
+		// if (current_cmd->fd_out != STDOUT_FILENO)
+		// 	close(current_cmd->fd_out);
 	}
 }
