@@ -58,6 +58,7 @@ typedef struct s_shell
 	size_t		size;
 	t_list		*parsed_tokens;
 	t_env		**environment;
+	t_env		**expansion;
 	char		**envp;
 }	t_shell;
 
