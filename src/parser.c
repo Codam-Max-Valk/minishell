@@ -41,26 +41,12 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 
 	index = 0;
 	node = ft_calloc(1, sizeof(t_info));
+	if (!node)
+		return (NULL);
 	node->command = ft_calloc(16, sizeof(char *)); //Fix by calculating how many commands there are between the pipes. or Begin till (pipe / end)
 	while (token && token->tag != T_PIPE && token->tag != T_END)
 	{
-		if (token->tag == T_COMMAND
-			&& token->next->tag == T_EQUALS
-			&& (token->next->next->tag == T_COMMAND
-				|| token->next->next->tag == T_EXPANSION
-				|| token->next->next->tag == T_DOUBLE_QUOTE
-				|| token->next->next->tag == T_SINGLE_QUOTE))
-		{
-			printf("Yet to be implemented!\n");
-			//if (!token->next->next || !token->next->next->content)
-			//	expander = ft_strdup("\0");
-			//if (!expander)
-			//	return (NULL); //Too much freaking allocation goddammit.
-			//tmp_tok = token->next->next;
-			//if (!add_expansion(shell->environment, token->content, expander))
-			//	return (NULL);
-			token = token->next;
-		}
+		if (token->tag == T_EQUALS);
 		else if (token->tag == T_EXPANSION)
 		{
 			expander = find_expansion(shell->environment, token->content);
