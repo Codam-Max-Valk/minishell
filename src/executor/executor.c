@@ -118,17 +118,12 @@ void	execute_command(t_shell *shell, t_info *info, char *envp[])
 	pid_t	pid;
 	char	*cmd_p;
 
-	set_start_fd(info);
-	if (info->is_builtin == true)
-	{
-		fire_builtin(shell, info->command);
-		return ;
-	}
 	pid = fork();
 	if (pid == -1)
 		exit(EXIT_FAILURE);
 	if (pid == 0)
 	{
+		set_start_fd(info);
 		if (info->fd_in != STDIN_FILENO)
 		{
 			if (dup2(info->fd_in, STDIN_FILENO) < 0)
@@ -142,6 +137,8 @@ void	execute_command(t_shell *shell, t_info *info, char *envp[])
 			close(info->fd_out);
 		}
 		cmd_p = cmd_path(parse_env(envp), info->command[0], 1);
+		if (info->is_builtin == true)
+			exit(fire_builtin(shell, info->command));
 		if (cmd_p != NULL)
 		{
 			if (execve(cmd_p, info->command, envp) < 0)
@@ -175,9 +172,8 @@ void	exec_loop(t_shell *shell, t_info *info, char *envp[])
 	bool	has_p;
 
 	info->fd_in = STDIN_FILENO;
-
-	// if (info->command && !*info->command)
-	// 	return ;
+	if (info->command && !*info->command)
+		return ;
 	check_builtin(shell, info);
 	while (info != NULL)
 	{
@@ -199,7 +195,7 @@ void	exec_loop(t_shell *shell, t_info *info, char *envp[])
 		execute_command(shell, current_cmd, envp);
 		if (current_cmd->fd_in != STDIN_FILENO)
 			close(current_cmd->fd_in);
-		// if (current_cmd->fd_out != STDOUT_FILENO)
-		// 	close(current_cmd->fd_out);
+		if (current_cmd->fd_out != STDOUT_FILENO)
+			close(current_cmd->fd_out);
 	}
 }
