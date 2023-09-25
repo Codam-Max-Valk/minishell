@@ -75,17 +75,17 @@ int	ft_isexpander(char *s)
 	char	*str;
 
 	i = 0;
-	if (s[i] == '=' || !ft_strchr(s, '='))
+	if (s[i] == EQUALS || !ft_strchr(s, EQUALS))
 		return (0);
 	while (s[i]
-		&& ft_strchr(&s[i], '=')
+		&& ft_strchr(&s[i], EQUALS)
 		&& !ft_issymbol(&s[i])
 		&& !ft_isspace(s[i]))
 		i++;
 	str = ft_substr(s, 0, i);
 	if (!str)
 		return (0);
-	if (!ft_strchr(str, '='))
+	if (!ft_strchr(str, EQUALS))
 		return (free(str), 0);
 	return (free(str), 1);
 }

@@ -39,6 +39,8 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 	size_t	index;
 	char	*expander;
 
+	char	**key_value;
+
 	index = 0;
 	node = ft_calloc(1, sizeof(t_info));
 	if (!node)
@@ -46,7 +48,12 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 	node->command = ft_calloc(16, sizeof(char *)); //Fix by calculating how many commands there are between the pipes. or Begin till (pipe / end)
 	while (token && token->tag != T_PIPE && token->tag != T_END)
 	{
-		if (token->tag == T_EQUALS);
+		if (token->tag == T_EQUALS)
+		{
+			key_value = ft_split(token->content, EQUALS);
+			add_expansion(shell->environment, key_value[0], key_value[1]);
+			free_double_array(key_value);
+		}
 		else if (token->tag == T_EXPANSION)
 		{
 			expander = find_expansion(shell->environment, token->content);
@@ -60,7 +67,9 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 			index++;
 		}
 		else if (token->tag == T_COMMAND || token->tag == T_DOUBLE_QUOTE || token->tag == T_SINGLE_QUOTE)
+		{
 			node->command[index++] = ft_strdup(token->content);
+		}
 		else if (token->tag == T_REDIRECT_OUT || token->tag == T_APPEND)
 		{
 			tmp_tok = token_dup(token);
@@ -100,13 +109,14 @@ static t_info	*parse_tokens(t_shell *shell, t_token **tokens)
 	token = *tokens;
 	if ((*tokens)->tag == T_END)
 		return (NULL);
+	print_tokens(tokens);
 	while (token)
 	{
 		token = emplace_tokens(shell, &info, token);
 		if (token->tag == T_PIPE || token->tag == T_END)
 			token = token->next;
 	}
-	return (print_tokens(tokens), info);
+	return (info);
 }
 
 t_info	*ms_readline(t_shell *shell)
@@ -124,7 +134,7 @@ t_info	*ms_readline(t_shell *shell)
 		return (ft_printf("List is empty!\n"), NULL); //Free input
 	info = parse_tokens(shell, &tokens);
 	if (!info)
-		return (NULL); //Tokenizer freees the tokens themself and returns null.
+		return (ft_printf("Information is null\n"), NULL); //Tokenizer freees the tokens themself and returns null.
 	token_lstclear(&tokens, token_free);
 	return (info);
 }
