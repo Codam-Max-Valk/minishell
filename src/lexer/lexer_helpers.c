@@ -49,8 +49,6 @@ int	ft_istoken(char *s)
 {
 	const int	tag = guess_tag(s);
 
-	if (!ft_isquote(*s))
-		return (1);
 	if (tag != T_DOUBLE_QUOTE || tag != T_SINGLE_QUOTE)
 		return (1);
 	if (tag != T_ARGUMENT || tag != T_COMMAND)
@@ -60,8 +58,8 @@ int	ft_istoken(char *s)
 
 int	ft_issymbol(char *s)
 {
-	const t_tag tag = guess_tag(s);
-	
+	const t_tag	tag = guess_tag(s);
+
 	if (tag == T_REDIRECT_IN || tag == T_REDIRECT_OUT
 		|| tag == T_APPEND || tag == T_HERE_DOC
 		|| tag == T_PIPE || tag == T_SEMICOLUMN)

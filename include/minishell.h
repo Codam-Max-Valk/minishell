@@ -47,6 +47,7 @@ typedef struct s_environment
 {
 	char					*key;
 	char					*value;
+	int						hidden;
 	struct s_environment	*next;
 }	t_env;
 
@@ -73,13 +74,13 @@ typedef struct s_info
 	struct s_info	*next;
 }	t_info;
 
-int		add_environment_variable(t_env **env, char *key, char *value);
+int		add_environment_variable(t_env **env, char *key, char *value, int hidden);
+void	delete_environment_key(t_env **env, char *key);
 int		get_environment_size(t_env **env);
 t_env	*find_environment_key(t_env **env, char *key);
-char	**find_environment_key_as_2d(t_env **env, char *key);
 
 t_info	*ms_readline(t_shell *shell);
-void	register_signals();
+void	register_signals(void);
 void	exec_loop(t_shell *shell, t_info *info, char *envp[]);
 
 

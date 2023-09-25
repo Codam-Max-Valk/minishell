@@ -165,9 +165,9 @@ void	exec_loop(t_shell *shell, t_info *info, char *envp[])
 
 	info->fd_in = STDIN_FILENO;
 
-	// if (info->command != NULL && !*info->command)
-	// 	return ;
-	// printf("we not here\n");
+	if (info->command != NULL && !*info->command)
+		return ;
+	printf("we not here\n");
 	if ((info->command && *info->command) && (strcmp(info->command[0], "exit") == 0 || strcmp(info->command[0], "cd") == 0))
 	{
 		fire_builtin(shell, info->command);

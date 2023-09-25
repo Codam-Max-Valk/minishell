@@ -2,7 +2,7 @@
 #include "../include/minishell.h"
 #include "../include/tokens.h"
 
-static void print_tokens(t_token **tokens)
+static void	print_tokens(t_token **tokens)
 {
 	t_token	*token;
 
@@ -38,7 +38,6 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 	t_token	*tmp_tok;
 	size_t	index;
 	char	*expander;
-
 	char	**key_value;
 
 	index = 0;
@@ -51,7 +50,7 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 		if (token->tag == T_EQUALS)
 		{
 			key_value = ft_split(token->content, EQUALS);
-			add_expansion(shell->expansion, key_value[0], key_value[1]);
+			add_expansion(shell->environment, key_value[0], key_value[1]);
 			free_double_array(key_value);
 		}
 		else if (token->tag == T_EXPANSION)
@@ -131,10 +130,10 @@ t_info	*ms_readline(t_shell *shell)
 		return (handle_control_d(shell), NULL);
 	tokens = tokenizer2(shell->last_command);
 	if (!tokens)
-		return (ft_printf("List is empty!\n"), NULL); //Free input
+		return (NULL);
 	info = parse_tokens(shell, &tokens);
 	if (!info)
-		return (ft_printf("Information is null\n"), NULL); //Tokenizer freees the tokens themself and returns null.
+		return (token_lstclear(&tokens, token_free), NULL);
 	token_lstclear(&tokens, token_free);
 	return (info);
 }

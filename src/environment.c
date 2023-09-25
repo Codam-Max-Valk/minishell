@@ -19,12 +19,13 @@ static t_env	*create_new_env_node(char *key, char *value)
 	return (env);
 }
 
-int	add_environment_variable(t_env **env, char *key, char *value)
+int	add_environment_variable(t_env **env, char *key, char *value, int hidden)
 {
 	t_env	*node;
 	t_env	*nnode;
 
 	nnode = create_new_env_node(key, value);
+	nnode->hidden = hidden;
 	if (!nnode)
 		return (0);
 	if (!*env)
@@ -72,27 +73,10 @@ t_env	*find_environment_key(t_env **env, char *key)
 	return (NULL);
 }
 
-char	**find_environment_key_as_2d(t_env **env, char *key)
+void	delete_environment_key(t_env **env, char *key)
 {
-	const t_env	*node = find_environment_key(env, key);
-	char		*s;
-	char		*s2;
-
-	if (!node)
-		return (NULL);
-	s = ft_strjoin(node->key, "=");
-	if (!s)
-		return (NULL);
-	s2 = ft_strjoin_free(s, node->value);
-	if (!s2)
-		return (free(s), NULL);
-	return ((char *[2]){s2, NULL});
-}
-
-void	delete_env_key(t_env **env, char *key)
-{
-	t_env *tmp_node;
-	t_env *node_prev;
+	t_env	*tmp_node;
+	t_env	*node_prev;
 
 	tmp_node = *env;
 	node_prev = NULL;
