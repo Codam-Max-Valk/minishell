@@ -4,6 +4,7 @@
 
 static void	print_tokens(t_token **tokens)
 {
+	return ;
 	t_token	*token;
 
 	if (!tokens || !*tokens)
@@ -15,20 +16,6 @@ static void	print_tokens(t_token **tokens)
 			get_tag_name(token->tag), token->content);
 		token = token->next;
 	}
-}
-
-static char	*ft_readline(void)
-{
-	static char	*line = NULL;
-	char		*prefix;
-
-	if (line)
-		free(line);
-	line = NULL;
-	line = readline(PREFIX);
-	if (line && *line)
-		ms_add_history(line);
-	return (line);
 }
 
 static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
@@ -50,12 +37,12 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 		if (token->tag == T_EQUALS)
 		{
 			key_value = ft_split(token->content, EQUALS);
-			add_expansion(shell->environment, key_value[0], key_value[1]);
+			set_pair(&shell->expansion, key_value[0], key_value[1]);
 			free_double_array(key_value);
 		}
 		else if (token->tag == T_EXPANSION)
 		{
-			expander = find_expansion(shell->environment, token->content);
+			expander = find_pair(shell->environment, token->content);
 			if (!expander)
 				expander = ft_strdup("\0");
 			if (!expander)
@@ -99,7 +86,7 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 	return (token);
 }
 
-static t_info	*parse_tokens(t_shell *shell, t_token **tokens)
+t_info	*parse_tokens(t_shell *shell, t_token **tokens)
 {
 	t_info		*info;
 	t_token		*token;
@@ -118,22 +105,3 @@ static t_info	*parse_tokens(t_shell *shell, t_token **tokens)
 	return (info);
 }
 
-t_info	*ms_readline(t_shell *shell)
-{
-	t_info	*info;
-	t_token	*tokens;
-
-	info = NULL;
-	tokens = NULL;
-	shell->last_command = ft_readline();
-	if (shell->last_command == NULL)
-		return (handle_control_d(shell), NULL);
-	tokens = tokenizer2(shell->last_command);
-	if (!tokens)
-		return (NULL);
-	info = parse_tokens(shell, &tokens);
-	if (!info)
-		return (token_lstclear(&tokens, token_free), NULL);
-	token_lstclear(&tokens, token_free);
-	return (info);
-}

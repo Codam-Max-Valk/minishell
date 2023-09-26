@@ -1,99 +1,117 @@
-#include "../include/minishell.h"
-#include "../include/libft.h"
+#include "../../include/minishell.h"
+#include "../../include/libft.h"
 
-static t_env	*create_new_env_node(char *key, char *value)
+static t_env	*env_lstback(t_env **env)
 {
-	t_env	*env;
+	t_env *node;
 
-	if (ft_isnull(key) && ft_isnull(value))
+	if (!env || !*env)
 		return (NULL);
-	env = ft_calloc(1, sizeof(t_env));
-	if (!env)
-		return (NULL);
-	env->key = ft_strdup(key);
-	if (ft_isnull(env->key))
-		return (free(env), NULL);
-	env->value = ft_strdup(value);
-	if (ft_isnull(env->value))
-		return (free(env->key), free(env), NULL);
-	return (env);
-}
-
-int	add_environment_variable(t_env **env, char *key, char *value, int hidden)
-{
-	t_env	*node;
-	t_env	*nnode;
-
-	nnode = create_new_env_node(key, value);
-	nnode->hidden = hidden;
-	if (!nnode)
-		return (0);
-	if (!*env)
-	{
-		*env = nnode;
-		return (1);
-	}
 	node = *env;
 	while (node->next)
 		node = node->next;
-	node->next = nnode;
-	return (1);
+	return (node);
 }
 
-int	get_environment_size(t_env **env)
+static void	env_lstaddback(t_env **env, t_env *new)
 {
-	size_t	i;
 	t_env	*node;
 
-	i = 0;
 	if (!env || !*env)
-		return (0);
-	node = *env;
-	while (node)
 	{
-		node = node->next;
-		i++;
+		*env = new;
+		return ;
 	}
-	return (i);
+	node = env_lstback(env);
+	node->next = new;
 }
 
-t_env	*find_environment_key(t_env **env, char *key)
+static bool	add_pair(t_env **lst, char *key, char *value)
+{
+	t_env	*node;
+
+	node = malloc(sizeof(t_env));
+	if (!node)
+		return (false);
+	node->key = ft_strdup(key);
+	if (!node->key)
+		return (free(node), false);
+	
+	if (ft_isnull(value))
+		node->value = ft_strdup("\0");
+	else if (*value == '$')
+		node->value = "FIND EXPANSION";
+	else
+		node->value = ft_strdup(value);
+	if (!node->value)
+		node->value = NULL;
+	node->next = NULL;
+	env_lstaddback(lst, node);
+	return (true);
+}
+
+char	*find_pair(t_env **env, char *key)
 {
 	t_env	*node;
 
 	if (!env || !*env)
 		return (NULL);
 	node = *env;
-	while (node)
-	{
-		if (strcmp(node->key, key) == 0)
-			return (node);
+	while (node != NULL && ft_strcmp(node->key, key))
 		node = node->next;
-	}
-	return (NULL);
+	if (!node)
+		return (NULL);
+	return (node->value);
 }
 
-void	delete_environment_key(t_env **env, char *key)
+void	del_pair(t_env **env, char *key)
 {
-	t_env	*tmp_node;
-	t_env	*node_prev;
+	t_env	*tmp;
+	t_env	*prev;
 
-	tmp_node = *env;
-	node_prev = NULL;
-	while (tmp_node)
+	tmp = *env;
+	prev = NULL;
+	while (tmp)
 	{
-		if (strcmp(tmp_node->key, key) == 0)
+		if (strcmp(tmp->key, key) == 0)
 		{
-			if (node_prev)
-				node_prev->next = tmp_node->next;
+			if (prev)
+				prev->next = tmp->next;
 			else
-				*env = tmp_node->next;
-			free(tmp_node->key);
-			free(tmp_node->value);
-			free(tmp_node);
+				*env = tmp->next;
+			free(tmp->key);
+			free(tmp->value);
+			free(tmp);
 			break ;
 		}
-		node_prev = tmp_node;
-		tmp_node = tmp_node->next;
+		prev = tmp;
+		tmp = tmp->next;
+	}
+}
+
+void	set_pair(t_env **env, char *key, char *value)
+{
+	t_env	*node;
+
+	if (ft_isnull(key))
+		return ;
+	if (!env || !*env)
+	{
+		add_pair(env, key, value);
+		return ;
+	}
+	node = *env;
+	while (node != NULL && ft_strcmp(node->key, key) == 0)
+		node = node->next;
+	if (!node)
+	{
+		add_pair(env, key, value);
+		return ;
+	}
+	del_pair(env, key);
+	if (!add_pair(env, key, value))
+	{
+		perror("cannot add variable to environment/expansion list");
+		return ;
 	}
 }

@@ -6,10 +6,10 @@ static int	open_or_create(void)
 	int	fd;
 
 	fd = -1;
-	//if (access(HISTORY_FILE, F_OK) == -1)
-	//	fd = open(HISTORY_FILE, O_CREAT | O_TRUNC | O_RDWR | O_APPEND, 0600);
-	//if (access(HISTORY_FILE, F_OK | R_OK | W_OK) == 0)
-	//	fd = open(HISTORY_FILE, O_RDWR | O_APPEND);
+	if (access(HISTORY_FILE, F_OK) == -1)
+		fd = open(HISTORY_FILE, O_CREAT | O_TRUNC | O_RDWR | O_APPEND, 0600);
+	if (access(HISTORY_FILE, F_OK | R_OK | W_OK) == 0)
+		fd = open(HISTORY_FILE, O_RDWR | O_APPEND);
 	return (fd);
 }
 
@@ -24,15 +24,16 @@ int	open_historyfile(void)
 	if (fd == -1)
 		return (-1);
 	content = "\0";
+	content1 = NULL;
 	count = 0;
 	while (content)
 	{
 		content = get_next_line(fd);
 		if (!content)
 			return (0);
-		content1 = ft_strtrim(content, "\n");
-		if (!content1)
-			return (free(content), 0);
+		//content1 = ft_strtrim(content, "\n");
+		//if (!content1)
+		//	return (free(content), 0);
 		add_history(content);
 		free(content);
 		free(content1);

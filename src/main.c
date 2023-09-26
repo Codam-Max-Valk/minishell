@@ -17,7 +17,7 @@ t_env	*initialize_environment(char **envp)
 			i++;
 			continue ;
 		}
-		add_environment_variable(&env, line[0], line[1], 0);
+		set_pair(&env, line[0], line[1]);
 		free_double_array(line);
 		i++;
 	}
@@ -33,6 +33,7 @@ void	register_builtins(t_shell *shell)
 	set_builtin(shell, "env", ft_env);
 	set_builtin(shell, "export", ft_export);
 	set_builtin(shell, "unset", ft_unset);
+	set_builtin(shell, "debug", ft_debug);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -53,7 +54,7 @@ int	main(int argc, char **argv, char **envp)
 	open_historyfile();
 	register_builtins(shell);
 
-	ft_printf("[Environment] %s\n", find_environment_key(&env, "PATH")->value);
+	ft_printf("[Environment] %s\n", find_pair(&env, "PATH"));
 	while (shell->exited)
 	{
 		register_signals();
