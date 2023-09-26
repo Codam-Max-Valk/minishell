@@ -6,11 +6,11 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/28 16:00:22 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/06/29 15:29:19 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/09/26 18:58:50 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../include/libft.h"
 
 char	*ft_strstr(char *str, char *to_find)
 {

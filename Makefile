@@ -1,52 +1,96 @@
-NAME := minishell
-CC = gcc
-CFLAGS = -Wall -Werror -Wextra
-HEADER = include/minishell.h
-OBJ_DIR = obj
-SRCFILES = 	main.c
+NAME = minishell
 
-vpath %.c	src
-OBJFILES = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRCFILES))
+# Sum commands
+RM = rm -rf
+MKDIR = mkdir -p
+
+# Compiler
+CC = gcc
+CFLAGS = #-Wall -Werror -Wextra
 
 # Color definitions
-
 GREEN = \033[0;92m
-MAGENTA = \033[0;95m
-CYAN = \033[0;96m
-BLUE = \033[0;94m
-COLOR_END = \033[0m
+RESET = \033[0m
 
+# Folders
+SRC_DIR = ./src
+OBJ_DIR = ./bin
+INC_DIR = ./include
+
+# Lib folders
+LIBFT = ./libft
+
+# Library flags
+READLINE_L = -lreadline
+
+# Files
+FILES	=	ft_freedoublearray \
+			ft_isnull \
+			ft_isspace \
+			ft_realloc \
+			ft_split_space \
+			ft_strcmp \
+			ft_strstr \
+			ft_split_first_occurence \
+			ft_unset \
+			ft_export \
+			ft_echo \
+			ft_cd \
+			ft_env \
+			ft_exit \
+			ft_pwd \
+			ft_debug \
+			builtin \
+			builtin_utils \
+			executor \
+			lexer_lst \
+			lexer \
+			lexer_helpers \
+			lexer_utils \
+			history \
+			main \
+			signals \
+			readline \
+			parser \
+			expander \
+			environment \
+	
+HEADER	=	./include/minishell.h \
+			./include/colors.h \
+			./include/tokens.h \
+			./include/libft.h \
+
+vpath %.c	$(SRC_DIR) $(SRC_DIR)/builtins $(SRC_DIR)/executor $(SRC_DIR)/lexer $(SRC_DIR)/libft_funcs
+
+SRC 	= ${addsuffix .c, $(FILES)}
+OBJ 	= ${patsubst %.c, $(OBJ_DIR)/%.o, $(SRC)}
+
+# Rules
 all: $(NAME)
 
-$(NAME): $(OBJFILES) $(HEADER)
-	@echo "$(BLUE)compiling $(NAME) $(COLOR_END)"
-	@$(MAKE) -C ./libft
-	@$(CC) $(CFLAGS) $(OBJFILES) libft/libft.a -lreadline -o $(NAME)
-	@echo "$(GREEN)compilation complete!$(COLOR_END)"
+$(OBJ_DIR)/%.o: %.c | bin
+	@$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
+	@echo "$(GREEN)Compiling: $(RESET)$(notdir $<)"
+
+$(NAME): $(OBJ) $(HEADER) | lib
+	@$(CC) $(CFLAGS) $(OBJ) -I$(INC_DIR) $(LIBFT)/libft.a $(READLINE_L) -o $(NAME)
+	@echo "$(GREEN)Compiling: $(RESET)$(NAME)"
 	
-$(OBJ_DIR)/%.o: %.c $(HEADER)
-	@mkdir -p $(OBJ_DIR)
-	@$(CC) $(CFLAGS) -c $< -o $@
+bin:
+	$(MKDIR) $(OBJ_DIR)
 
-dev:
-	@$(MAKE) default -f ./Makefile_dev
-
-dev_tokens:
-	$(MAKE) tokens -f ./Makefile_dev
-
-dev_exec:
-	$(MAKE) exec -f ./Makefile_dev
+lib:
+	$(MAKE) -C $(LIBFT)
 
 clean:
-	@rm -f $(OBJFILES)
-	@rm -rf $(OBJ_DIR)
-	@$(MAKE) clean -C ./libft
-	@echo "$(CYAN)clean complete!$(COLOR_END)"
+	$(MAKE) clean -C $(LIBFT)
+	$(RM) $(OBJ)
+	$(RM) $(OBJ_DIR)
 
 fclean: clean
-	@rm -f $(NAME)
-	@$(MAKE) fclean -C ./libft
+	$(MAKE) fclean -C $(LIBFT)
+	$(RM) $(NAME)
 
 re: fclean all
 
-.PHONY: clean all fclean re bonus dev_tokens dev
+.PHONY: all lib clean fclean re bin

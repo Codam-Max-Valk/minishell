@@ -59,7 +59,7 @@ typedef struct s_shell
 	size_t		size;
 	t_list		*parsed_tokens;
 	char		**envp;
-	t_env		**environment;
+	t_env		*environment;
 	t_env		*expansion;
 }	t_shell;
 

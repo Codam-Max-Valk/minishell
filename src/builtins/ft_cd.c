@@ -6,7 +6,7 @@ int	ft_cd(t_shell *shell, int argc, char **argv)
 	char	*target;
 
 	if (argv[1] == NULL)
-		target = find_pair(shell->environment, "HOME");
+		target = find_pair(&shell->environment, "HOME");
 	else
 		target = argv[1];
 	if (chdir(target))

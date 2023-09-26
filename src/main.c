@@ -49,7 +49,7 @@ int	main(int argc, char **argv, char **envp)
 		return (EXIT_FAILURE);
 	shell->exited = 1;
 	env = initialize_environment(envp);
-	shell->environment = &env;
+	shell->environment = env;
 
 	open_historyfile();
 	register_builtins(shell);

@@ -1,5 +1,5 @@
-#include "../../include/minishell.h"
-#include "../../include/libft.h"
+#include "../include/minishell.h"
+#include "../include/libft.h"
 
 static t_env	*env_lstback(t_env **env)
 {

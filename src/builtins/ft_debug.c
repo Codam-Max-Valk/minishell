@@ -9,7 +9,7 @@ int	ft_debug(t_shell *shell, int ac, char **av)
 	{
 		if (!shell->environment)
 			return (printf("error: environment list is still empty!\n"), EXIT_FAILURE);
-		env = *shell->environment;
+		env = shell->environment;
 	}
 	else if (ft_strcmp(av[1], "exp") == 0)
 	{

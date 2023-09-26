@@ -6,11 +6,11 @@
 /*   By: mvalk <mvalk@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/18 15:29:40 by mvalk         #+#    #+#                 */
-/*   Updated: 2023/06/29 15:46:35 by mvalk         ########   odam.nl         */
+/*   Updated: 2023/09/26 18:58:45 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../include/libft.h"
 
 static	size_t	ft_substrlen(char const *s)
 {

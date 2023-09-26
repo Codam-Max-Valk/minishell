@@ -42,7 +42,7 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 		}
 		else if (token->tag == T_EXPANSION)
 		{
-			expander = find_pair(shell->environment, token->content);
+			expander = find_pair(&shell->environment, token->content);
 			if (!expander)
 				expander = ft_strdup("\0");
 			if (!expander)
