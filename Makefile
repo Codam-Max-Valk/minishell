@@ -42,7 +42,7 @@ FILES	=	ft_freedoublearray \
 			ft_debug \
 			builtin \
 			builtin_utils \
-			executor \
+			executor2 \
 			lexer_lst \
 			lexer \
 			lexer_helpers \

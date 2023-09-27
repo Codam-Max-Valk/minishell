@@ -1,0 +1,8 @@
+total 120
+drwxr-xr-x 12 mvalk piscine   228 Sep 26 13:00 ..
+drwxr-xr-x  2 mvalk piscine  4096 Sep 27 18:55 bin
+drwxr-xr-x  8 mvalk piscine   200 Sep 27 15:34 .git
+-rw-r--r--  1 mvalk piscine    83 Sep  6 15:10 .gitmodules
+drwxr-xr-x  5 mvalk piscine   104 Sep 21 13:39 libft
+drwxr-xr-x  2 mvalk piscine    20 Sep 25 16:23 obj
+-rw-r--r--  1 mvalk piscine  1047 Sep 27 17:24 README.md

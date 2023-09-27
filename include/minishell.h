@@ -69,9 +69,9 @@ typedef struct s_info
 	t_token			*inf;
 	t_token			*outf;
 	int				pipe_fd[2];
-	bool			is_builtin;
 	int				fd_in;
 	int				fd_out;
+	bool			is_builtin;
 	struct s_info	*next;
 }	t_info;
 

@@ -123,7 +123,6 @@ void	execute_command(t_shell *shell, t_info *info, char *envp[])
 		exit(EXIT_FAILURE);
 	if (pid == 0)
 	{
-		set_start_fd(info);
 		if (info->fd_in != STDIN_FILENO)
 		{
 			if (dup2(info->fd_in, STDIN_FILENO) < 0)
@@ -150,6 +149,8 @@ void	execute_command(t_shell *shell, t_info *info, char *envp[])
 	}
 	else
 	{
+		close(cmd->pipe_fd[1]);
+		close(cmd->pipe_fd[0]);
 		waitpid(pid, NULL, 0);
 	}
 }
