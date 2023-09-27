@@ -4,6 +4,8 @@
 *.out
 Minishell
 *.out
+.test_minishell_history
+.minishell_history
 
 #Folders
 hidden

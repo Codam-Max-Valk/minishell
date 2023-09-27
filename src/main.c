@@ -17,11 +17,23 @@ t_env	*initialize_environment(char **envp)
 			i++;
 			continue ;
 		}
-		add_environment_variable(&env, line[0], line[1]);
+		set_pair(&env, line[0], line[1]);
 		free_double_array(line);
 		i++;
 	}
 	return (env);
+}
+
+void	register_builtins(t_shell *shell)
+{
+	set_builtin(shell, "cd", ft_cd);
+	set_builtin(shell, "pwd", ft_pwd);
+	set_builtin(shell, "exit", ft_exit);
+	set_builtin(shell, "echo", ft_echo);
+	set_builtin(shell, "env", ft_env);
+	set_builtin(shell, "export", ft_export);
+	set_builtin(shell, "unset", ft_unset);
+	set_builtin(shell, "debug", ft_debug);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -35,23 +47,14 @@ int	main(int argc, char **argv, char **envp)
 	shell = ft_calloc(1, sizeof(t_shell));
 	if (!shell)
 		return (EXIT_FAILURE);
-	shell->exited = 1; //We can change the namings in the future.
+	shell->exited = 1;
 	env = initialize_environment(envp);
-	shell->environment = &env;
+	shell->environment = env;
 
 	open_historyfile();
-	
-	//Make seperate functions for each function.
-	set_builtin(shell, "cd", ft_cd);
-	set_builtin(shell, "pwd", ft_pwd);
-	set_builtin(shell, "exit", ft_exit);
-	set_builtin(shell, "echo", ft_echo);
-	set_builtin(shell, "env", ft_env);
-	set_builtin(shell, "export", ft_export);
-	set_builtin(shell, "unset", ft_unset);
+	register_builtins(shell);
 
-	print_builtins(shell); //Builtins kunnen nu gehandeld worden Max.
-	ft_printf("[Environment] %s\n", *find_environment_key_as_2d(&env, "PATH"));
+	ft_printf("[Environment] %s\n", find_pair(&env, "PATH"));
 	while (shell->exited)
 	{
 		register_signals();

@@ -6,9 +6,9 @@ int	ft_env(t_shell *shell, int argc, char **argv)
 {
 	t_env	*tmp;
 
-	if (!shell->environment || !*shell->environment)
+	if (!shell->environment)
 		return (EXIT_FAILURE);
-	tmp = *shell->environment;
+	tmp = shell->environment;
 	while (tmp != NULL)
 	{
 		printf("%s=%s\n", tmp->key, tmp->value);

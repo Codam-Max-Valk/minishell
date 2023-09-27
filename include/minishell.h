@@ -47,6 +47,7 @@ typedef struct s_environment
 {
 	char					*key;
 	char					*value;
+	int						hidden;
 	struct s_environment	*next;
 }	t_env;
 
@@ -57,8 +58,9 @@ typedef struct s_shell
 	t_builtin	*(builtins[MAX_BUILTIN]);
 	size_t		size;
 	t_list		*parsed_tokens;
-	t_env		**environment;
 	char		**envp;
+	t_env		*environment;
+	t_env		*expansion;
 }	t_shell;
 
 typedef struct s_info
@@ -73,15 +75,15 @@ typedef struct s_info
 	struct s_info	*next;
 }	t_info;
 
-int		add_environment_variable(t_env **env, char *key, char *value);
+int		add_environment_variable(t_env **env, char *key, char *value, int hidden);
+void	delete_environment_key(t_env **env, char *key);
 int		get_environment_size(t_env **env);
 t_env	*find_environment_key(t_env **env, char *key);
-char	**find_environment_key_as_2d(t_env **env, char *key);
 
+t_info	*parse_tokens(t_shell *shell, t_token **tokens);
 t_info	*ms_readline(t_shell *shell);
-void	register_signals();
+void	register_signals(void);
 void	exec_loop(t_shell *shell, t_info *info, char **env);
-
 
 //History
 int		open_historyfile(void);
@@ -104,11 +106,15 @@ int		ft_pwd(t_shell *shell, int ac, char **av);
 int		ft_exit(t_shell *shell, int ac, char **av);
 int		ft_echo(t_shell *shell, int ac, char **av);
 
+//Debug builtin
+int		ft_debug(t_shell *shell, int ac, char **av);
+
 //Signals
 void	handle_control_d(t_shell *shell);
 
-//Test
-char	*find_expansion(t_env **env, const char *key);
-bool	add_expansion(t_env **env, char *key, char *value);
+//Expansions & Environment
+void	set_pair(t_env **env, char *key, char *value);
+void	del_pair(t_env **env, char *key);
+char	*find_pair(t_env **env, char *key);
 
 #endif

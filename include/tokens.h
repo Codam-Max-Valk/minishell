@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/09/21 14:05:51 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/09/25 15:28:00 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # define DELIMITOR ">< \"\'\t\n\v\f\r"
 
 # define PIPE "|"
-# define EQUALS "="
+# define EQUALS '='
 # define EXPANSION "$"
 # define SEMICOLUMN ";"
 # define DOUBLE_QUOTE "\""
@@ -63,10 +63,12 @@ t_token		*token_create(char *arg, t_tag tag);
 t_token		*token_dup(t_token	*token);
 void		token_addback(t_token **tokens, t_token *token);
 void		token_lstclear(t_token **tokens, t_token_clearfunc func);
+
 //lexer_helpers.c
 t_tag		guess_tag(char *s);
 int			ft_istoken(char *s);
 int			ft_issymbol(char *s);
+int			ft_isexpander(char *s);
 
 //lexer_utils.c * TODO: Add string checks.
 int			get_quote_length(char *s);

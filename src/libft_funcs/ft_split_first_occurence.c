@@ -6,11 +6,11 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/29 17:30:43 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/09/18 17:44:06 by mvalk         ########   odam.nl         */
+/*   Updated: 2023/09/26 18:58:43 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../include/libft.h"
 #include <stdlib.h>
 
 char	**ft_split_first_occurrence(char *line, char delimiter)

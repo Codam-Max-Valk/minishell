@@ -6,11 +6,11 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/28 13:33:24 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/06/29 17:09:47 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/09/26 18:58:33 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../include/libft.h"
 
 int32_t	ft_isnull(char *s)
 {

@@ -50,22 +50,29 @@ static int	tokenize(t_token **tokens, char *s, t_tag tag, t_token_lengthfunc f)
 
 size_t	add_tagged_token(t_token **tokens, char *s, int i, t_tag tag)
 {
+	static int	length = 1;
 	static int	last_index = 0;
-	int			length;
 
-	length = 1;
 	if (tag == T_SINGLE_QUOTE || tag == T_DOUBLE_QUOTE)
 		length = tokenize(tokens, &s[i], tag, get_quote_length);
+	
 	else if (tag == T_HERE_DOC || tag == T_APPEND || tag == T_REDIRECT_IN || tag == T_REDIRECT_OUT)
 		length = tokenize(tokens, &s[i], tag, get_redirect_length);
-	else if (tag == T_EQUALS)
-		length = tokenize(tokens, &s[last_index], tag, get_expander_length);
+	
 	else if (ft_issymbol(&s[i]))
 		length = tokenize(tokens, &s[i], tag, get_symbol_length);
+	
 	else if (tag == T_EXPANSION)
 		length = tokenize(tokens, &s[++i], tag, get_content_length) + 1;
-	else if ((s[i] >= 33 && s[i] <= 126) && s[i + 1] != '=' /* Better checks */)
+	
+	else if (ft_isexpander(&s[i]))
+		length = tokenize(tokens, &s[i], T_EQUALS, get_expander_length);
+	
+	else if ((s[i] >= 33 && s[i] <= 126))
 		length = tokenize(tokens, &s[i], T_COMMAND, get_content_length);
+	
+	else
+		length = 1;
 	last_index = i;
 	return (length);
 }

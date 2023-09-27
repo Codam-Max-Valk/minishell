@@ -19,8 +19,6 @@ t_tag	guess_tag(char *s)
 		return (T_REDIRECT_IN);
 	else if (ft_strncmp(s, REDIRECT_OUT, 1) == 0)
 		return (T_REDIRECT_OUT);
-	else if (ft_strncmp(s, EQUALS, 1) == 0)
-		return (T_EQUALS);
 	else if (ft_strncmp(s, EXPANSION, 1) == 0)
 		return (T_EXPANSION);
 	else if (ft_strncmp(s, SEMICOLUMN, 1) == 0)
@@ -35,8 +33,6 @@ int	get_token_length(t_tag tag)
 	if (tag == T_REDIRECT_OUT)
 		return (1);
 	if (tag == T_PIPE)
-		return (1);
-	if (tag == T_EQUALS)
 		return (1);
 	if (tag == T_EXPANSION)
 		return (1);
@@ -53,8 +49,6 @@ int	ft_istoken(char *s)
 {
 	const int	tag = guess_tag(s);
 
-	if (!ft_isquote(*s))
-		return (1);
 	if (tag != T_DOUBLE_QUOTE || tag != T_SINGLE_QUOTE)
 		return (1);
 	if (tag != T_ARGUMENT || tag != T_COMMAND)
@@ -64,11 +58,32 @@ int	ft_istoken(char *s)
 
 int	ft_issymbol(char *s)
 {
-	const t_tag tag = guess_tag(s);
-	
+	const t_tag	tag = guess_tag(s);
+
 	if (tag == T_REDIRECT_IN || tag == T_REDIRECT_OUT
 		|| tag == T_APPEND || tag == T_HERE_DOC
 		|| tag == T_PIPE || tag == T_SEMICOLUMN)
 		return (1);
 	return (0);
+}
+
+int	ft_isexpander(char *s)
+{
+	int		i;
+	char	*str;
+
+	i = 0;
+	if (s[i] == EQUALS || !ft_strchr(s, EQUALS))
+		return (0);
+	while (s[i]
+		&& ft_strchr(&s[i], EQUALS)
+		&& !ft_issymbol(&s[i])
+		&& !ft_isspace(s[i]))
+		i++;
+	str = ft_substr(s, 0, i);
+	if (!str)
+		return (0);
+	if (!ft_strchr(str, EQUALS))
+		return (free(str), 0);
+	return (free(str), 1);
 }
