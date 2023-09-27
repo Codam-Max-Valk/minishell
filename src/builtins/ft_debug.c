@@ -22,7 +22,7 @@ int	ft_debug(t_shell *shell, int ac, char **av)
 	
 	while (env)
 	{
-		printf("[%sDebug%s] Key: %-4s :\tValue: %s\n", BOLD_RED, RESET, env->key, env->value);
+		printf("[%sDebug%s] Key: %32s :\tValue: %-16s\n", BOLD_RED, RESET, env->key, env->value);
 		env = env->next;
 	}	
 	return (EXIT_SUCCESS);

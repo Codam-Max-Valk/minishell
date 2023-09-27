@@ -4,7 +4,6 @@
 
 static void	print_tokens(t_token **tokens)
 {
-	return ;
 	t_token	*token;
 
 	if (!tokens || !*tokens)
@@ -26,6 +25,7 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 	size_t	index;
 	char	*expander;
 	char	**key_value;
+	char	*value;
 
 	index = 0;
 	node = ft_calloc(1, sizeof(t_info));
@@ -37,12 +37,20 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 		if (token->tag == T_EQUALS)
 		{
 			key_value = ft_split(token->content, EQUALS);
-			set_pair(&shell->expansion, key_value[0], key_value[1]);
+			if (!key_value)
+				return (NULL);
+			if (key_value[1])
+			{
+				value = ft_strtrim(key_value[1], TOKEN_DELIMITOR);
+				if (!value)
+					return (free_double_array(key_value), NULL);
+			}
+			sed_pair(shell, key_value[0], value);
 			free_double_array(key_value);
 		}
 		else if (token->tag == T_EXPANSION)
 		{
-			expander = find_pair(&shell->environment, token->content);
+			expander = find_pair_content(shell, token->content);
 			if (!expander)
 				expander = ft_strdup("\0");
 			if (!expander)

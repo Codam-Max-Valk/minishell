@@ -51,7 +51,7 @@ int	ft_istoken(char *s)
 
 	if (tag != T_DOUBLE_QUOTE || tag != T_SINGLE_QUOTE)
 		return (1);
-	if (tag != T_ARGUMENT || tag != T_COMMAND)
+	if (tag != T_COMMAND)
 		return (1);
 	return (0);
 }

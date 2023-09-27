@@ -54,7 +54,7 @@ int	main(int argc, char **argv, char **envp)
 	open_historyfile();
 	register_builtins(shell);
 
-	ft_printf("[Environment] %s\n", find_pair(&env, "PATH"));
+	ft_printf("[Environment] %s\n", find_pair_content(shell, "PATH"));
 	while (shell->exited)
 	{
 		register_signals();

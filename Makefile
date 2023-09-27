@@ -3,6 +3,7 @@ NAME = minishell
 # Sum commands
 RM = rm -rf
 MKDIR = mkdir -p
+MAKE = make --silent
 
 # Compiler
 CC = gcc
@@ -31,6 +32,7 @@ FILES	=	ft_freedoublearray \
 			ft_split_space \
 			ft_strcmp \
 			ft_strstr \
+			ft_safe_strdup \
 			ft_split_first_occurence \
 			ft_unset \
 			ft_export \
@@ -52,21 +54,22 @@ FILES	=	ft_freedoublearray \
 			signals \
 			readline \
 			parser \
-			expander \
 			environment \
+			environment_lst \
 	
 HEADER	=	./include/minishell.h \
 			./include/colors.h \
 			./include/tokens.h \
 			./include/libft.h \
 
-vpath %.c	$(SRC_DIR) $(SRC_DIR)/builtins $(SRC_DIR)/executor $(SRC_DIR)/lexer $(SRC_DIR)/libft_funcs
+vpath %.c	$(SRC_DIR) $(SRC_DIR)/builtins $(SRC_DIR)/executor $(SRC_DIR)/lists $(SRC_DIR)/lexer $(SRC_DIR)/libft_funcs
 
 SRC 	= ${addsuffix .c, $(FILES)}
 OBJ 	= ${patsubst %.c, $(OBJ_DIR)/%.o, $(SRC)}
 
 # Rules
 all: $(NAME)
+	@./$(NAME)
 
 $(OBJ_DIR)/%.o: %.c | bin
 	@$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
@@ -77,19 +80,20 @@ $(NAME): $(OBJ) $(HEADER) | lib
 	@echo "$(GREEN)Compiling: $(RESET)$(NAME)"
 	
 bin:
-	$(MKDIR) $(OBJ_DIR)
+	@$(MKDIR) $(OBJ_DIR)
 
 lib:
-	$(MAKE) -C $(LIBFT)
+	@$(MAKE) -C $(LIBFT)
 
 clean:
-	$(MAKE) clean -C $(LIBFT)
-	$(RM) $(OBJ)
-	$(RM) $(OBJ_DIR)
+	@$(MAKE) clean -C $(LIBFT)
+	@$(RM) $(OBJ)
+	@$(RM) $(OBJ_DIR)
+	@echo "Cleaning"
 
 fclean: clean
-	$(MAKE) fclean -C $(LIBFT)
-	$(RM) $(NAME)
+	@$(MAKE) fclean -C $(LIBFT)
+	@$(RM) $(NAME)
 
 re: fclean all
 

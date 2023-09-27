@@ -37,6 +37,13 @@ typedef struct s_shell	t_shell;
 
 typedef int				(*t_builtin_func)(t_shell *, int, char **);
 
+typedef enum e_envtype
+{
+	ENVIRONMENT,
+	LOCAL_ENVIRONMENT,
+	NONE
+}	t_envtype;
+
 typedef struct s_builtin
 {
 	char			*command;
@@ -47,7 +54,6 @@ typedef struct s_environment
 {
 	char					*key;
 	char					*value;
-	int						hidden;
 	struct s_environment	*next;
 }	t_env;
 
@@ -111,9 +117,20 @@ int		ft_debug(t_shell *shell, int ac, char **av);
 //Signals
 void	handle_control_d(t_shell *shell);
 
+//Environment lst utils
+t_env	*env_addpair(t_env **lst, char *key, char *value);
+t_env	*env_lstback(t_env **env);
+t_env	*env_lstrepl_value(t_env **lst, char *key, char *value);
+void	env_lstaddback(t_env **env, t_env *new);
+void	env_lstdelone(t_env **env, char *key);
+
 //Expansions & Environment
+bool	add_pair(t_env **lst, char *key, char *value);
 void	set_pair(t_env **env, char *key, char *value);
-void	del_pair(t_env **env, char *key);
-char	*find_pair(t_env **env, char *key);
+void	sed_pair(t_shell *shell, char *key, char *value);
+
+t_env	*find_pair(t_shell *shell, char *key);
+char	*find_pair_list(t_env **env, char *key);
+char	*find_pair_content(t_shell *shell, char *key);
 
 #endif

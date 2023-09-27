@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/09/25 15:28:00 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/09/27 13:38:15 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdio.h>
 
 # define DELIMITOR ">< \"\'\t\n\v\f\r"
+# define TOKEN_DELIMITOR "<>\"\'"
 
 # define PIPE "|"
 # define EQUALS '='
@@ -43,8 +44,7 @@ typedef enum e_tag
 	T_EXPANSION		= 9,
 	T_SEMICOLUMN	= 10,
 	T_COMMAND		= 11,
-	T_ARGUMENT		= 12,
-	T_END			= 13,
+	T_END			= 12,
 }	t_tag;
 
 typedef struct s_token
