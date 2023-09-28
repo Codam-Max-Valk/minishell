@@ -13,7 +13,7 @@ static int	open_or_create(void)
 	return (fd);
 }
 
-int	open_historyfile(void)
+int	history_init(void)
 {
 	int		fd;
 	size_t	count;

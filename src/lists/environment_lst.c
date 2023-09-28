@@ -15,6 +15,8 @@ t_env	*env_addpair(t_env **lst, char *key, char *value)
 	if (!node->value)
 		return (free(value), NULL);
 	node->next = NULL;
+	printf("Adding: %s=%s\n", key, value);
+	return (node);
 }
 
 t_env	*env_lstrepl_value(t_env **lst, char *key, char *value)
@@ -51,6 +53,7 @@ void	env_lstaddback(t_env **env, t_env *new)
 
 	if (!env || !*env)
 	{
+		printf("Replacing first element\n");
 		*env = new;
 		return ;
 	}

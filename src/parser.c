@@ -45,7 +45,7 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 				if (!value)
 					return (free_double_array(key_value), NULL);
 			}
-			sed_pair(shell, key_value[0], value);
+			set_pairv2(shell, key_value[0], value, LOCAL_ENVIRONMENT);
 			free_double_array(key_value);
 		}
 		else if (token->tag == T_EXPANSION)

@@ -5,9 +5,10 @@ t_env	*find_pair(t_shell *shell, char *key)
 {
 	t_env	*node;
 
+	node = NULL;
 	if (ft_isnull(key))
 		return (NULL);
-	if (shell->expansion)
+	if (shell->expansion != NULL)
 	{
 		node = shell->expansion;
 		while (node && ft_strcmp(node->key, key))
@@ -15,7 +16,7 @@ t_env	*find_pair(t_shell *shell, char *key)
 		if (node)
 			return (node);
 	}
-	if (shell->environment)
+	if (shell->environment != NULL)
 	{
 		node = shell->environment;
 		while (node && ft_strcmp(node->key, key))
@@ -52,32 +53,39 @@ char	*find_pair_content(t_shell *shell, char *key)
 	return (node->value);
 }
 
-
-//Rewrite these functions under me.
-void	set_pair(t_env **env, char *key, char *value)
+void	set_pairv2(t_shell *shell, char *key, char *value, t_envtype type)
 {
 	t_env	*node;
+	char	*tmp;
 
-	if (ft_isnull(key))
+	tmp = NULL;
+	if (!shell)
 		return ;
-	if (!env || !*env)
-	{
-		add_pair(env, key, value);
-		return ;
-	}
-	node = *env;
-	while (node != NULL && ft_strcmp(node->key, key) == 0)
-		node = node->next;
+	node = find_pair(shell, &value[1]);
+	if (!node)
+		tmp = value;
+	else
+		tmp = node->value;
+
+	if (type == ENVIRONMENT)
+		node = env_addpair(&shell->environment, key, tmp);
+	else if (type == LOCAL_ENVIRONMENT)
+		node = env_addpair(&shell->expansion, key, tmp);
+
 	if (!node)
 	{
-		add_pair(env, key, value);
-		return ;
+		perror("environment");
+		exit(127);
 	}
-	env_lstdelone(env, key);
-	if (!add_pair(env, key, value))
-		perror("cannot add variable to environment/expansion list");
+
+	//Addpair() can handle this crap if allocation doesn't go through
+	if (type == ENVIRONMENT)
+		env_lstaddback(&shell->environment, node);
+	else if (type == LOCAL_ENVIRONMENT)
+		env_lstaddback(&shell->expansion, node);
 }
 
+//Rewrite these functions under me.
 void	sed_pair(t_shell *shell, char *key, char *value)
 {
 	t_env	*node;
@@ -88,9 +96,9 @@ void	sed_pair(t_shell *shell, char *key, char *value)
 	node = find_pair(shell, key);
 	if (!node)
 	{
-		if (!add_pair(&shell->expansion, key, value))
-			perror("cannot add variable to environment/expansion list");
-		return ;
+		//if (!add_pair(&shell->expansion, key, value))
+		//	perror("cannot add variable to environment/expansion list");
+		//return ;
 	}
 	free(node->value);
 	if (ft_isnull(value) || *value != '$')
@@ -103,25 +111,4 @@ void	sed_pair(t_shell *shell, char *key, char *value)
 		node->value = ft_safe_strdup(NULL);
 	if (!node->value)
 		perror("cannot add variable to environment/expansion list");
-}
-
-bool	add_pair(t_env **lst, char *key, char *value)
-{
-	t_env	*node;
-	t_env	*content;
-
-	node = malloc(sizeof(t_env));
-	if (!node)
-		return (false);
-	node->key = ft_strdup(key);
-	if (!node->key)
-		return (free(node), false);
-
-	if (ft_isnull(value) || *value != '$')
-		node->value = ft_safe_strdup(value);
-	else if (*value == '$')
-		node->value = ft_safe_strdup("Uh");
-	node->next = NULL;
-	env_lstaddback(lst, node);
-	return (true);
 }

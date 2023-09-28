@@ -1,14 +1,12 @@
 #include "../include/minishell.h"
 #include "../include/libft.h"
 
-t_env	*initialize_environment(char **envp)
+void	environment_init(t_shell *shell, char **envp)
 {
 	size_t		i;
-	t_env		*env;
 	char		**line;
 
 	i = 0;
-	env = NULL;
 	while (envp[i])
 	{
 		line = ft_split_first_occurrence(envp[i], '=');
@@ -17,14 +15,13 @@ t_env	*initialize_environment(char **envp)
 			i++;
 			continue ;
 		}
-		set_pair(&env, line[0], line[1]);
+		set_pairv2(shell, line[0], line[1], ENVIRONMENT);
 		free_double_array(line);
 		i++;
 	}
-	return (env);
 }
 
-void	register_builtins(t_shell *shell)
+void	builtins_init(t_shell *shell)
 {
 	set_builtin(shell, "cd", ft_cd);
 	set_builtin(shell, "pwd", ft_pwd);
@@ -34,6 +31,9 @@ void	register_builtins(t_shell *shell)
 	set_builtin(shell, "export", ft_export);
 	set_builtin(shell, "unset", ft_unset);
 	set_builtin(shell, "debug", ft_debug);
+
+	set_builtin(shell, "calc", ft_calc);
+
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -48,11 +48,10 @@ int	main(int argc, char **argv, char **envp)
 	if (!shell)
 		return (EXIT_FAILURE);
 	shell->exited = 1;
-	env = initialize_environment(envp);
-	shell->environment = env;
-
-	open_historyfile();
-	register_builtins(shell);
+	
+	history_init();
+	builtins_init(shell);
+	environment_init(shell, envp);
 
 	ft_printf("[Environment] %s\n", find_pair_content(shell, "PATH"));
 	while (shell->exited)

@@ -91,7 +91,7 @@ void	register_signals(void);
 void	exec_loop(t_shell *shell, t_info *info, char *envp[]);
 
 //History
-int		open_historyfile(void);
+int		history_init(void);
 void	ms_add_history(char	*str);
 
 //Builtins
@@ -110,6 +110,7 @@ int		ft_env(t_shell *shell, int ac, char **av);
 int		ft_pwd(t_shell *shell, int ac, char **av);
 int		ft_exit(t_shell *shell, int ac, char **av);
 int		ft_echo(t_shell *shell, int ac, char **av);
+int		ft_calc(t_shell *shell, int ac, char **av);
 
 //Debug builtin
 int		ft_debug(t_shell *shell, int ac, char **av);
@@ -126,11 +127,12 @@ void	env_lstdelone(t_env **env, char *key);
 
 //Expansions & Environment
 bool	add_pair(t_env **lst, char *key, char *value);
-void	set_pair(t_env **env, char *key, char *value);
 void	sed_pair(t_shell *shell, char *key, char *value);
 
+//Exp v2
 t_env	*find_pair(t_shell *shell, char *key);
 char	*find_pair_list(t_env **env, char *key);
 char	*find_pair_content(t_shell *shell, char *key);
+void	set_pairv2(t_shell *shell, char *key, char *value, t_envtype type);
 
 #endif

@@ -41,6 +41,7 @@ FILES	=	ft_freedoublearray \
 			ft_env \
 			ft_exit \
 			ft_pwd \
+			ft_calc \
 			ft_debug \
 			builtin \
 			builtin_utils \
