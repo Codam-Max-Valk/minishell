@@ -11,7 +11,7 @@ t_env	*find_pair(t_shell *shell, char *key)
 	if (shell->expansion != NULL)
 	{
 		node = shell->expansion;
-		while (node && ft_strcmp(node->key, key))
+		while (node && ft_strcmp(node->key, key) != 0)
 			node = node->next;
 		if (node)
 			return (node);
@@ -19,7 +19,7 @@ t_env	*find_pair(t_shell *shell, char *key)
 	if (shell->environment != NULL)
 	{
 		node = shell->environment;
-		while (node && ft_strcmp(node->key, key))
+		while (node && ft_strcmp(node->key, key) != 0)
 			node = node->next;
 		if (node)
 			return (node);
@@ -53,32 +53,38 @@ char	*find_pair_content(t_shell *shell, char *key)
 	return (node->value);
 }
 
+/// @brief	Sets a new pair in the defined environment type
+///			if the key does not exist in the environment yet
+/// @param shell Head struct of Minishell.
+/// @param key Environment key
+/// @param value Value to be. (Is nullable).
+/// @param type Environment type
 void	set_pairv2(t_shell *shell, char *key, char *value, t_envtype type)
 {
 	t_env	*node;
 	char	*tmp;
+	int		pos;
 
-	tmp = NULL;
+	pos = 0;
 	if (!shell)
 		return ;
-	node = find_pair(shell, &value[1]);
-	if (!node)
+	tmp = NULL;
+	node = find_pair(shell, key);
+	if (node)
+		return ;
+	if (ft_isnull(value))
+		tmp = "\0";
+	else if (value && *value != '$')
 		tmp = value;
-	else
-		tmp = node->value;
-
-	if (type == ENVIRONMENT)
-		node = env_addpair(&shell->environment, key, tmp);
-	else if (type == LOCAL_ENVIRONMENT)
-		node = env_addpair(&shell->expansion, key, tmp);
-
-	if (!node)
+	else if (value && *value == '$')
 	{
-		perror("environment");
-		exit(127);
+		node = find_pair(shell, &value[1]);
+		if (node)
+			tmp = node->value;
 	}
-
-	//Addpair() can handle this crap if allocation doesn't go through
+	node = env_addpair(key, tmp, type);
+	if (!node)
+		return ;
 	if (type == ENVIRONMENT)
 		env_lstaddback(&shell->environment, node);
 	else if (type == LOCAL_ENVIRONMENT)
@@ -86,7 +92,7 @@ void	set_pairv2(t_shell *shell, char *key, char *value, t_envtype type)
 }
 
 //Rewrite these functions under me.
-void	sed_pair(t_shell *shell, char *key, char *value)
+void	sed_pair(t_shell *shell, char *key, char *value, t_envtype type)
 {
 	t_env	*node;
 	t_env	*content;
@@ -96,19 +102,12 @@ void	sed_pair(t_shell *shell, char *key, char *value)
 	node = find_pair(shell, key);
 	if (!node)
 	{
-		//if (!add_pair(&shell->expansion, key, value))
-		//	perror("cannot add variable to environment/expansion list");
-		//return ;
+		set_pairv2(shell, key, value, type);
+		return ;
 	}
-	free(node->value);
-	if (ft_isnull(value) || *value != '$')
-		node->value = ft_safe_strdup(value);
-	else
-		content = find_pair(shell, key);
-	if (*value == '$' && content)
-		node->value = ft_safe_strdup(content->value);
-	else
-		node->value = ft_safe_strdup(NULL);
-	if (!node->value)
-		perror("cannot add variable to environment/expansion list");
+	if (node->type == LOCAL_ENVIRONMENT)
+		env_lstdelone(&shell->expansion, key);
+	else if (node->type == ENVIRONMENT)
+		env_lstdelone(&shell->environment, key);
+	set_pairv2(shell, key, value, node->type);
 }

@@ -1,7 +1,7 @@
 #include "../include/minishell.h"
 #include "../include/libft.h"
 
-t_env	*env_addpair(t_env **lst, char *key, char *value)
+t_env	*env_addpair(char *key, char *value, t_envtype type)
 {
 	t_env	*node;
 
@@ -11,9 +11,10 @@ t_env	*env_addpair(t_env **lst, char *key, char *value)
 	node->key = ft_strdup(key);
 	if (!node->key)
 		return (free(node), NULL);
-	node->value = ft_strdup(value);
+	node->value = ft_safe_strdup(value);
 	if (!node->value)
 		return (free(value), NULL);
+	node->type = type;
 	node->next = NULL;
 	printf("Adding: %s=%s\n", key, value);
 	return (node);
@@ -53,7 +54,6 @@ void	env_lstaddback(t_env **env, t_env *new)
 
 	if (!env || !*env)
 	{
-		printf("Replacing first element\n");
 		*env = new;
 		return ;
 	}

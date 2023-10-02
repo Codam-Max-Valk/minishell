@@ -1,0 +1,1 @@
+echo "dsa '$USER' dsa" '$USER'

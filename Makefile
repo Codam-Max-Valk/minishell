@@ -7,7 +7,7 @@ MAKE = make --silent
 
 # Compiler
 CC = gcc
-CFLAGS = #-Wall -Werror -Wextra
+CFLAGS = -g #-Wall -Werror -Wextra
 
 # Color definitions
 GREEN = \033[0;92m
@@ -70,7 +70,7 @@ OBJ 	= ${patsubst %.c, $(OBJ_DIR)/%.o, $(SRC)}
 
 # Rules
 all: $(NAME)
-	@./$(NAME)
+	#@./$(NAME)
 
 $(OBJ_DIR)/%.o: %.c | bin
 	@$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
@@ -79,7 +79,7 @@ $(OBJ_DIR)/%.o: %.c | bin
 $(NAME): $(OBJ) $(HEADER) | lib
 	@$(CC) $(CFLAGS) $(OBJ) -I$(INC_DIR) $(LIBFT)/libft.a $(READLINE_L) -o $(NAME)
 	@echo "$(GREEN)Compiling: $(RESET)$(NAME)"
-	
+
 bin:
 	@$(MKDIR) $(OBJ_DIR)
 

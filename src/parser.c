@@ -29,6 +29,7 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 
 	index = 0;
 	node = ft_calloc(1, sizeof(t_info));
+	value = NULL;
 	if (!node)
 		return (NULL);
 	node->command = ft_calloc(16, sizeof(char *)); //Fix by calculating how many commands there are between the pipes. or Begin till (pipe / end)
@@ -43,10 +44,14 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 			{
 				value = ft_strtrim(key_value[1], TOKEN_DELIMITOR);
 				if (!value)
+				{
+					value = NULL;
 					return (free_double_array(key_value), NULL);
+				}
 			}
-			set_pairv2(shell, key_value[0], value, LOCAL_ENVIRONMENT);
+			sed_pair(shell, key_value[0], value, LOCAL_ENVIRONMENT);
 			free_double_array(key_value);
+			value = NULL;
 		}
 		else if (token->tag == T_EXPANSION)
 		{

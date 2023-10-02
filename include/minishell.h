@@ -54,6 +54,7 @@ typedef struct s_environment
 {
 	char					*key;
 	char					*value;
+	t_envtype				type;
 	struct s_environment	*next;
 }	t_env;
 
@@ -80,11 +81,7 @@ typedef struct s_info
 	struct s_info	*next;
 }	t_info;
 
-int		add_environment_variable(t_env **env, char *key, char *value, int hidden);
-void	delete_environment_key(t_env **env, char *key);
-int		get_environment_size(t_env **env);
-t_env	*find_environment_key(t_env **env, char *key);
-
+//Parser
 t_info	*parse_tokens(t_shell *shell, t_token **tokens);
 t_info	*ms_readline(t_shell *shell);
 void	register_signals(void);
@@ -119,20 +116,19 @@ int		ft_debug(t_shell *shell, int ac, char **av);
 void	handle_control_d(t_shell *shell);
 
 //Environment lst utils
-t_env	*env_addpair(t_env **lst, char *key, char *value);
+t_env	*env_addpair(char *key, char *value, t_envtype type);
 t_env	*env_lstback(t_env **env);
 t_env	*env_lstrepl_value(t_env **lst, char *key, char *value);
 void	env_lstaddback(t_env **env, t_env *new);
 void	env_lstdelone(t_env **env, char *key);
 
 //Expansions & Environment
-bool	add_pair(t_env **lst, char *key, char *value);
-void	sed_pair(t_shell *shell, char *key, char *value);
 
 //Exp v2
 t_env	*find_pair(t_shell *shell, char *key);
 char	*find_pair_list(t_env **env, char *key);
 char	*find_pair_content(t_shell *shell, char *key);
 void	set_pairv2(t_shell *shell, char *key, char *value, t_envtype type);
+void	sed_pair(t_shell *shell, char *key, char *value, t_envtype type);
 
 #endif
