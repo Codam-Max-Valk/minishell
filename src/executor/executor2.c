@@ -136,6 +136,36 @@ void	set_fd_out(t_info *cmd, int fd_out)
 	}
 }
 
+static void	child_exec(t_shell *shell, t_info *cmd, char *envp[])
+{
+	char	*cmd_p;
+
+	if (cmd->fd_in != STDIN_FILENO)
+	{
+		if (dup2(cmd->fd_in, STDIN_FILENO) < 0)
+			error_exit("dup2-1", errno);
+		close(cmd->fd_in);
+	}		
+	if (cmd->fd_out != STDOUT_FILENO)
+	{
+		if (dup2(cmd->fd_out, STDOUT_FILENO) < 0)
+			error_exit("dup2-2", errno);
+		close(cmd->fd_out);
+	}
+	close(cmd->pipe_fd[0]);
+	cmd_p = cmd_path(parse_env(envp), cmd->command[0], 1);
+	if (cmd->is_builtin == true)
+		exit(fire_builtin(shell, cmd->command));
+	if (cmd_p != NULL)
+	{
+		if (execve(cmd_p, cmd->command, envp) < 0)
+			error_exit("execve", errno);
+	}
+	ft_putstr_fd(cmd->command[0], 2);
+	ft_putendl_fd(": command not found", 2);
+	exit(127);
+}
+
 void	execute_command(t_shell *shell, t_info *cmd, char *envp[])
 {
 	pid_t	pid;
@@ -146,32 +176,7 @@ void	execute_command(t_shell *shell, t_info *cmd, char *envp[])
 		exit(EXIT_FAILURE);
 	if (pid == 0)
 	{
-		if (cmd->fd_in != STDIN_FILENO)
-		{
-			printf("fd in in child = %d\n", cmd->fd_in);
-			if (dup2(cmd->fd_in, STDIN_FILENO) < 0)
-				error_exit("dup2-1", errno);
-			close(cmd->fd_in);
-		}		
-		if (cmd->fd_out != STDOUT_FILENO)
-		{
-			printf("fd out in child = %d\n", cmd->fd_out);
-			if (dup2(cmd->fd_out, STDOUT_FILENO) < 0)
-				error_exit("dup2-2", errno);
-			close(cmd->fd_out);
-		}
-		close(cmd->pipe_fd[0]);
-		cmd_p = cmd_path(parse_env(envp), cmd->command[0], 1);
-		if (cmd->is_builtin == true)
-			exit(fire_builtin(shell, cmd->command));
-		if (cmd_p != NULL)
-		{
-			if (execve(cmd_p, cmd->command, envp) < 0)
-				error_exit("execve", errno);
-		}
-		ft_putstr_fd(cmd->command[0], 2);
-		ft_putendl_fd(": command not found", 2);
-		exit(127);
+		child_exec(shell, cmd, envp);
 	}
 	else
 	{
