@@ -7,12 +7,28 @@ void	error_exit(char *function, int error_num)
 	exit(error_num);
 }
 
-int	handle_here(const char *delim)
+char	*create_here_file(int i)
 {
-	const char *tmp_file = "/tmp/.heredoc_tmp.txt";
+	char	*tmp_file_name;
+	char	*tmp_file_num;
+
+	tmp_file_num = ft_itoa(i);
+	if (tmp_file_num == NULL)
+		return (NULL);
+	tmp_file_name = ft_strjoin("/tmp/.heredoc_", tmp_file_num);
+	free(tmp_file_num);
+	if (!tmp_file_name)
+		return (NULL);
+	return (ft_strjoin_free(tmp_file_name, ".txt"));
+}
+
+int	handle_here(const char *delim, int i)
+{
+	char		*tmp_file;
 	int			fd;
 	char		*line;
 
+	tmp_file = create_here_file(i);
 	fd = open(tmp_file, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (fd == -1)
 		error_exit("open", errno);
@@ -72,26 +88,24 @@ char	*cmd_path(char **paths, char *cmd, int path_f)
 	return (NULL);
 }
 
-void	set_fd_in(t_info *nxt, int fd_in)
+static void	set_fd_in(t_info *nxt, int fd_in)
 {
-	t_token	*tmp_tok;
+	t_token	*tmp_tok = NULL;
 	int		tmp_fd;
+	static int		i = 0;
 
 	if (nxt->inf == NULL)
-	{
 		nxt->fd_in = dup(fd_in);
-	}
 	else
 	{
-		tmp_tok = nxt->inf;
 		tmp_fd = -1;
 		nxt->fd_in = dup(fd_in);
-		while (tmp_tok != NULL)
+		while (nxt->inf != NULL)
 		{
-			if (tmp_tok->tag == T_REDIRECT_IN)
-				tmp_fd = open(tmp_tok->content, O_RDONLY);
-			else if (tmp_tok->tag == T_HERE_DOC)
-				tmp_fd = handle_here(tmp_tok->content);
+			if (nxt->inf->tag == T_REDIRECT_IN)
+				tmp_fd = open(nxt->inf->content, O_RDONLY);
+			else if (nxt->inf->tag == T_HERE_DOC)
+				tmp_fd = handle_here(nxt->inf->content, i);
 			if (tmp_fd == -1)
 				perror("infile not open");
 			else
@@ -99,7 +113,8 @@ void	set_fd_in(t_info *nxt, int fd_in)
 				dup2(tmp_fd, nxt->fd_in);
 				close(tmp_fd);
 			}
-			tmp_tok = tmp_tok->next;
+			nxt->inf = nxt->inf->next;
+			i++;
 		}
 	}
 }
@@ -110,20 +125,17 @@ void	set_fd_out(t_info *cmd, int fd_out)
 	int		tmp_fd;
 
 	if (cmd->outf == NULL)
-	{
 		cmd->fd_out = dup(fd_out);
-	}
 	else
 	{
-		tmp_tok = cmd->outf;
 		tmp_fd = -1;
 		cmd->fd_out = dup(fd_out);
-		while (tmp_tok != NULL)
+		while (cmd->outf != NULL)
 		{
-			if (tmp_tok->tag == T_APPEND)
-				tmp_fd = open(tmp_tok->content, O_CREAT | O_RDWR | O_APPEND, 0644);
-			else if (tmp_tok->tag == T_REDIRECT_OUT)
-				tmp_fd = open(tmp_tok->content, O_CREAT | O_RDWR | O_TRUNC, 0644);
+			if (cmd->outf->tag == T_APPEND)
+				tmp_fd = open(cmd->outf->content, O_CREAT | O_RDWR | O_APPEND, 0644);
+			else if (cmd->outf->tag == T_REDIRECT_OUT)
+				tmp_fd = open(cmd->outf->content, O_CREAT | O_RDWR | O_TRUNC, 0644);
 			if (tmp_fd == -1)
 				perror("outfile not open");
 			else 
@@ -131,7 +143,7 @@ void	set_fd_out(t_info *cmd, int fd_out)
 				dup2(tmp_fd, cmd->fd_out);
 				close(tmp_fd);
 			}
-			tmp_tok = tmp_tok->next;
+			cmd->outf = cmd->outf->next;
 		}
 	}
 }
@@ -140,6 +152,7 @@ static void	child_exec(t_shell *shell, t_info *cmd, char *envp[])
 {
 	char	*cmd_p;
 
+	close(cmd->pipe_fd[0]);
 	if (cmd->fd_in != STDIN_FILENO)
 	{
 		if (dup2(cmd->fd_in, STDIN_FILENO) < 0)
@@ -152,7 +165,6 @@ static void	child_exec(t_shell *shell, t_info *cmd, char *envp[])
 			error_exit("dup2-2", errno);
 		close(cmd->fd_out);
 	}
-	close(cmd->pipe_fd[0]);
 	cmd_p = cmd_path(parse_env(envp), cmd->command[0], 1);
 	if (cmd->is_builtin == true)
 		exit(fire_builtin(shell, cmd->command));
@@ -191,7 +203,6 @@ void	execute_command(t_shell *shell, t_info *cmd, char *envp[])
 void	exec_loop(t_shell *shell, t_info *info, char **envp)
 {
 	t_info	*cmd;
-	// t_info	*nxt;
 
 	if (info->command && !*info->command)
 		return ;

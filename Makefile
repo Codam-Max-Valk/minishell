@@ -5,7 +5,7 @@ RM = rm -rf
 MKDIR = mkdir -p
 
 # Compiler
-CC = gcc
+CC = cc -g
 CFLAGS = #-Wall -Werror -Wextra
 
 # Color definitions
