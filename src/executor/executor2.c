@@ -207,6 +207,13 @@ void	exec_loop(t_shell *shell, t_info *info, char **envp)
 	if (info->command && !*info->command)
 		return ;
 	set_fd_in(info, STDIN_FILENO);
+	if (info->next == NULL && does_builtin_exist(shell, *info->command) == true)
+	{
+		set_fd_out(info, STDOUT_FILENO);
+		fire_builtin(shell, info->command);
+		printf("outf:%d\n", info->fd_out);
+		return ;
+	}
 	while (info != NULL)
 	{
 		cmd = info;
