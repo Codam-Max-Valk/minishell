@@ -83,6 +83,10 @@ t_env	*find_environment_key(t_env **env, char *key);
 t_info	*parse_tokens(t_shell *shell, t_token **tokens);
 t_info	*ms_readline(t_shell *shell);
 void	register_signals(void);
+
+//Executor
+char	**parse_env(char **envp);
+char	*cmd_path(char **paths, char *cmd, int path_f);
 void	exec_loop(t_shell *shell, t_info *info, char **env);
 
 //History

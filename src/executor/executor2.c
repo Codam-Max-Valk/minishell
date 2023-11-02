@@ -52,45 +52,44 @@ int	handle_here(const char *delim, int i)
 }
 
 
-char	**parse_env(char **envp)
-{
-	char	**split_path;
-	int		i;
+// char	**parse_env(char **envp)
+// {
+// 	char	**split_path;
+// 	int		i;
 
-	i = 0;
-	while (envp[i] && ft_strncmp(envp[i], "PATH", 4))
-		i++;
-	split_path = ft_split(envp[i], ':');
-	return (split_path);
-}
+// 	i = 0;
+// 	while (envp[i] && ft_strncmp(envp[i], "PATH", 4))
+// 		i++;
+// 	split_path = ft_split(envp[i], ':');
+// 	return (split_path);
+// }
 
-char	*cmd_path(char **paths, char *cmd, int path_f)
-{
-	char	*full_cmd;
-	char	*tmp;
+// char	*cmd_path(char **paths, char *cmd, int path_f)
+// {
+// 	char	*full_cmd;
+// 	char	*tmp;
 
-	if (!cmd)
-		return (NULL);
-	if (ft_strchr(cmd, '/'))
-		return (cmd);
-	if (path_f == -1)
-		return (NULL);
-	while (*paths)
-	{
-		tmp = ft_strjoin(*paths, "/");
-		full_cmd = ft_strjoin(tmp, cmd);
-		free (tmp);
-		if (access(full_cmd, F_OK) == 0)
-			return (full_cmd);
-		free (full_cmd);
-		paths++;
-	}
-	return (NULL);
-}
+// 	if (!cmd)
+// 		return (NULL);
+// 	if (ft_strchr(cmd, '/'))
+// 		return (cmd);
+// 	if (path_f == -1)
+// 		return (NULL);
+// 	while (*paths)
+// 	{
+// 		tmp = ft_strjoin(*paths, "/");
+// 		full_cmd = ft_strjoin(tmp, cmd);
+// 		free (tmp);
+// 		if (access(full_cmd, F_OK) == 0)
+// 			return (full_cmd);
+// 		free (full_cmd);
+// 		paths++;
+// 	}
+// 	return (NULL);
+// }
 
 static void	set_fd_in(t_info *nxt, int fd_in)
 {
-	t_token	*tmp_tok = NULL;
 	int		tmp_fd;
 	static int		i = 0;
 
@@ -105,16 +104,15 @@ static void	set_fd_in(t_info *nxt, int fd_in)
 			if (nxt->inf->tag == T_REDIRECT_IN)
 				tmp_fd = open(nxt->inf->content, O_RDONLY);
 			else if (nxt->inf->tag == T_HERE_DOC)
-				tmp_fd = handle_here(nxt->inf->content, i);
+				tmp_fd = handle_here(nxt->inf->content, i++);
 			if (tmp_fd == -1)
 				perror("infile not open");
-			else
+			else 
 			{
 				dup2(tmp_fd, nxt->fd_in);
 				close(tmp_fd);
 			}
 			nxt->inf = nxt->inf->next;
-			i++;
 		}
 	}
 }
@@ -152,7 +150,6 @@ static void	child_exec(t_shell *shell, t_info *cmd, char *envp[])
 {
 	char	*cmd_p;
 
-	close(cmd->pipe_fd[0]);
 	if (cmd->fd_in != STDIN_FILENO)
 	{
 		if (dup2(cmd->fd_in, STDIN_FILENO) < 0)
@@ -188,6 +185,7 @@ void	execute_command(t_shell *shell, t_info *cmd, char *envp[])
 		exit(EXIT_FAILURE);
 	if (pid == 0)
 	{
+		close(cmd->pipe_fd[0]);
 		child_exec(shell, cmd, envp);
 	}
 	else
@@ -211,7 +209,6 @@ void	exec_loop(t_shell *shell, t_info *info, char **envp)
 	{
 		set_fd_out(info, STDOUT_FILENO);
 		fire_builtin(shell, info->command);
-		printf("outf:%d\n", info->fd_out);
 		return ;
 	}
 	while (info != NULL)
@@ -226,10 +223,7 @@ void	exec_loop(t_shell *shell, t_info *info, char **envp)
 			set_fd_out(cmd, cmd->pipe_fd[1]);
 		}
 		else
-		{
 			set_fd_out(cmd, STDOUT_FILENO);
-		}
-		printf("outf:%d\n", cmd->fd_out);
 		execute_command(shell, cmd, envp);
 	}
 }
