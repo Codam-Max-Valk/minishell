@@ -6,8 +6,8 @@ MKDIR = mkdir -p
 MAKE = make --silent
 
 # Compiler
-CC = gcc
-CFLAGS = -g #-Wall -Werror -Wextra
+CC = cc -g
+CFLAGS = #-Wall -Werror -Wextra
 
 # Color definitions
 GREEN = \033[0;92m
@@ -45,7 +45,8 @@ FILES	=	ft_freedoublearray \
 			ft_debug \
 			builtin \
 			builtin_utils \
-			executor \
+			executor2 \
+			executor_utils \
 			lexer_lst \
 			lexer \
 			lexer_helpers \

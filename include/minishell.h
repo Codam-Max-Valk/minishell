@@ -78,6 +78,7 @@ typedef struct s_info
 	int				pipe_fd[2];
 	int				fd_in;
 	int				fd_out;
+	bool			is_builtin;
 	struct s_info	*next;
 }	t_info;
 
@@ -85,7 +86,11 @@ typedef struct s_info
 t_info	*parse_tokens(t_shell *shell, t_token **tokens);
 t_info	*ms_readline(t_shell *shell);
 void	register_signals(void);
-void	exec_loop(t_shell *shell, t_info *info, char *envp[]);
+
+//Executor
+char	**parse_env(char **envp);
+char	*cmd_path(char **paths, char *cmd, int path_f);
+void	exec_loop(t_shell *shell, t_info *info, char **env);
 
 //History
 int		history_init(void);
