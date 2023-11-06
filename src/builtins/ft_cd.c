@@ -8,9 +8,9 @@ char	*find_home_path(t_shell *shell, char *av)
 
 	i = 0;
 	if (av[1] != '\0' && ft_strchr(av, '~'))
-		new_path = ft_strjoin(find_pair(&shell->environment, "HOME"), &av[1]);
+		new_path = ft_strjoin(find_pair_content(shell, "HOME"), &av[1]);
 	else if (av[0] == '~' && av[1] == '\0')
-		new_path = find_pair(&shell->environment, "HOME");
+		new_path = find_pair_content(shell, "HOME");
 	else
 		new_path = av;
 	return (new_path);
@@ -23,7 +23,7 @@ int	ft_cd(t_shell *shell, int argc, char **argv)
 	if (argc > 2)
 		return (ft_putstr_fd("cd", 2), ft_putendl_fd(": too many arguments", 2), EXIT_FAILURE);
 	if (argv[1] == NULL)
-		target = find_pair_list(&shell->environment, "HOME");
+		target = find_pair_content(shell, "HOME");
 	else
 		target = find_home_path(shell, argv[1]);
 	if (chdir(target))

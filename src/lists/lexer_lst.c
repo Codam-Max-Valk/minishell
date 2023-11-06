@@ -33,6 +33,7 @@ t_token	*token_dup(t_token *token)
 			return (NULL);
 	}
 	new->tag = token->tag;
+	new->next = NULL;
 	return (new);
 }
 

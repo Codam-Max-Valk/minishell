@@ -51,47 +51,11 @@ int	handle_here(const char *delim, int i)
 	return (open(tmp_file, O_RDONLY));
 }
 
-
-// char	**parse_env(char **envp)
-// {
-// 	char	**split_path;
-// 	int		i;
-
-// 	i = 0;
-// 	while (envp[i] && ft_strncmp(envp[i], "PATH", 4))
-// 		i++;
-// 	split_path = ft_split(envp[i], ':');
-// 	return (split_path);
-// }
-
-// char	*cmd_path(char **paths, char *cmd, int path_f)
-// {
-// 	char	*full_cmd;
-// 	char	*tmp;
-
-// 	if (!cmd)
-// 		return (NULL);
-// 	if (ft_strchr(cmd, '/'))
-// 		return (cmd);
-// 	if (path_f == -1)
-// 		return (NULL);
-// 	while (*paths)
-// 	{
-// 		tmp = ft_strjoin(*paths, "/");
-// 		full_cmd = ft_strjoin(tmp, cmd);
-// 		free (tmp);
-// 		if (access(full_cmd, F_OK) == 0)
-// 			return (full_cmd);
-// 		free (full_cmd);
-// 		paths++;
-// 	}
-// 	return (NULL);
-// }
-
 static void	set_fd_in(t_info *nxt, int fd_in)
 {
-	int		tmp_fd;
+	int				tmp_fd;
 	static int		i = 0;
+	t_token			*tmp_red;
 
 	if (nxt->inf == NULL)
 		nxt->fd_in = dup(fd_in);
@@ -99,12 +63,13 @@ static void	set_fd_in(t_info *nxt, int fd_in)
 	{
 		tmp_fd = -1;
 		nxt->fd_in = dup(fd_in);
-		while (nxt->inf != NULL)
+		tmp_red = nxt->inf;
+		while (tmp_red != NULL)
 		{
-			if (nxt->inf->tag == T_REDIRECT_IN)
-				tmp_fd = open(nxt->inf->content, O_RDONLY);
-			else if (nxt->inf->tag == T_HERE_DOC)
-				tmp_fd = handle_here(nxt->inf->content, i++);
+			if (tmp_red->tag == T_REDIRECT_IN)
+				tmp_fd = open(tmp_red->content, O_RDONLY);
+			else if (tmp_red->tag == T_HERE_DOC)
+				tmp_fd = handle_here(tmp_red->content, i++);
 			if (tmp_fd == -1)
 				perror("infile not open");
 			else 
@@ -112,15 +77,15 @@ static void	set_fd_in(t_info *nxt, int fd_in)
 				dup2(tmp_fd, nxt->fd_in);
 				close(tmp_fd);
 			}
-			nxt->inf = nxt->inf->next;
+			tmp_red = tmp_red->next;
 		}
 	}
 }
 
 void	set_fd_out(t_info *cmd, int fd_out)
 {
-	t_token	*tmp_tok;
 	int		tmp_fd;
+	t_token			*tmp_red;
 
 	if (cmd->outf == NULL)
 		cmd->fd_out = dup(fd_out);
@@ -128,12 +93,13 @@ void	set_fd_out(t_info *cmd, int fd_out)
 	{
 		tmp_fd = -1;
 		cmd->fd_out = dup(fd_out);
-		while (cmd->outf != NULL)
+		tmp_red = cmd->outf;
+		while (tmp_red != NULL)
 		{
-			if (cmd->outf->tag == T_APPEND)
-				tmp_fd = open(cmd->outf->content, O_CREAT | O_RDWR | O_APPEND, 0644);
-			else if (cmd->outf->tag == T_REDIRECT_OUT)
-				tmp_fd = open(cmd->outf->content, O_CREAT | O_RDWR | O_TRUNC, 0644);
+			if (tmp_red->tag == T_APPEND)
+				tmp_fd = open(tmp_red->content, O_CREAT | O_RDWR | O_APPEND, 0644);
+			else if (tmp_red->tag == T_REDIRECT_OUT)
+				tmp_fd = open(tmp_red->content, O_CREAT | O_RDWR | O_TRUNC, 0644);
 			if (tmp_fd == -1)
 				perror("outfile not open");
 			else 
@@ -141,7 +107,7 @@ void	set_fd_out(t_info *cmd, int fd_out)
 				dup2(tmp_fd, cmd->fd_out);
 				close(tmp_fd);
 			}
-			cmd->outf = cmd->outf->next;
+			tmp_red = tmp_red->next;
 		}
 	}
 }
@@ -198,32 +164,36 @@ void	execute_command(t_shell *shell, t_info *cmd, char *envp[])
 	}
 }
 
-void	exec_loop(t_shell *shell, t_info *info, char **envp)
+void	exec_loop(t_shell *shell, t_info **info, char **envp)
 {
+	t_info	*nxt;
 	t_info	*cmd;
 
-	if (info->command && !*info->command)
+	cmd = *info;
+	if (cmd->command && !*cmd->command)
 		return ;
-	set_fd_in(info, STDIN_FILENO);
-	if (info->next == NULL && does_builtin_exist(shell, *info->command) == true)
+	set_fd_in(cmd, STDIN_FILENO);
+	set_fd_out(cmd, STDOUT_FILENO);
+	if (cmd->next == NULL && does_builtin_exist(shell, *cmd->command) == true)
 	{
-		set_fd_out(info, STDOUT_FILENO);
-		fire_builtin(shell, info->command);
+		fire_builtin(shell, cmd->command);
+		close(cmd->fd_in);
+		close(cmd->fd_out);
 		return ;
 	}
-	while (info != NULL)
+	while (cmd != NULL)
 	{
-		cmd = info;
-		info = info->next;
-		if (pipe(cmd->pipe_fd) == -1)
+		nxt = cmd;
+		cmd = cmd->next;
+		if (pipe(nxt->pipe_fd) == -1)
 			error_exit("pipe", errno);
-		if (info)
+		if (cmd)
 		{
-			set_fd_in(info, cmd->pipe_fd[0]);
-			set_fd_out(cmd, cmd->pipe_fd[1]);
+			set_fd_in(cmd, nxt->pipe_fd[0]);
+			set_fd_out(nxt, nxt->pipe_fd[1]);
 		}
 		else
-			set_fd_out(cmd, STDOUT_FILENO);
-		execute_command(shell, cmd, envp);
+			set_fd_out(nxt, STDOUT_FILENO);
+		execute_command(shell, nxt, envp);
 	}
 }

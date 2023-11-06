@@ -7,7 +7,7 @@ MAKE = make --silent
 
 # Compiler
 CC = cc -g
-CFLAGS = #-Wall -Werror -Wextra
+CFLAGS = -fsanitize=address #-Wall -Werror -Wextra
 
 # Color definitions
 GREEN = \033[0;92m
@@ -58,6 +58,7 @@ FILES	=	ft_freedoublearray \
 			parser \
 			environment \
 			environment_lst \
+			garbage_collector
 	
 HEADER	=	./include/minishell.h \
 			./include/colors.h \

@@ -31,7 +31,6 @@ void	builtins_init(t_shell *shell)
 	set_builtin(shell, "export", ft_export);
 	set_builtin(shell, "unset", ft_unset);
 	set_builtin(shell, "debug", ft_debug);
-
 	set_builtin(shell, "calc", ft_calc);
 
 }
@@ -62,7 +61,9 @@ int	main(int argc, char **argv, char **envp)
 		{
 			continue ;
 		}
-		exec_loop(shell, info, envp);
+		exec_loop(shell, &info, envp);
+		clean_info(&info);
 	}
+	cleanup_base(shell);
 	return (EXIT_SUCCESS);
 }

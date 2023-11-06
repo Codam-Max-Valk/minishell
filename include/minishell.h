@@ -90,7 +90,7 @@ void	register_signals(void);
 //Executor
 char	**parse_env(char **envp);
 char	*cmd_path(char **paths, char *cmd, int path_f);
-void	exec_loop(t_shell *shell, t_info *info, char **env);
+void	exec_loop(t_shell *shell, t_info **info, char **env);
 
 //History
 int		history_init(void);
@@ -116,6 +116,8 @@ int		ft_calc(t_shell *shell, int ac, char **av);
 
 //Debug builtin
 int		ft_debug(t_shell *shell, int ac, char **av);
+void	cleanup_base(t_shell *shell);
+void	clean_info(t_info **info);
 
 //Signals
 void	handle_control_d(t_shell *shell);
