@@ -35,6 +35,8 @@
 
 typedef struct s_shell	t_shell;
 
+int	g_exit_code = 0;
+
 typedef int				(*t_builtin_func)(t_shell *, int, char **);
 
 typedef enum e_envtype

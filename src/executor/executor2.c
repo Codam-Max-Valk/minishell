@@ -4,7 +4,8 @@
 void	error_exit(char *function, int error_num)
 {
 	perror(function);
-	exit(error_num);
+	g_exit_code = error_num;
+	exit(g_exit_code);
 }
 
 char	*create_here_file(int i)
@@ -144,8 +145,10 @@ static void	child_exec(t_shell *shell, t_info *cmd, char *envp[])
 void	execute_command(t_shell *shell, t_info *cmd, char *envp[])
 {
 	pid_t	pid;
+	int		status;
 	char	*cmd_p;
 
+	
 	pid = fork();
 	if (pid == -1)
 		exit(EXIT_FAILURE);
@@ -160,7 +163,9 @@ void	execute_command(t_shell *shell, t_info *cmd, char *envp[])
 		close(cmd->pipe_fd[1]);
 		close(cmd->fd_in);
 		close(cmd->fd_out);
-		waitpid(pid, NULL, 0);
+		waitpid(pid, &status, 0);
+		if(WIFEXITED(status))
+			g_exit_code = status;
 	}
 }
 
