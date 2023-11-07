@@ -23,14 +23,14 @@ t_token	*token_dup(t_token *token)
 {
 	t_token	*new;
 
-	new = malloc(sizeof(t_token));
+	new = ft_calloc(1, sizeof(t_token));
 	if (!new)
 		return (NULL);
 	if (token->content)
 	{
 		new->content = ft_strdup(token->content);
 		if (!new->content)
-			return (NULL);
+			return (free(new), NULL);
 	}
 	new->tag = token->tag;
 	new->next = NULL;
@@ -59,7 +59,7 @@ void	token_lstclear(t_token **tokens, t_token_clearfunc func)
 	t_token	*temp;
 
 	index = *tokens;
-	while (index->next)
+	while (index)
 	{
 		temp = index->next;
 		func(index);

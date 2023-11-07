@@ -7,7 +7,7 @@ MAKE = make --silent
 
 # Compiler
 CC = cc -g
-CFLAGS = -fsanitize=address #-Wall -Werror -Wextra
+CFLAGS = #-fsanitize=address #-Wall -Werror -Wextra
 
 # Color definitions
 GREEN = \033[0;92m

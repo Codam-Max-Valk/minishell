@@ -1,6 +1,7 @@
 #include "../include/minishell.h"
 #include "../include/libft.h"
 
+
 void	environment_init(t_shell *shell, char **envp)
 {
 	size_t		i;
@@ -32,7 +33,6 @@ void	builtins_init(t_shell *shell)
 	set_builtin(shell, "unset", ft_unset);
 	set_builtin(shell, "debug", ft_debug);
 	set_builtin(shell, "calc", ft_calc);
-
 }
 
 int	main(int argc, char **argv, char **envp)

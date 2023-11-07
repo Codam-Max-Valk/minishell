@@ -35,8 +35,6 @@
 
 typedef struct s_shell	t_shell;
 
-int	g_exit_code = 0;
-
 typedef int				(*t_builtin_func)(t_shell *, int, char **);
 
 typedef enum e_envtype
@@ -120,6 +118,7 @@ int		ft_calc(t_shell *shell, int ac, char **av);
 int		ft_debug(t_shell *shell, int ac, char **av);
 void	cleanup_base(t_shell *shell);
 void	clean_info(t_info **info);
+void	clean_tokens(t_token **tokens);
 
 //Signals
 void	handle_control_d(t_shell *shell);

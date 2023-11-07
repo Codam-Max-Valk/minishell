@@ -4,8 +4,7 @@
 void	error_exit(char *function, int error_num)
 {
 	perror(function);
-	g_exit_code = error_num;
-	exit(g_exit_code);
+	exit(error_num);
 }
 
 char	*create_here_file(int i)
@@ -116,6 +115,7 @@ void	set_fd_out(t_info *cmd, int fd_out)
 static void	child_exec(t_shell *shell, t_info *cmd, char *envp[])
 {
 	char	*cmd_p;
+	char	**env_p;
 
 	if (cmd->fd_in != STDIN_FILENO)
 	{
@@ -129,7 +129,8 @@ static void	child_exec(t_shell *shell, t_info *cmd, char *envp[])
 			error_exit("dup2-2", errno);
 		close(cmd->fd_out);
 	}
-	cmd_p = cmd_path(parse_env(envp), cmd->command[0], 1);
+	env_p = parse_env(envp);
+	cmd_p = cmd_path(env_p, cmd->command[0], 1);
 	if (cmd->is_builtin == true)
 		exit(fire_builtin(shell, cmd->command));
 	if (cmd_p != NULL)
@@ -139,10 +140,14 @@ static void	child_exec(t_shell *shell, t_info *cmd, char *envp[])
 	}
 	ft_putstr_fd(cmd->command[0], 2);
 	ft_putendl_fd(": command not found", 2);
+	free_double_array(env_p);
+	free(cmd_p);
+	cleanup_base(shell);
+	clean_info(&cmd);
 	exit(127);
 }
 
-void	execute_command(t_shell *shell, t_info *cmd, char *envp[])
+int		execute_command(t_shell *shell, t_info *cmd, char *envp[])
 {
 	pid_t	pid;
 	int		status;
@@ -151,11 +156,12 @@ void	execute_command(t_shell *shell, t_info *cmd, char *envp[])
 	
 	pid = fork();
 	if (pid == -1)
-		exit(EXIT_FAILURE);
-	if (pid == 0)
+		return(EXIT_FAILURE);
+	else if (pid == 0)
 	{
 		close(cmd->pipe_fd[0]);
 		child_exec(shell, cmd, envp);
+		return (EXIT_SUCCESS);
 	}
 	else
 	{
@@ -165,7 +171,8 @@ void	execute_command(t_shell *shell, t_info *cmd, char *envp[])
 		close(cmd->fd_out);
 		waitpid(pid, &status, 0);
 		if(WIFEXITED(status))
-			g_exit_code = status;
+			return(WEXITSTATUS(status));
+		return (EXIT_SUCCESS);
 	}
 }
 
