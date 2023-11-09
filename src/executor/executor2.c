@@ -188,6 +188,12 @@ void	exec_loop(t_shell *shell, t_info **info, char **envp)
 	set_fd_out(cmd, STDOUT_FILENO);
 	if (cmd->next == NULL && does_builtin_exist(shell, *cmd->command) == true)
 	{
+		if (cmd->fd_out != STDOUT_FILENO)
+		{
+			if (dup2(cmd->fd_out, STDOUT_FILENO) < 0)
+				error_exit("dup2-2", errno);
+			close(cmd->fd_out);
+		}
 		fire_builtin(shell, cmd->command);
 		close(cmd->fd_in);
 		close(cmd->fd_out);

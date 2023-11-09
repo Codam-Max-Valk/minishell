@@ -26,6 +26,7 @@ int	ft_cd(t_shell *shell, int argc, char **argv)
 		target = find_pair_content(shell, "HOME");
 	else
 		target = find_home_path(shell, argv[1]);
+	printf("going to path: %s\n", target);
 	if (chdir(target))
 	{
 		perror("cd");
