@@ -160,8 +160,7 @@ int		execute_command(t_shell *shell, t_info *cmd, char *envp[])
 	else if (pid == 0)
 	{
 		close(cmd->pipe_fd[0]);
-		child_exec(shell, cmd, envp);
-		return (EXIT_SUCCESS);
+		return (child_exec(shell, cmd, envp), EXIT_SUCCESS);
 	}
 	else
 	{
@@ -212,6 +211,6 @@ void	exec_loop(t_shell *shell, t_info **info, char **envp)
 		}
 		else
 			set_fd_out(nxt, STDOUT_FILENO);
-		execute_command(shell, nxt, envp);
+		shell->exit_code = execute_command(shell, nxt, envp);
 	}
 }

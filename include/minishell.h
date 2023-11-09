@@ -61,6 +61,7 @@ typedef struct s_environment
 typedef struct s_shell
 {
 	int			exited;
+	int			exit_code;
 	char		*last_command;
 	t_builtin	*(builtins[MAX_BUILTIN]);
 	size_t		size;
