@@ -83,7 +83,10 @@ t_token	*tokenizer2(char *s)
 		tag = guess_tag(&s[index]);
 		x = add_tagged_token(&tokens, s, index, tag);
 		if (x >= 1)
+		{
 			index += x;
+			tokens->size++;
+		}
 		else
 			return (token_lstclear(&tokens, token_free), NULL);
 	}

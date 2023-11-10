@@ -91,7 +91,6 @@ void	set_pairv2(t_shell *shell, char *key, char *value, t_envtype type)
 		env_lstaddback(&shell->expansion, node);
 }
 
-//Rewrite these functions under me.
 void	sed_pair(t_shell *shell, char *key, char *value, t_envtype type)
 {
 	t_env	*node;

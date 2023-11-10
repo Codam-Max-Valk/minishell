@@ -1,7 +1,6 @@
 #include "../include/minishell.h"
 #include "../include/libft.h"
 
-
 void	environment_init(t_shell *shell, char **envp)
 {
 	size_t		i;
@@ -51,7 +50,6 @@ int	main(int argc, char **argv, char **envp)
 	history_init();
 	builtins_init(shell);
 	environment_init(shell, envp);
-
 	ft_printf("[Environment] %s\n", find_pair_content(shell, "PATH"));
 	while (shell->exited)
 	{

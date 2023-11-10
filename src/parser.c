@@ -15,13 +15,52 @@ static void	print_tokens(t_token **tokens)
 			get_tag_name(token->tag), token->content);
 		token = token->next;
 	}
+	token = *tokens;
+	while (token->tag != T_END)
+		token = token->next;
+	if ((*tokens)->size == token->size)
+		printf("Size: %d\n", token->size);
+	else
+		printf("--- Size overlapping! ---\nFirst index: (Size: %d)\nLast index:  (Size: %d)\n",
+			(*tokens)->size, token->size);
 }
+
+static bool	add_expansion(t_info *node, t_shell *shell, t_token *token, int index)
+{
+	char	*expander;
+
+	expander = find_pair_content(shell, token->content);
+	if (!expander)
+		expander = ft_strdup("\0");
+	if (!expander)
+		return (false);
+	node->command[index] = ft_strdup(expander);
+	if (!node->command[index])
+	{
+		free(expander);
+		return (false);
+	}
+	free(expander);
+	return (true);
+}
+
+static bool add_redirect_token(t_token **pipe, t_token *token)
+{
+	t_token	*tmp;
+
+	tmp = token_dup(token);
+	if (!tmp)
+		return (printf("error: cannot duplicate token\n"), false);
+	token_addback(pipe, tmp);
+	return (true);
+}
+
+
 
 static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 {
 	t_info	*node;
 	t_info	*tmp_nod;
-	t_token	*tmp_tok;
 	size_t	index;
 	char	*expander;
 	char	**key_value;
@@ -55,35 +94,26 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 		}
 		else if (token->tag == T_EXPANSION)
 		{
-			expander = find_pair_content(shell, token->content);
-			if (!expander)
-				expander = ft_strdup("\0");
-			if (!expander)
-				return (NULL);
-			node->command[index] = ft_strdup(expander);
-			if (!node->command[index])
-				return (NULL);
+			if (!add_expansion(node, shell, token, index))
+				return (NULL /* Clean everything... */);
 			index++;
 		}
 		else if (token->tag == T_COMMAND || token->tag == T_DOUBLE_QUOTE || token->tag == T_SINGLE_QUOTE)
 		{
-			node->command[index++] = ft_strdup(token->content);
+			node->command[index] = ft_strdup(token->content);
+			if (!node->command[index])
+				return (NULL /* Clean everything... */);
+			index++;
 		}
 		else if (token->tag == T_REDIRECT_OUT || token->tag == T_APPEND)
 		{
-			tmp_tok = token_dup(token);
-			if (!tmp_tok)
-				return (ft_printf("error: cannot duplicate token\n"), NULL); //Add error handling.
-			token_addback(&node->outf, tmp_tok);
-			tmp_tok = NULL;
+			if (!add_redirect_token(&node->outf, token))
+				return (NULL /* Clean everything... */);
 		}
 		else if (token->tag == T_REDIRECT_IN || token->tag == T_HERE_DOC)
 		{
-			tmp_tok = token_dup(token);
-			if (!tmp_tok)
-				return (ft_printf("error: cannot duplicate token\n"), NULL); //Add error handling.
-			token_addback(&node->inf, tmp_tok);
-			tmp_tok = NULL;
+			if (!add_redirect_token(&node->inf, token))
+				return (NULL /* Clean everything... */);
 		}
 		token = token->next;
 	}

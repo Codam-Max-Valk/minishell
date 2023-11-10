@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/09/27 13:38:15 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/11/10 16:37:50 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct s_token
 {
 	char			*content;
 	t_tag			tag;
+	int				size;
 	struct s_token	*next;
 }	t_token;
 
