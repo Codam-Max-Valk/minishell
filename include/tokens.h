@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/11/10 16:37:50 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/11/13 17:18:35 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 
 typedef enum e_tag
 {
+	T_NONE			= 0,
 	T_DOUBLE_QUOTE	= 1,
 	T_SINGLE_QUOTE	= 2,
 	T_REDIRECT_IN	= 3,
@@ -43,8 +44,7 @@ typedef enum e_tag
 	T_EQUALS		= 8,
 	T_EXPANSION		= 9,
 	T_SEMICOLUMN	= 10,
-	T_COMMAND		= 11,
-	T_END			= 12,
+	T_COMMAND		= 11
 }	t_tag;
 
 typedef struct s_token

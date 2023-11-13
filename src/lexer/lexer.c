@@ -15,7 +15,7 @@ const char	*get_tag_name(t_tag tag)
 		[T_EXPANSION] = "Expansions", \
 		[T_SEMICOLUMN] = "Semi column", \
 		[T_COMMAND] = "Command/Argument", \
-		[T_END] = "End", \
+		[T_NONE] = "None", \
 	};
 
 	if (!tag_table[tag])
@@ -90,7 +90,7 @@ t_token	*tokenizer2(char *s)
 		else
 			return (token_lstclear(&tokens, token_free), NULL);
 	}
-	token_addback(&tokens, token_create(NULL, T_END)); //Solid cliphanger to make this code function temporary
+	token_addback(&tokens, token_create(NULL, 0)); //Solid cliphanger to make this code function temporary
 	return (tokens);
 }
 

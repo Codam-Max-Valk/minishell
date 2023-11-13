@@ -16,16 +16,19 @@ static void	print_tokens(t_token **tokens)
 		token = token->next;
 	}
 	token = *tokens;
-	while (token->tag != T_END)
+	while (token->next->tag != T_NONE)
 		token = token->next;
 	if ((*tokens)->size == token->size)
 		printf("Size: %d\n", token->size);
 	else
 		printf("--- Size overlapping! ---\nFirst index: (Size: %d)\nLast index:  (Size: %d)\n",
 			(*tokens)->size, token->size);
+	/*
+	sizeof_node(&token)
+	*/
 }
 
-static bool	add_expansion(t_info *node, t_shell *shell, t_token *token, int index)
+static bool	find_expansion(t_info *node, t_shell *shell, t_token *token, int index)
 {
 	char	*expander;
 
@@ -55,46 +58,86 @@ static bool add_redirect_token(t_token **pipe, t_token *token)
 	return (true);
 }
 
+static bool add_expansion(t_shell *shell, t_token *token)
+{
+	char	**key_value;
+	char	*value;
 
+	if (!shell || !token)
+		return (false);
+	key_value = ft_split(token->content, EQUALS);
+	value = NULL;
+	if (!key_value)
+		return (NULL);
+	if (key_value[1])
+	{
+		value = ft_strtrim(key_value[1], TOKEN_DELIMITOR);
+		if (!value)
+			return (free_double_array(key_value), false);
+	}
+	sed_pair(shell, key_value[0], value, LOCAL_ENVIRONMENT);
+	free_double_array(key_value);
+	return (true);
+}
+
+static int	sizeof_node(t_token **tokens)
+{
+	int		i;
+	t_token	*token;
+
+	i = 0;
+	token = *tokens;
+	while (token->tag != T_PIPE
+		&& token->tag != T_NONE
+		&& token)
+	{
+		if (token->tag == T_COMMAND
+			|| token->tag == T_EXPANSION
+			|| token->tag == T_EQUALS
+			|| token->tag == T_DOUBLE_QUOTE
+			|| token->tag == T_SINGLE_QUOTE)
+		i++;
+		token = token->next;
+	}
+	return (i);
+}
+
+static void	info_addback(t_info **info, t_info *new)
+{
+	t_info	*tmp_nod;
+
+	if (!*info)
+	{
+		*info = new;
+		return ;
+	}
+	tmp_nod = *info;
+	while (tmp_nod->next)
+		tmp_nod = tmp_nod->next;
+	tmp_nod->next = new;
+}
 
 static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 {
 	t_info	*node;
-	t_info	*tmp_nod;
 	size_t	index;
-	char	*expander;
-	char	**key_value;
-	char	*value;
 
 	index = 0;
 	node = ft_calloc(1, sizeof(t_info));
-	value = NULL;
 	if (!node)
 		return (NULL);
-	node->command = ft_calloc(16, sizeof(char *)); //Fix by calculating how many commands there are between the pipes. or Begin till (pipe / end)
-	while (token && token->tag != T_PIPE && token->tag != T_END)
+	node->command = ft_calloc(sizeof_node(&token) + 1, sizeof(char *));
+	while (token && token->tag != T_PIPE && token->tag != T_NONE)
 	{
 		if (token->tag == T_EQUALS)
 		{
-			key_value = ft_split(token->content, EQUALS);
-			if (!key_value)
-				return (NULL);
-			if (key_value[1])
-			{
-				value = ft_strtrim(key_value[1], TOKEN_DELIMITOR);
-				if (!value)
-				{
-					value = NULL;
-					return (free_double_array(key_value), NULL);
-				}
-			}
-			sed_pair(shell, key_value[0], value, LOCAL_ENVIRONMENT);
-			free_double_array(key_value);
-			value = NULL;
+			if (!add_expansion(shell, token))
+				return (NULL /* Clean everything... */);
+			index++;
 		}
 		else if (token->tag == T_EXPANSION)
 		{
-			if (!add_expansion(node, shell, token, index))
+			if (!find_expansion(node, shell, token, index))
 				return (NULL /* Clean everything... */);
 			index++;
 		}
@@ -117,15 +160,7 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 		}
 		token = token->next;
 	}
-	if (!*info)
-		*info = node;
-	else
-	{
-		tmp_nod = *info;
-		while (tmp_nod->next)
-			tmp_nod = tmp_nod->next;
-		tmp_nod->next = node;
-	}
+	info_addback(info, node);
 	return (token);
 }
 
@@ -136,13 +171,13 @@ t_info	*parse_tokens(t_shell *shell, t_token **tokens)
 
 	info = NULL;
 	token = *tokens;
-	if ((*tokens)->tag == T_END)
+	if ((*tokens)->tag == T_NONE)
 		return (NULL);
 	print_tokens(tokens);
 	while (token)
 	{
 		token = emplace_tokens(shell, &info, token);
-		if (token->tag == T_PIPE || token->tag == T_END)
+		if (token->tag == T_PIPE || token->tag == T_NONE)
 			token = token->next;
 	}
 	return (info);
