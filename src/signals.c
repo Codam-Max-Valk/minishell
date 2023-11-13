@@ -1,6 +1,5 @@
 #include "../include/minishell.h"
 
-
 static void	handle_control_c(int code)
 {
 	ft_putchar('\n');

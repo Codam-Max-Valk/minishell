@@ -2,32 +2,6 @@
 #include "../include/minishell.h"
 #include "../include/tokens.h"
 
-static void	print_tokens(t_token **tokens)
-{
-	t_token	*token;
-
-	if (!tokens || !*tokens)
-		return ;
-	token = *tokens;
-	while (token)
-	{
-		printf("Tag: %-16s : Content: %s\n",
-			get_tag_name(token->tag), token->content);
-		token = token->next;
-	}
-	token = *tokens;
-	while (token->next->tag != T_NONE)
-		token = token->next;
-	if ((*tokens)->size == token->size)
-		printf("Size: %d\n", token->size);
-	else
-		printf("--- Size overlapping! ---\nFirst index: (Size: %d)\nLast index:  (Size: %d)\n",
-			(*tokens)->size, token->size);
-	/*
-	sizeof_node(&token)
-	*/
-}
-
 static bool	find_expansion(t_info *node, t_shell *shell, t_token *token, int index)
 {
 	char	*expander;
@@ -102,21 +76,6 @@ static int	sizeof_node(t_token **tokens)
 	return (i);
 }
 
-static void	info_addback(t_info **info, t_info *new)
-{
-	t_info	*tmp_nod;
-
-	if (!*info)
-	{
-		*info = new;
-		return ;
-	}
-	tmp_nod = *info;
-	while (tmp_nod->next)
-		tmp_nod = tmp_nod->next;
-	tmp_nod->next = new;
-}
-
 static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 {
 	t_info	*node;
@@ -173,12 +132,20 @@ t_info	*parse_tokens(t_shell *shell, t_token **tokens)
 	token = *tokens;
 	if ((*tokens)->tag == T_NONE)
 		return (NULL);
-	print_tokens(tokens);
+	while (DEBUG && token)
+	{
+		printf("Tag: %-16s : Content: %s\n",
+			get_tag_name(token->tag), token->content);
+		token = token->next;
+	}
+	token = *tokens;
 	while (token)
 	{
-		token = emplace_tokens(shell, &info, token);
 		if (token->tag == T_PIPE || token->tag == T_NONE)
 			token = token->next;
+		else
+			token = emplace_tokens(shell, &info, token);
+		
 	}
 	return (info);
 }

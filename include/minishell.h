@@ -33,6 +33,8 @@
 # define HISTORY_FILE ".minishell_history"
 # define MAX_BUILTIN 10
 
+# define DEBUG 1
+
 typedef struct s_shell	t_shell;
 
 typedef int				(*t_builtin_func)(t_shell *, int, char **);
@@ -131,13 +133,14 @@ t_env	*env_lstrepl_value(t_env **lst, char *key, char *value);
 void	env_lstaddback(t_env **env, t_env *new);
 void	env_lstdelone(t_env **env, char *key);
 
-//Expansions & Environment
-
 //Exp v2
 t_env	*find_pair(t_shell *shell, char *key);
 char	*find_pair_list(t_env **env, char *key);
 char	*find_pair_content(t_shell *shell, char *key);
 void	set_pairv2(t_shell *shell, char *key, char *value, t_envtype type);
 void	sed_pair(t_shell *shell, char *key, char *value, t_envtype type);
+
+// More lst functions
+void	info_addback(t_info **info, t_info *new);
 
 #endif

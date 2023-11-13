@@ -58,6 +58,7 @@ FILES	=	ft_freedoublearray \
 			parser \
 			environment \
 			environment_lst \
+			parser_lst \
 			garbage_collector
 	
 HEADER	=	./include/minishell.h \
@@ -90,13 +91,13 @@ lib:
 
 clean:
 	@$(MAKE) clean -C $(LIBFT)
-	@$(RM) $(OBJ)
-	@$(RM) $(OBJ_DIR)
+	@$(RM) $(OBJ) $(OBJ_DIR)
 	@echo "Cleaning"
 
 fclean: clean
 	@$(MAKE) fclean -C $(LIBFT)
 	@$(RM) $(NAME)
+	@echo "Cleaning"
 
 re: fclean all
 
