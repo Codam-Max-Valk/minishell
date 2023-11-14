@@ -60,6 +60,9 @@ typedef struct s_environment
 
 typedef struct s_shell
 {
+	int			stdin_fd;
+	int			stdout_fd;
+	int			pipe_fd[2];
 	int			exited;
 	char		*last_command;
 	t_builtin	*(builtins[MAX_BUILTIN]);
@@ -75,6 +78,8 @@ typedef struct s_info
 	char			**command;
 	t_token			*inf;
 	t_token			*outf;
+	int				pipe_in;
+	int				pipe_out;
 	int				pipe_fd[2];
 	int				fd_in;
 	int				fd_out;
@@ -82,15 +87,26 @@ typedef struct s_info
 	struct s_info	*next;
 }	t_info;
 
+typedef	enum	e_io
+{
+	input,
+	output
+}	t_io;
+
 //Parser
 t_info	*parse_tokens(t_shell *shell, t_token **tokens);
 t_info	*ms_readline(t_shell *shell);
 void	register_signals(void);
 
 //Executor
+void	reset_fd(t_shell *shell, bool end);
 char	**parse_env(char **envp);
 char	*cmd_path(char **paths, char *cmd, int path_f);
 void	exec_loop(t_shell *shell, t_info **info, char **env);
+void	set_redir_out(t_shell *shell, t_info *info, t_token *file);
+void	set_redir_in(t_shell *shell, t_info *info, t_token *file);
+void	reset_info_fd(t_info *info);
+int		handle_here(const char *delim);
 
 //History
 int		history_init(void);
