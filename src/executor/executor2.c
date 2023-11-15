@@ -22,13 +22,14 @@ char	*create_here_file(int i)
 	return (ft_strjoin_free(tmp_file_name, ".txt"));
 }
 
-int	handle_here(const char *delim, int i)
+int	handle_here(const char *delim)
 {
 	char		*tmp_file;
+	static int	i = 0;
 	int			fd;
 	char		*line;
 
-	tmp_file = create_here_file(i);
+	tmp_file = create_here_file(i++);
 	fd = open(tmp_file, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (fd == -1)
 		error_exit("open", errno);
@@ -51,84 +52,72 @@ int	handle_here(const char *delim, int i)
 	return (open(tmp_file, O_RDONLY));
 }
 
-static void	set_fd_in(t_info *nxt, int fd_in)
-{
-	int				tmp_fd;
-	static int		i = 0;
-	t_token			*tmp_red;
+// static void	set_fd_in(t_info *nxt, int fd_in)
+// {
+// 	int				tmp_fd;
+// 	static int		i = 0;
+// 	t_token			*tmp_red;
 
-	if (nxt->inf == NULL)
-		nxt->fd_in = dup(fd_in);
-	else
-	{
-		tmp_fd = -1;
-		nxt->fd_in = dup(fd_in);
-		tmp_red = nxt->inf;
-		while (tmp_red != NULL)
-		{
-			if (tmp_red->tag == T_REDIRECT_IN)
-				tmp_fd = open(tmp_red->content, O_RDONLY);
-			else if (tmp_red->tag == T_HERE_DOC)
-				tmp_fd = handle_here(tmp_red->content, i++);
-			if (tmp_fd == -1)
-				perror("infile not open");
-			else 
-			{
-				dup2(tmp_fd, nxt->fd_in);
-				close(tmp_fd);
-			}
-			tmp_red = tmp_red->next;
-		}
-	}
-}
+// 	if (nxt->inf == NULL)
+// 		nxt->fd_in = dup(fd_in);
+// 	else
+// 	{
+// 		tmp_fd = -1;
+// 		nxt->fd_in = dup(fd_in);
+// 		tmp_red = nxt->inf;
+// 		while (tmp_red != NULL)
+// 		{
+// 			if (tmp_red->tag == T_REDIRECT_IN)
+// 				tmp_fd = open(tmp_red->content, O_RDONLY);
+// 			else if (tmp_red->tag == T_HERE_DOC)
+// 				tmp_fd = handle_here(tmp_red->content, i++);
+// 			if (tmp_fd == -1)
+// 				perror("infile not open");
+// 			else 
+// 			{
+// 				dup2(tmp_fd, nxt->fd_in);
+// 				close(tmp_fd);
+// 			}
+// 			tmp_red = tmp_red->next;
+// 		}
+// 	}
+// }
 
-void	set_fd_out(t_info *cmd, int fd_out)
-{
-	int		tmp_fd;
-	t_token			*tmp_red;
+// void	set_fd_out(t_info *cmd, int fd_out)
+// {
+// 	int		tmp_fd;
+// 	t_token			*tmp_red;
 
-	if (cmd->outf == NULL)
-		cmd->fd_out = dup(fd_out);
-	else
-	{
-		tmp_fd = -1;
-		cmd->fd_out = dup(fd_out);
-		tmp_red = cmd->outf;
-		while (tmp_red != NULL)
-		{
-			if (tmp_red->tag == T_APPEND)
-				tmp_fd = open(tmp_red->content, O_CREAT | O_RDWR | O_APPEND, 0644);
-			else if (tmp_red->tag == T_REDIRECT_OUT)
-				tmp_fd = open(tmp_red->content, O_CREAT | O_RDWR | O_TRUNC, 0644);
-			if (tmp_fd == -1)
-				perror("outfile not open");
-			else 
-			{
-				dup2(tmp_fd, cmd->fd_out);
-				close(tmp_fd);
-			}
-			tmp_red = tmp_red->next;
-		}
-	}
-}
+// 	if (cmd->outf == NULL)
+// 		cmd->fd_out = dup(fd_out);
+// 	else
+// 	{
+// 		tmp_fd = -1;
+// 		cmd->fd_out = dup(fd_out);
+// 		tmp_red = cmd->outf;
+// 		while (tmp_red != NULL)
+// 		{
+// 			if (tmp_red->tag == T_APPEND)
+// 				tmp_fd = open(tmp_red->content, O_CREAT | O_RDWR | O_APPEND, 0644);
+// 			else if (tmp_red->tag == T_REDIRECT_OUT)
+// 				tmp_fd = open(tmp_red->content, O_CREAT | O_RDWR | O_TRUNC, 0644);
+// 			if (tmp_fd == -1)
+// 				perror("outfile not open");
+// 			else 
+// 			{
+// 				dup2(tmp_fd, cmd->fd_out);
+// 				close(tmp_fd);
+// 			}
+// 			tmp_red = tmp_red->next;
+// 		}
+// 	}
+// }
 
 static void	child_exec(t_shell *shell, t_info *cmd, char *envp[])
 {
 	char	*cmd_p;
 	char	**env_p;
 
-	if (cmd->fd_in != STDIN_FILENO)
-	{
-		if (dup2(cmd->fd_in, STDIN_FILENO) < 0)
-			error_exit("dup2-1", errno);
-		close(cmd->fd_in);
-	}		
-	if (cmd->fd_out != STDOUT_FILENO)
-	{
-		if (dup2(cmd->fd_out, STDOUT_FILENO) < 0)
-			error_exit("dup2-2", errno);
-		close(cmd->fd_out);
-	}
 	env_p = parse_env(envp);
 	cmd_p = cmd_path(env_p, cmd->command[0], 1);
 	if (cmd->is_builtin == true)
@@ -159,19 +148,54 @@ int		execute_command(t_shell *shell, t_info *cmd, char *envp[])
 		return(EXIT_FAILURE);
 	else if (pid == 0)
 	{
-		close(cmd->pipe_fd[0]);
-		return (child_exec(shell, cmd, envp), EXIT_SUCCESS);
+		close(shell->pipe_fd[1]);
+		child_exec(shell, cmd, envp);
+		return (EXIT_SUCCESS);
 	}
 	else
 	{
-		close(cmd->pipe_fd[0]);
-		close(cmd->pipe_fd[1]);
-		close(cmd->fd_in);
-		close(cmd->fd_out);
 		waitpid(pid, &status, 0);
+		reset_info_fd(cmd);
 		if(WIFEXITED(status))
 			return(WEXITSTATUS(status));
 		return (EXIT_SUCCESS);
+	}
+}
+
+int	single_command_exec(t_shell *shell, t_info *cmd, char **envp)
+{
+	if (does_builtin_exist(shell, *cmd->command) == true)
+	{
+		return (fire_builtin(shell, cmd->command));
+	}
+	else
+	{
+		return (execute_command(shell, cmd, envp));
+	}
+}
+
+void	set_fd_side(t_shell *shell, t_info *cmd, t_token *head, t_io side)
+{
+	t_token	*tmp;
+
+	tmp = head;
+	if (tmp == NULL && cmd->pipe_out > 0 && side == output && cmd->next)
+	{
+		dup2(cmd->pipe_out, STDOUT_FILENO);
+		return ;
+	}
+	if (tmp == NULL && cmd->pipe_in > 0 && side == input)
+	{
+		dup2(cmd->pipe_in, STDIN_FILENO);
+		return ;
+	}
+	while (tmp)
+	{
+		if (side == input)
+			set_redir_in(shell, cmd, tmp);
+		else if (side == output)
+			set_redir_out(shell, cmd, tmp);
+		tmp = tmp->next;
 	}
 }
 
@@ -183,34 +207,28 @@ void	exec_loop(t_shell *shell, t_info **info, char **envp)
 	cmd = *info;
 	if (cmd->command && !*cmd->command)
 		return ;
-	set_fd_in(cmd, STDIN_FILENO);
-	set_fd_out(cmd, STDOUT_FILENO);
-	if (cmd->next == NULL && does_builtin_exist(shell, *cmd->command) == true)
+	if (cmd->next == NULL)
 	{
-		if (cmd->fd_out != STDOUT_FILENO)
-		{
-			if (dup2(cmd->fd_out, STDOUT_FILENO) < 0)
-				error_exit("dup2-2", errno);
-			close(cmd->fd_out);
-		}
-		fire_builtin(shell, cmd->command);
-		close(cmd->fd_in);
-		close(cmd->fd_out);
+		set_fd_side(shell, cmd, cmd->inf, input);
+		set_fd_side(shell, cmd, cmd->outf, output);
+		single_command_exec(shell, cmd, envp);
+		reset_fd(shell);
 		return ;
 	}
 	while (cmd != NULL)
 	{
-		nxt = cmd;
-		cmd = cmd->next;
-		if (pipe(nxt->pipe_fd) == -1)
+		nxt = cmd->next;
+		if (pipe(shell->pipe_fd) == -1)
 			error_exit("pipe", errno);
-		if (cmd)
+		cmd->pipe_out = shell->pipe_fd[1];
+		if (nxt)
 		{
-			set_fd_in(cmd, nxt->pipe_fd[0]);
-			set_fd_out(nxt, nxt->pipe_fd[1]);
+			nxt->pipe_in = shell->pipe_fd[0];
 		}
-		else
-			set_fd_out(nxt, STDOUT_FILENO);
-		shell->exit_code = execute_command(shell, nxt, envp);
+		set_fd_side(shell, cmd, cmd->inf, input);
+		set_fd_side(shell, cmd, cmd->outf, output);
+		execute_command(shell, cmd, envp);
+		reset_fd(shell);
+		cmd = cmd->next;
 	}
 }

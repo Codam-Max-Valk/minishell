@@ -46,10 +46,13 @@ int	main(int argc, char **argv, char **envp)
 	if (!shell)
 		return (EXIT_FAILURE);
 	shell->exited = 1;
-	
+
 	history_init();
 	builtins_init(shell);
 	environment_init(shell, envp);
+
+	shell->stdin_fd = dup(STDIN_FILENO);
+	shell->stdout_fd = dup(STDOUT_FILENO);
 	ft_printf("[Environment] %s\n", find_pair_content(shell, "PATH"));
 	while (shell->exited)
 	{
