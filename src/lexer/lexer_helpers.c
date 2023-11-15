@@ -3,8 +3,6 @@
 
 t_tag	guess_tag(char *s)
 {
-	if (!s || !*s)
-		return (0);
 	if (ft_strncmp(s, APPEND, 2) == 0)
 		return (T_APPEND);
 	else if (ft_strncmp(s, HERE_DOC, 2) == 0)

@@ -6,11 +6,11 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/27 13:56:23 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/09/27 13:56:38 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/11/15 15:04:08 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "libft.h"
 
 char	*ft_safe_strdup(const char *s1)
 {

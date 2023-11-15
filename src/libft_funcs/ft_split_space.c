@@ -6,11 +6,11 @@
 /*   By: mvalk <mvalk@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/18 15:29:40 by mvalk         #+#    #+#                 */
-/*   Updated: 2023/09/26 18:58:45 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/11/15 15:04:36 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "libft.h"
 
 static	size_t	ft_substrlen(char const *s)
 {
@@ -41,7 +41,7 @@ static	size_t	ft_strcounter(char const *s)
 	return (str_count + 1);
 }
 
-static	int	ft_free_split_str(char **split_str, ssize_t array_i)
+static	int	ft_free_split_str(char **split_str, size_t array_i)
 {
 	if (!split_str[array_i])
 	{
@@ -58,7 +58,7 @@ static	int	ft_free_split_str(char **split_str, ssize_t array_i)
 
 char	**ft_split_space(char const *s)
 {
-	ssize_t	array_i;
+	size_t	array_i;
 	char	**split_str;
 
 	array_i = 0;
@@ -83,22 +83,3 @@ char	**ft_split_space(char const *s)
 	split_str[array_i] = NULL;
 	return (split_str);
 }
-
-// int main(void)
-// {
-// 	char *a = "      split       this for   me  !";
-// 	size_t	i = 0;
-// 	char	**split_a = ft_split(a, ' ');
-
-// 	printf("stringcount: %lu\n", ft_strcounter(a, ' '));
-// 	while (i < ft_strcounter(a, ' '))
-// 	{
-// 		printf("string %lu: %s\n", i, split_a[i]);
-// 		i++;
-// 	}
-// 	for(int i = 0; split_a[i] != NULL; i++)
-// 		free(split_a[i]);
-// 	free (split_a);
-// 	system("leaks -q a.out");
-// 	return (0);
-// }

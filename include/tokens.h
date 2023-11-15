@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/11/13 17:18:35 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/11/15 15:18:34 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,14 @@ int			get_redirect_length(char *s);
 int			get_token_length(t_tag tag);
 int			get_expander_length(char *s);
 
+// More stuff to organize
+int			sizeof_node(t_token **tokens);
+
 //lexer.c
 t_token		*tokenizer2(char *s);
 void		token_free(t_token *token);
 
-//Remove once done.
+//Debug.
 const char	*get_tag_name(t_tag tag);
 
 #endif

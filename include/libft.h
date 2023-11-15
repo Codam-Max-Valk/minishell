@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/03 17:52:19 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/09/27 13:56:46 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/11/15 15:00:53 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ int		ft_isalpha(int c);
 int		ft_isascii(int c);
 int		ft_isdigit(int c);
 int		ft_isprint(int c);
-int		ft_isnull(char *s);
 bool	ft_isnumber(const char *str);
+int		ft_isspace(char c);
 
 //File Operations
 void	ft_putchar_fd(char c, int fd);
@@ -79,7 +79,9 @@ size_t	ft_strlcpy(char *dst, char *src, size_t size);
 size_t	ft_strlen(const char *str);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
+int		ft_strcmp(char *s1, char *s2);
 char	*ft_strnstr(const char *haystack, const char *needle, size_t len);
+char	*ft_strstr(char *str, char *to_find);
 char	*ft_strrchr(const char *s, int c);
 char	*ft_strtrim(char *s1, char *set);
 char	*ft_substr(const char *s, unsigned int start, size_t len);
@@ -88,17 +90,14 @@ int		ft_tolower(int c);
 int		ft_toupper(int c);
 
 //Memory
+void	*ft_realloc(void *ptr, size_t size);
 void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t count, size_t size);
-void	*ft_realloc(void *ptr, size_t size);
 void	*ft_memchr(const void *s, int c, size_t n);
 int		ft_memcmp(const void *s1, const void *s2, size_t n);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
 void	*ft_memmove(void *dst, const void *src, size_t len);
 void	*ft_memset(void *b, int c, size_t len);
-
-//Free
-void	free_double_array(char **s);
 
 //Link List
 /// @brief 	Allocates (with malloc(3)) and returns a new node, 
@@ -167,11 +166,11 @@ void	ft_lstiter(t_list *lst, void (*f)(void *));
 /// @return The new list, NULL if the allocation fails.
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
-char	*ft_strstr(char *str, char *to_find);
+// Functions for Minishell
 char	**ft_split_first_occurrence(char *line, char delimiter);
-int		ft_strcmp(char *s1, char *s2);
-int		ft_isspace(char c);
 char	**ft_split_space(char const *s);
 char	*ft_safe_strdup(const char *s1);
+int		ft_isnull(char *s);
+void	free_double_array(char **s);
 
 #endif

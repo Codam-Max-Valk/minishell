@@ -6,8 +6,8 @@ MKDIR = mkdir -p
 MAKE = make --silent
 
 # Compiler
-CC = cc -g
-CFLAGS = #-fsanitize=address #-Wall -Werror -Wextra
+CC = gcc -g
+CFLAGS = -fstack-usage #-fsanitize=address #-Wall -Werror -Wextra
 
 # Color definitions
 GREEN = \033[0;92m
@@ -27,11 +27,7 @@ READLINE_L = -lreadline
 # Files
 FILES	=	ft_freedoublearray \
 			ft_isnull \
-			ft_isspace \
-			ft_realloc \
 			ft_split_space \
-			ft_strcmp \
-			ft_strstr \
 			ft_safe_strdup \
 			ft_split_first_occurence \
 			ft_unset \
@@ -51,11 +47,13 @@ FILES	=	ft_freedoublearray \
 			lexer \
 			lexer_helpers \
 			lexer_utils \
+			lexer_debug \
 			history \
 			main \
 			signals \
 			readline \
 			parser \
+			parser_utils \
 			environment \
 			environment_lst \
 			parser_lst \
@@ -66,16 +64,15 @@ HEADER	=	./include/minishell.h \
 			./include/tokens.h \
 			./include/libft.h \
 
-vpath %.c	$(SRC_DIR) $(SRC_DIR)/builtins $(SRC_DIR)/executor $(SRC_DIR)/lists $(SRC_DIR)/lexer $(SRC_DIR)/libft_funcs
+vpath %.c	$(SRC_DIR) $(SRC_DIR)/builtins $(SRC_DIR)/parser $(SRC_DIR)/executor $(SRC_DIR)/lists $(SRC_DIR)/lexer $(SRC_DIR)/libft_funcs
 
 SRC 	= ${addsuffix .c, $(FILES)}
 OBJ 	= ${patsubst %.c, $(OBJ_DIR)/%.o, $(SRC)}
 
 # Rules
 all: $(NAME)
-	#@./$(NAME)
 
-$(OBJ_DIR)/%.o: %.c | bin
+$(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	@$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
 	@echo "$(GREEN)Compiling: $(RESET)$(notdir $<)"
 
@@ -83,8 +80,8 @@ $(NAME): $(OBJ) $(HEADER) | lib
 	@$(CC) $(CFLAGS) $(OBJ) -I$(INC_DIR) $(LIBFT)/libft.a $(READLINE_L) -o $(NAME)
 	@echo "$(GREEN)Compiling: $(RESET)$(NAME)"
 
-bin:
-	@$(MKDIR) $(OBJ_DIR)
+$(OBJ_DIR):
+	@$(MKDIR) -p $(OBJ_DIR)
 
 lib:
 	@$(MAKE) -C $(LIBFT)
@@ -101,4 +98,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all lib clean fclean re bin
+.PHONY: all lib clean fclean re
