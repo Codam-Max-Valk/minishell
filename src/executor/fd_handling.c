@@ -1,14 +1,9 @@
 #include "../../include/minishell.h"
 
-void	reset_fd(t_shell *shell, bool end)
+void	reset_fd(t_shell *shell)
 {
 	dup2(shell->stdin_fd, STDIN_FILENO);
 	dup2(shell->stdout_fd, STDOUT_FILENO);
-	if (end == false)
-	{
-		shell->stdin_fd = dup(STDIN_FILENO);
-		shell->stdout_fd = dup(STDOUT_FILENO);
-	}
 }
 
 void	reset_info_fd(t_info *info)

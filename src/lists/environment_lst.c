@@ -20,20 +20,38 @@ t_env	*env_addpair(char *key, char *value, t_envtype type)
 	return (node);
 }
 
-t_env	*env_lstrepl_value(t_env **lst, char *key, char *value)
+// t_env	*env_lstrepl_value(t_env **lst, char *key, char *value)
+// {
+// 	t_env	*node;
+
+// 	node = *lst;
+// 	while (node && ft_strcmp(node->key, key) == 0)
+// 		node = node->next;
+// 	if (!node)
+// 		return (NULL);
+// 	free(node->value);
+// 	node->value = ft_strdup(value);
+// 	if (!node->value)
+// 		return (env_lstdelone(lst, key), NULL);
+// 	return (node);
+// }
+
+void	env_lstrepl_value(t_env **lst, char *key, char *value)
 {
 	t_env	*node;
 
 	node = *lst;
-	while (node && ft_strcmp(node->key, key) == 0)
+	while (node && ft_strcmp(node->key, key) != 0)
 		node = node->next;
 	if (!node)
-		return (NULL);
-	free(node->value);
-	node->value = ft_strdup(value);
+		return ;
+	if (node->value)
+		free(node->value);
+	node->value = NULL;
+	if (value)
+		node->value = ft_safe_strdup(value);
 	if (!node->value)
-		return (env_lstdelone(lst, key), NULL);
-	return (node);
+		return (env_lstdelone(lst, key));
 }
 
 t_env	*env_lstback(t_env **env)

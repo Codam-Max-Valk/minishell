@@ -50,7 +50,7 @@ int	main(int argc, char **argv, char **envp)
 
 	history_init();
 	builtins_init(shell);
-	//environment_init(shell, envp);
+	environment_init(shell, envp);
 
 	shell->stdin_fd = dup(STDIN_FILENO);
 	shell->stdout_fd = dup(STDOUT_FILENO);

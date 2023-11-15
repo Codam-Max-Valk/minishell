@@ -148,15 +148,14 @@ int		execute_command(t_shell *shell, t_info *cmd, char *envp[])
 		return(EXIT_FAILURE);
 	else if (pid == 0)
 	{
-		// close(shell->pipe_fd[0]);
 		close(shell->pipe_fd[1]);
 		child_exec(shell, cmd, envp);
 		return (EXIT_SUCCESS);
 	}
 	else
 	{
-		reset_info_fd(cmd);
 		waitpid(pid, &status, 0);
+		reset_info_fd(cmd);
 		if(WIFEXITED(status))
 			return(WEXITSTATUS(status));
 		return (EXIT_SUCCESS);
@@ -213,7 +212,7 @@ void	exec_loop(t_shell *shell, t_info **info, char **envp)
 		set_fd_side(shell, cmd, cmd->inf, input);
 		set_fd_side(shell, cmd, cmd->outf, output);
 		single_command_exec(shell, cmd, envp);
-		reset_fd(shell, true);
+		reset_fd(shell);
 		return ;
 	}
 	while (cmd != NULL)
@@ -229,7 +228,7 @@ void	exec_loop(t_shell *shell, t_info **info, char **envp)
 		set_fd_side(shell, cmd, cmd->inf, input);
 		set_fd_side(shell, cmd, cmd->outf, output);
 		execute_command(shell, cmd, envp);
-		reset_fd(shell, (nxt == NULL));
+		reset_fd(shell);
 		cmd = cmd->next;
 	}
 }

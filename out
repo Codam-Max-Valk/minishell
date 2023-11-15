@@ -1,9 +1,11 @@
-drwxr-xr-x  8 mvalk piscine   224 Nov 14 17:40 .
-drwxr-xr-x  2 mvalk piscine  4096 Nov 14 17:40 bin
-drwxr-xr-x  8 mvalk piscine   200 Nov 14 13:56 .git
+drwxr-xr-x  8 mvalk piscine   241 Nov 15 17:50 .
+drwxr-xr-x  2 mvalk piscine  4096 Nov 15 17:50 bin
+drwxr-xr-x  8 mvalk piscine   200 Nov 15 16:22 .git
 -rw-r--r--  1 mvalk piscine    83 Sep  6 15:10 .gitmodules
 -rw-r--r--  1 mvalk piscine    30 Nov  9 13:38 KANKER.sh
 drwxr-xr-x  5 mvalk piscine   104 Nov 14 16:51 libft
--rwxr-xr-x  1 mvalk piscine 98792 Nov 14 17:40 minishell
+-rwxr-xr-x  1 mvalk piscine 98976 Nov 15 17:50 minishell
 -rw-------  1 mvalk piscine  2706 Nov  2 14:26 .minishell_history
+-rw-r--r--  1 mvalk piscine   504 Nov 15 17:51 out
 -rw-r--r--  1 mvalk piscine  1047 Sep 27 17:24 README.md
+ha

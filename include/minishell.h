@@ -64,6 +64,7 @@ typedef struct s_shell
 	int			stdout_fd;
 	int			pipe_fd[2];
 	int			exited;
+	int			exit_code;
 	char		*last_command;
 	t_builtin	*(builtins[MAX_BUILTIN]);
 	size_t		size;
@@ -99,7 +100,7 @@ t_info	*ms_readline(t_shell *shell);
 void	register_signals(void);
 
 //Executor
-void	reset_fd(t_shell *shell, bool end);
+void	reset_fd(t_shell *shell);
 char	**parse_env(char **envp);
 char	*cmd_path(char **paths, char *cmd, int path_f);
 void	exec_loop(t_shell *shell, t_info **info, char **env);
@@ -142,7 +143,8 @@ void	handle_control_d(t_shell *shell);
 //Environment lst utils
 t_env	*env_addpair(char *key, char *value, t_envtype type);
 t_env	*env_lstback(t_env **env);
-t_env	*env_lstrepl_value(t_env **lst, char *key, char *value);
+// t_env	*env_lstrepl_value(t_env **lst, char *key, char *value);
+void	env_lstrepl_value(t_env **lst, char *key, char *value);
 void	env_lstaddback(t_env **env, t_env *new);
 void	env_lstdelone(t_env **env, char *key);
 
