@@ -58,7 +58,8 @@ FILES	=	ft_freedoublearray \
 			environment \
 			environment_lst \
 			parser_lst \
-			garbage_collector
+			garbage_collector \
+			ft_replaceall \
 	
 HEADER	=	./include/minishell.h \
 			./include/colors.h \

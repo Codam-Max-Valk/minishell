@@ -13,11 +13,7 @@ static bool	find_expansion(t_info *node, t_shell *shell, t_token *token, int ind
 		return (false);
 	node->command[index] = ft_strdup(expander);
 	if (!node->command[index])
-	{
-		free(expander);
 		return (false);
-	}
-	free(expander);
 	return (true);
 }
 
@@ -39,7 +35,7 @@ static bool	add_expansion(t_shell *shell, t_token *token)
 
 	if (!shell || !token)
 		return (false);
-	key_value = ft_split(token->content, EQUALS);
+	key_value = ft_split_first_occurrence(token->content, EQUALS);
 	value = NULL;
 	if (!key_value)
 		return (NULL);
@@ -53,8 +49,6 @@ static bool	add_expansion(t_shell *shell, t_token *token)
 	free_double_array(key_value);
 	return (true);
 }
-
-
 
 static int	add_tokens_back(t_shell *shell, t_info *node, t_token *token, int index)
 {
@@ -70,9 +64,7 @@ static int	add_tokens_back(t_shell *shell, t_info *node, t_token *token, int ind
 			return (-1);
 		index++;
 	}
-	else if (token->tag == T_COMMAND
-		|| token->tag == T_DOUBLE_QUOTE
-		|| token->tag == T_SINGLE_QUOTE)
+	else if (token->tag == T_COMMAND || token->tag == T_DOUBLE_QUOTE || token->tag == T_SINGLE_QUOTE)
 	{
 		node->command[index] = ft_strdup(token->content);
 		if (!node->command[index])
@@ -124,15 +116,16 @@ t_info	*parse_tokens(t_shell *shell, t_token **tokens)
 		return (NULL);
 	while (token)
 	{
-		if (DEBUG)
-		{
-			printf("Tag: %-16s : Content: %s\n",
-				get_tag_name(token->tag), token->content);
-		}
+		printf("Tag: %-16s : Content: %s\n",
+			get_tag_name(token->tag), token->content);
+		token = token->next;
+	}
+	token = *tokens;
+	while (token)
+	{
+		token = emplace_tokens(shell, &info, token);
 		if (token->tag == T_PIPE || token->tag == T_NONE)
 			token = token->next;
-		else
-			token = emplace_tokens(shell, &info, token);
 	}
 	return (info);
 }

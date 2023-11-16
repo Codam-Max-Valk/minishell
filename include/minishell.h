@@ -96,6 +96,9 @@ typedef	enum	e_io
 	output
 }	t_io;
 
+//String
+char	*ft_replaceall(const char *str, char c);
+
 //Parser
 t_info	*parse_tokens(t_shell *shell, t_token **tokens);
 t_info	*ms_readline(t_shell *shell);

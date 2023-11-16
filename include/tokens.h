@@ -6,7 +6,7 @@
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/11 16:53:18 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/11/15 15:18:34 by cbijman       ########   odam.nl         */
+/*   Updated: 2023/11/16 14:27:55 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct s_token
 //Typedefs for function pointers.
 typedef int		(*t_token_lengthfunc)(char *);
 typedef void	(*t_token_clearfunc)(t_token *);
+typedef int		(*t_tokenizer_funcmap)(t_token **, char *, int, enum e_tag);
 
 //lexer_lst.c
 t_token		*token_create(char *arg, t_tag tag);

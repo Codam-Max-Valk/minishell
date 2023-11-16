@@ -1,5 +1,5 @@
-#include "../include/tokens.h"
-#include "../include/libft.h"
+#include "tokens.h"
+#include "libft.h"
 
 int	get_quote_length(char *s)
 {
@@ -33,9 +33,11 @@ int	get_redirect_length(char *s)
 	if (!s || !*s || !tag)
 		return (PARSE_FAILURE);
 	index = get_token_length(tag);
-	while (ft_isspace(s[index])) //Quote handling
+	while (ft_isspace(s[index]))
 		index++;
-	while (s[index] && !ft_isspace(s[index]) && !ft_issymbol(&s[index]))
+	while (s[index]
+		&& !ft_isspace(s[index])
+		&& !ft_issymbol(&s[index]))
 	{
 		length++;
 		index++;
@@ -86,6 +88,7 @@ int	get_expander_length(char *s)
 		&& !ft_isspace(s[length])
 		&& !ft_issymbol(&s[length]))
 		length++;
+	printf("Expansion: %s\n", ft_substr(s, 0, length));
 	return (length);
 }
 
