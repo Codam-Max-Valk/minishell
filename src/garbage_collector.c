@@ -51,3 +51,13 @@ void	clean_tokens(t_token **tokens)
 	}
 	*tokens = NULL;
 }
+
+void	child_cleanup(t_shell *shell, t_info *cmd, char *cmd_p, char **env_p)
+{
+	if (env_p != NULL)
+		free_double_array(env_p);
+	if (cmd_p != NULL)
+		free(cmd_p);
+	cleanup_base(shell);
+	clean_info(&cmd);
+}

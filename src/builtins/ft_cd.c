@@ -12,7 +12,7 @@ char	*find_home_path(t_shell *shell, char *av)
 	else if (av[0] == '~' && av[1] == '\0')
 		new_path = ft_safe_strdup(find_pair_content(shell, "HOME"));
 	else
-		new_path = ft_strdup(av);
+		new_path = ft_safe_strdup(av);
 	return (new_path);
 }
 
@@ -22,7 +22,8 @@ int	ft_cd(t_shell *shell, int argc, char **argv)
 	char	*oldpwd;
 
 	if (argc > 2)
-		return (ft_putstr_fd("cd", 2), ft_putendl_fd(": too many arguments", 2), EXIT_FAILURE);
+		return (ft_putstr_fd("cd", 2),
+			ft_putendl_fd(": too many arguments", 2), EXIT_FAILURE);
 	if (ft_strcmp("-", argv[1]) == 0)
 		target = ft_safe_strdup(find_pair_content(shell, "OLDPWD"));
 	else if (argv[1] == NULL)
@@ -38,11 +39,7 @@ int	ft_cd(t_shell *shell, int argc, char **argv)
 		free(oldpwd);
 	}
 	if (chdir(target))
-	{
-		free(target);
-		return (perror("cd"), EXIT_FAILURE);
-	}
-	if (target)
-		free(target);
+		return (free(target), perror("cd"), EXIT_FAILURE);
+	free(target);
 	return (EXIT_SUCCESS);
 }

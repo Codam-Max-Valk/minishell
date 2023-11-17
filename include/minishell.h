@@ -64,7 +64,6 @@ typedef struct s_shell
 {
 	int			stdin_fd;
 	int			stdout_fd;
-	int			pipe_fd[2];
 	int			exited;
 	int			exit_code;
 	char		*last_command;
@@ -104,8 +103,10 @@ char	*ft_replaceall(const char *str, char c);
 t_info	*parse_tokens(t_shell *shell, t_token **tokens);
 t_info	*ms_readline(t_shell *shell);
 void	register_signals(void);
+void	handle_control_c(int code);
 
 //Executor
+void	error_exit(char *function, int error_num);
 void	reset_fd(t_shell *shell);
 char	**parse_env(char **envp);
 char	*cmd_path(char **paths, char *cmd, int path_f);
@@ -114,6 +115,8 @@ void	set_redir_out(t_shell *shell, t_info *info, t_token *file);
 void	set_redir_in(t_shell *shell, t_info *info, t_token *file);
 void	reset_info_fd(t_info *info);
 int		handle_here(const char *delim);
+void	child_cleanup(t_shell *shell, t_info *cmd, char *cmd_p, char **env_p);
+
 
 //History
 int		history_init(void);

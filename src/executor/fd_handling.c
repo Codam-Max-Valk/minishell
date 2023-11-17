@@ -1,9 +1,51 @@
 #include "../../include/minishell.h"
 
-void	reset_fd(t_shell *shell)
+static char	*create_here_file(int i)
 {
-	dup2(shell->stdin_fd, STDIN_FILENO);
-	dup2(shell->stdout_fd, STDOUT_FILENO);
+	char	*tmp_file_name;
+	char	*tmp_file_num;
+
+	tmp_file_num = ft_itoa(i);
+	if (tmp_file_num == NULL)
+		return (NULL);
+	tmp_file_name = ft_strjoin("/tmp/.heredoc_", tmp_file_num);
+	free(tmp_file_num);
+	if (!tmp_file_name)
+		return (NULL);
+	return (ft_strjoin_free(tmp_file_name, ".txt"));
+}
+
+int	handle_here(const char *delim)
+{
+	char		*tmp_file;
+	static int	i = 0;
+	int			fd;
+	char		*line;
+
+	tmp_file = create_here_file(i++);
+	fd = open(tmp_file, O_CREAT | O_RDWR | O_TRUNC, 0644);
+	if (fd == -1)
+		error_exit("open", errno);
+	while (1)
+	{
+		line = readline(">");
+		if (line == NULL)
+		{
+			close(fd);
+			return (open(tmp_file, O_RDONLY));
+		}
+		if (ft_strcmp(line, (char *)delim) == 0)
+		{
+			free(line);
+			break ;
+		}
+		line = ft_strjoin_free(line, "\n");
+		if (write(fd, line, ft_strlen(line)) == -1)
+			error_exit("write", errno);
+		free(line);
+	}
+	close(fd);
+	return (open(tmp_file, O_RDONLY));
 }
 
 void	reset_info_fd(t_info *info)
@@ -36,7 +78,6 @@ void	set_redir_in(t_shell *shell, t_info *info, t_token *file)
 		ft_putstr_fd(file->content, STDERR_FILENO);
 		strerror(ENOENT);
 	}
-	// dup2(info->fd_in, STDIN_FILENO);
 }
 
 void	set_redir_out(t_shell *shell, t_info *info, t_token *file)
@@ -53,7 +94,6 @@ void	set_redir_out(t_shell *shell, t_info *info, t_token *file)
 		ft_putstr_fd(file->content, STDERR_FILENO);
 		strerror(errno);
 	}
-	// dup2(info->fd_out, STDOUT_FILENO);
 }
 
 

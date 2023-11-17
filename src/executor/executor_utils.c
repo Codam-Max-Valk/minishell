@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+void	reset_fd(t_shell *shell)
+{
+	dup2(shell->stdin_fd, STDIN_FILENO);
+	dup2(shell->stdout_fd, STDOUT_FILENO);
+}
+
 char	**parse_env(char **envp)
 {
 	char	**split_path;
