@@ -78,6 +78,7 @@ typedef struct s_shell
 
 typedef struct s_info
 {
+	pid_t			pid;
 	char			**command;
 	t_token			*inf;
 	t_token			*outf;
