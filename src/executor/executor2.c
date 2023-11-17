@@ -52,67 +52,6 @@ int	handle_here(const char *delim)
 	return (open(tmp_file, O_RDONLY));
 }
 
-// static void	set_fd_in(t_info *nxt, int fd_in)
-// {
-// 	int				tmp_fd;
-// 	static int		i = 0;
-// 	t_token			*tmp_red;
-
-// 	if (nxt->inf == NULL)
-// 		nxt->fd_in = dup(fd_in);
-// 	else
-// 	{
-// 		tmp_fd = -1;
-// 		nxt->fd_in = dup(fd_in);
-// 		tmp_red = nxt->inf;
-// 		while (tmp_red != NULL)
-// 		{
-// 			if (tmp_red->tag == T_REDIRECT_IN)
-// 				tmp_fd = open(tmp_red->content, O_RDONLY);
-// 			else if (tmp_red->tag == T_HERE_DOC)
-// 				tmp_fd = handle_here(tmp_red->content, i++);
-// 			if (tmp_fd == -1)
-// 				perror("infile not open");
-// 			else 
-// 			{
-// 				dup2(tmp_fd, nxt->fd_in);
-// 				close(tmp_fd);
-// 			}
-// 			tmp_red = tmp_red->next;
-// 		}
-// 	}
-// }
-
-// void	set_fd_out(t_info *cmd, int fd_out)
-// {
-// 	int		tmp_fd;
-// 	t_token			*tmp_red;
-
-// 	if (cmd->outf == NULL)
-// 		cmd->fd_out = dup(fd_out);
-// 	else
-// 	{
-// 		tmp_fd = -1;
-// 		cmd->fd_out = dup(fd_out);
-// 		tmp_red = cmd->outf;
-// 		while (tmp_red != NULL)
-// 		{
-// 			if (tmp_red->tag == T_APPEND)
-// 				tmp_fd = open(tmp_red->content, O_CREAT | O_RDWR | O_APPEND, 0644);
-// 			else if (tmp_red->tag == T_REDIRECT_OUT)
-// 				tmp_fd = open(tmp_red->content, O_CREAT | O_RDWR | O_TRUNC, 0644);
-// 			if (tmp_fd == -1)
-// 				perror("outfile not open");
-// 			else 
-// 			{
-// 				dup2(tmp_fd, cmd->fd_out);
-// 				close(tmp_fd);
-// 			}
-// 			tmp_red = tmp_red->next;
-// 		}
-// 	}
-// }
-
 static void	child_exec(t_shell *shell, t_info *cmd, char *envp[])
 {
 	char	*cmd_p;
@@ -140,7 +79,6 @@ void	set_child_fd_in(t_info *cmd)
 {
 	if (cmd->pipe_in < 1)
 	{
-		// printf("no pipe in: cmd = %s\nfd_out:\t[%d]\nfd_in:\t[%d]\n", cmd->command[0], cmd->fd_out, cmd->fd_in);
 		if (cmd->fd_in > 0)
 		{
 			dup2(cmd->fd_in, STDIN_FILENO);
@@ -149,17 +87,12 @@ void	set_child_fd_in(t_info *cmd)
 	}
 	else
 	{
-		// printf("yes pipe in: cmd = %s\nfd_out:\t[%d]\nfd_in:\t[%d]\npipe_in:\t[%d]\npipe_out:\t[%d]\n", cmd->command[0], cmd->fd_out, cmd->fd_in, cmd->pipe_in, cmd->pipe_out);
+		dup2(cmd->pipe_in, STDIN_FILENO);
+		close(cmd->pipe_in);
 		if (cmd->fd_in > 0)
 		{
 			dup2(cmd->fd_in, STDIN_FILENO);
 			close(cmd->fd_in);
-			close(cmd->pipe_in);
-		}
-		else
-		{
-			dup2(cmd->pipe_in, STDIN_FILENO);
-			close(cmd->pipe_in);
 		}
 	}
 }
@@ -168,7 +101,6 @@ void	set_child_fd_out(t_info *cmd)
 {
 	if (cmd->pipe_out < 1)
 	{
-		// printf("no pipe out: cmd = %s\nfd_out:\t[%d]\nfd_in:\t[%d]\n", cmd->command[0], cmd->fd_out, cmd->fd_in);
 		if (cmd->fd_out > 2)
 		{
 			dup2(cmd->fd_out, STDOUT_FILENO);
@@ -177,7 +109,6 @@ void	set_child_fd_out(t_info *cmd)
 	}
 	else
 	{
-		// printf("yes pipe out: cmd=%s\nfd_out:\t[%d]\nfd_in:\t[%d]\npipe_in:\t[%d]\npipe_out:\t[%d]\n", cmd->command[0], cmd->fd_out, cmd->fd_in, cmd->pipe_in, cmd->pipe_out);
 		dup2(cmd->pipe_out, STDOUT_FILENO);
 		close(cmd->pipe_out);
 		if (cmd->fd_out > 2)
@@ -195,10 +126,10 @@ int		execute_command(t_shell *shell, t_info *cmd, char *envp[])
 	char	*cmd_p;
 
 	
-	pid = fork();
-	if (pid == -1)
+	cmd->pid = fork();
+	if (cmd->pid == -1)
 		return(EXIT_FAILURE);
-	else if (pid == 0)
+	else if (cmd->pid == 0)
 	{
 		set_child_fd_in(cmd);
 		set_child_fd_out(cmd);
@@ -207,10 +138,7 @@ int		execute_command(t_shell *shell, t_info *cmd, char *envp[])
 	}
 	else
 	{
-		// reset_info_fd(cmd);
-		// waitpid(-1, &status, 0);
-		// if(WIFEXITED(status))
-		// 	return(WEXITSTATUS(status));
+		reset_info_fd(cmd);
 		return (EXIT_SUCCESS);
 	}
 }
@@ -223,7 +151,10 @@ int	single_command_exec(t_shell *shell, t_info *cmd, char **envp)
 	}
 	else
 	{
-		return (execute_command(shell, cmd, envp));
+		execute_command(shell, cmd, envp);
+		reset_info_fd(cmd);
+		waitpid(-1, NULL, 0);
+		return (EXIT_SUCCESS);
 	}
 }
 
@@ -247,7 +178,7 @@ void	exec_loop(t_shell *shell, t_info **info, char **envp)
 {
 	t_info	*nxt;
 	t_info	*cmd;
-	int i = 0;
+	int		status;
 
 	cmd = *info;
 	if (!cmd->command || !*cmd->command)
@@ -262,39 +193,25 @@ void	exec_loop(t_shell *shell, t_info **info, char **envp)
 	}
 	while (cmd != NULL)
 	{
-		// cmd->fd_in = STDIN_FILENO;
-		// cmd->fd_out = STDOUT_FILENO;
 		nxt = cmd->next;
-		// printf("%p\n", nxt);
 		if (nxt)
 		{
 			if (pipe(nxt->pipe_fd) == -1)
 				error_exit("pipe", errno);
 			cmd->pipe_out = nxt->pipe_fd[1];
-			// dup2(cmd->pipe_out, cmd->fd_out);
 			nxt->pipe_in = nxt->pipe_fd[0];
-			// dup2(nxt->pipe_in, nxt->fd_in);
 		}
 		set_fd_side(shell, cmd, cmd->inf, input);
 		set_fd_side(shell, cmd, cmd->outf, output);
-		i++;
 		execute_command(shell, cmd, envp);
 		cmd = cmd->next;
+		reset_fd(shell);
 	}
-	// cmd = *info;
-
-	// int status;
-
-	// pid_t a[i + 1];
-
-	// i = 0;
-	// while (cmd != NULL)
-	// {
-	// 	a[i] = fork();
-	// 	if (a[i] == 0)
-	// 	cmd = cmd->next;
-	// 	while (a[i] != 0)
-	// 		waitpid(a[i], &status, 0);
-	// }
+	cmd = *info;
+	while (cmd != NULL)
+	{
+		waitpid(cmd->pid, &status, 0);
+		cmd = cmd->next;
+	}
 	reset_fd(shell);
 }
