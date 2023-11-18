@@ -1,7 +1,7 @@
 #include "minishell.h"
 #include "libft.h"
 
-char	*ft_replaceall(const char *str, char c)
+char	*ft_replace(char *str, char c)
 {
 	char	*nstr;
 	size_t	len;
@@ -28,5 +28,5 @@ char	*ft_replaceall(const char *str, char c)
 		}
 		i++;
 	}
-	return (nstr);
+	return (free(str), nstr);
 }

@@ -12,17 +12,16 @@ static int	tokenize(t_token **tokens, char *s, t_tag tag, t_token_lengthfunc f)
 	length = f(s);
 	if (length == -1)
 		return (PARSE_FAILURE);
-	if (length <= 2 && (tag == T_SINGLE_QUOTE || tag == T_DOUBLE_QUOTE))
-	{
+	if (length < 2 && (tag == T_SINGLE_QUOTE || tag == T_DOUBLE_QUOTE))
 		return (length);
-	}
-	if (tag == T_COMMAND)
-	{
-		printf("Potetioniol ocmmand: %s\n", ft_replaceall(s, '\''));
-	}
+	
 	str = ft_substr(s, 0, length);
 	if (!str)
 		return (PARSE_FAILURE);
+	// if (tag == T_COMMAND)
+	// 	str = ft_replace(s, '\'');
+	// if (!str)
+	// 	return (PARSE_FAILURE);
 	str1 = ft_strtrim(str, DELIMITOR);
 	if (!str1)
 		return (free(str), PARSE_FAILURE);

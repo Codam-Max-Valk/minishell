@@ -40,7 +40,6 @@ FILES	=	ft_freedoublearray \
 			ft_calc \
 			ft_debug \
 			builtin \
-			builtin_utils \
 			executor2 \
 			executor_utils \
 			fd_handling \
@@ -59,7 +58,7 @@ FILES	=	ft_freedoublearray \
 			environment_lst \
 			parser_lst \
 			garbage_collector \
-			ft_replaceall \
+			ft_replace \
 	
 HEADER	=	./include/minishell.h \
 			./include/colors.h \
