@@ -60,8 +60,8 @@ void	reset_info_fd(t_info *info)
 		close(info->pipe_out);
 	info->fd_in = STDIN_FILENO;
 	info->fd_out = STDOUT_FILENO;
-	info->pipe_in = -1;
-	info->pipe_out = -1;
+	info->pipe_in = 0;
+	info->pipe_out = 0;
 }
 
 void	set_redir_in(t_shell *shell, t_info *info, t_token *file)
@@ -74,9 +74,10 @@ void	set_redir_in(t_shell *shell, t_info *info, t_token *file)
 		info->fd_in = handle_here(file->content);
 	if (info->fd_in == -1 && file != NULL)
 	{
+		info->should_x = false;
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(file->content, STDERR_FILENO);
-		strerror(ENOENT);
+		ft_putendl_fd(strerror(errno), STDERR_FILENO);
 	}
 }
 
@@ -90,9 +91,10 @@ void	set_redir_out(t_shell *shell, t_info *info, t_token *file)
 		info->fd_out = open(file->content, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (info->fd_out == -1 && file != NULL)
 	{
+		info->should_x = false;
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(file->content, STDERR_FILENO);
-		strerror(errno);
+		ft_putendl_fd(strerror(errno), STDERR_FILENO);
 	}
 }
 

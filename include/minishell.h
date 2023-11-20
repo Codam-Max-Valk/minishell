@@ -86,7 +86,7 @@ typedef struct s_info
 	int				pipe_fd[2];
 	int				fd_in;
 	int				fd_out;
-	bool			is_builtin;
+	bool			should_x;
 	struct s_info	*next;
 }	t_info;
 

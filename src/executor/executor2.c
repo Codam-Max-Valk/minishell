@@ -33,23 +33,15 @@ static void	child_exec(t_shell *shell, t_info *cmd, char *envp[])
 
 void	dup_child_fd(t_info *cmd, int pipe_fd, int fd_red, int std)
 {
-	if (pipe_fd < 1)
-	{
-		if (fd_red > 2)
-		{
-			dup2(fd_red, std);
-			close(fd_red);
-		}
-	}
-	else
+	if (pipe_fd)
 	{
 		dup2(pipe_fd, std);
 		close(pipe_fd);
-		if (fd_red > 2)
-		{
-			dup2(fd_red, std);
-			close(fd_red);
-		}
+	}
+	if (fd_red > 2)
+	{
+		dup2(fd_red, std);
+		close(fd_red);
 	}
 }
 
@@ -59,7 +51,6 @@ int		execute_command(t_shell *shell, t_info *cmd, char *envp[])
 	int		status;
 	char	*cmd_p;
 
-	
 	cmd->pid = fork();
 	if (cmd->pid == -1)
 		return(EXIT_FAILURE);
@@ -96,21 +87,19 @@ static void	single_command_exec(t_shell *shell, t_info *cmd, char **envp)
 {
 	open_redir_side(shell, cmd, cmd->inf, input);
 	open_redir_side(shell, cmd, cmd->outf, output);
-	if (does_builtin_exist(shell, *cmd->command) == true)
+	if (does_builtin_exist(shell, *cmd->command) == true && cmd->should_x == true)
 	{
 		dup_child_fd(cmd, cmd->pipe_in, cmd->fd_in, STDIN_FILENO);
 		dup_child_fd(cmd, cmd->pipe_out, cmd->fd_out, STDOUT_FILENO);
 		fire_builtin(shell, cmd->command);
-		reset_info_fd(cmd);
-		reset_fd(shell);
 	}
-	else if (cmd->command)
+	else if (cmd->command && cmd->should_x == true)
 	{
 		execute_command(shell, cmd, envp);
 		waitpid(cmd->pid, &shell->exit_code, 0);
-		reset_info_fd(cmd);
-		reset_fd(shell);
 	}
+	reset_info_fd(cmd);
+	reset_fd(shell);
 }
 
 void	exec_loop(t_shell *shell, t_info **info, char **envp)
@@ -120,12 +109,12 @@ void	exec_loop(t_shell *shell, t_info **info, char **envp)
 	int		status;
 
 	cmd = *info;
-	// if (!cmd->command || !*cmd->command)
-	// 	return ;
 	if (cmd->next == NULL)
 		return (single_command_exec(shell, cmd, envp));
+	reset_info_fd(cmd);
 	while (cmd != NULL)
 	{
+		cmd->should_x = true;
 		nxt = cmd->next;
 		if (nxt)
 		{
@@ -136,14 +125,17 @@ void	exec_loop(t_shell *shell, t_info **info, char **envp)
 		}
 		open_redir_side(shell, cmd, cmd->inf, input);
 		open_redir_side(shell, cmd, cmd->outf, output);
-		execute_command(shell, cmd, envp);
-		cmd = cmd->next;
+		if (cmd->should_x == true)
+			execute_command(shell, cmd, envp);
+		reset_info_fd(cmd);
 		reset_fd(shell);
+		cmd = cmd->next;
 	}
 	cmd = *info;
 	while (cmd != NULL)
 	{
-		waitpid(cmd->pid, &status, 0);
+		if (cmd->should_x == true)
+			waitpid(cmd->pid, &shell->exit_code, 0);
 		cmd = cmd->next;
 	}
 	reset_fd(shell);
