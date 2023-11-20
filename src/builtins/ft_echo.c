@@ -21,7 +21,7 @@ int	ft_echo(t_shell *shell, int ac, char **av)
 
 	i = 1;
 	option_n = false;
-	if (ft_strncmp(av[i], "-n", 2) == 0)
+	if (av[i] && ft_strncmp(av[i], "-n", 2) == 0)
 	{
 		while (i < ac && is_option_n(av[i]) == true)
 		{

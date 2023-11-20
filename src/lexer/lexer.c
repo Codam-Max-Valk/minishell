@@ -14,14 +14,9 @@ static int	tokenize(t_token **tokens, char *s, t_tag tag, t_token_lengthfunc f)
 		return (PARSE_FAILURE);
 	if (length < 2 && (tag == T_SINGLE_QUOTE || tag == T_DOUBLE_QUOTE))
 		return (length);
-	
 	str = ft_substr(s, 0, length);
 	if (!str)
 		return (PARSE_FAILURE);
-	// if (tag == T_COMMAND)
-	// 	str = ft_replace(s, '\'');
-	// if (!str)
-	// 	return (PARSE_FAILURE);
 	str1 = ft_strtrim(str, DELIMITOR);
 	if (!str1)
 		return (free(str), PARSE_FAILURE);
@@ -41,8 +36,8 @@ size_t	add_tagged_token(t_token **tokens, char *s, int i, t_tag tag)
 	[T_REDIRECT_OUT] = get_redirect_length,
 	[T_APPEND] = get_redirect_length,
 	[T_HERE_DOC] = get_redirect_length,
-	[T_PIPE] = get_symbol_length,
-	[T_SEMICOLUMN] = get_symbol_length,
+	[T_PIPE] = ft_issymbol,
+	[T_SEMICOLUMN] = ft_issymbol,
 	};
 
 	if (tag == T_SINGLE_QUOTE || tag == T_DOUBLE_QUOTE || ft_issymbol(&s[i]))
@@ -77,7 +72,7 @@ t_token	*tokenizer2(char *s)
 		else
 			return (token_lstclear(&tokens, token_free), NULL);
 	}
-	token_addback(&tokens, token_create(NULL, 0)); //Solid cliphanger to make this code function temporary
+	token_addback(&tokens, token_create(NULL, 0));
 	return (tokens);
 }
 

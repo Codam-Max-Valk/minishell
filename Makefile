@@ -54,6 +54,7 @@ FILES	=	ft_freedoublearray \
 			readline \
 			parser \
 			parser_utils \
+			parser_helpers \
 			environment \
 			environment_lst \
 			parser_lst \

@@ -2,7 +2,8 @@
 #include "../include/minishell.h"
 #include "../include/tokens.h"
 
-static bool	find_expansion(t_info *node, t_shell *shell, t_token *token, int index)
+static bool	find_variable(t_info *node, t_shell *shell,
+	t_token *token, int index)
 {
 	char	*expander;
 
@@ -17,18 +18,7 @@ static bool	find_expansion(t_info *node, t_shell *shell, t_token *token, int ind
 	return (true);
 }
 
-static bool	add_redirect_token(t_token **pipe, t_token *token)
-{
-	t_token	*tmp;
-
-	tmp = token_dup(token);
-	if (!tmp)
-		return (printf("error: cannot duplicate token\n"), false);
-	token_addback(pipe, tmp);
-	return (true);
-}
-
-static bool	add_expansion(t_shell *shell, t_token *token)
+static bool	add_variable(t_shell *shell, t_token *token)
 {
 	char	**key_value;
 	char	*value;
@@ -50,35 +40,45 @@ static bool	add_expansion(t_shell *shell, t_token *token)
 	return (true);
 }
 
-static int	add_tokens_back(t_shell *shell, t_info *node, t_token *token, int index)
+static bool	add_redirect_token(t_info *node, t_token *token)
+{
+	t_token	*tmp;
+
+	tmp = token_dup(token);
+	if (!tmp)
+		return (printf("error: cannot duplicate token\n"), false);
+	if (token->tag == T_REDIRECT_IN || token->tag == T_HERE_DOC)
+		token_addback(&node->inf, tmp);
+	if (token->tag == T_REDIRECT_OUT || token->tag == T_APPEND)
+		token_addback(&node->outf, tmp);
+	return (true);
+}
+
+static int	add_tokens_back(t_shell *shell, t_info *node,
+	t_token *token, int index)
 {
 	if (token->tag == T_EQUALS)
 	{
-		if (!add_expansion(shell, token))
+		if (!add_variable(shell, token))
 			return (-1);
 		index++;
 	}
 	else if (token->tag == T_EXPANSION)
 	{
-		if (!find_expansion(node, shell, token, index))
+		if (!find_variable(node, shell, token, index))
 			return (-1);
 		index++;
 	}
-	else if (token->tag == T_COMMAND || token->tag == T_DOUBLE_QUOTE || token->tag == T_SINGLE_QUOTE)
+	else if (is_command(token->tag))
 	{
 		node->command[index] = ft_strdup(token->content);
 		if (!node->command[index])
 			return (-1);
 		index++;
 	}
-	else if (token->tag == T_REDIRECT_OUT || token->tag == T_APPEND)
+	else if (is_redirect(token->tag))
 	{
-		if (!add_redirect_token(&node->outf, token))
-			return (-1);
-	}
-	else if (token->tag == T_REDIRECT_IN || token->tag == T_HERE_DOC)
-	{
-		if (!add_redirect_token(&node->inf, token))
+		if (!add_redirect_token(node, token))
 			return (-1);
 	}
 	return (index);

@@ -164,4 +164,8 @@ void	sed_pair(t_shell *shell, char *key, char *value, t_envtype type);
 // More lst functions
 void	info_addback(t_info **info, t_info *new);
 
+// Uh
+int		is_redirect(t_tag tag);
+int		is_command(t_tag tag);
+
 #endif

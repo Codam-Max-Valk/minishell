@@ -47,22 +47,6 @@ int	get_redirect_length(char *s)
 	return (index);
 }
 
-int	get_symbol_length(char *s)
-{
-	const t_tag	tag = guess_tag(s);
-	int			length;
-
-	length = 0;
-	if (!s || !*s)
-		return (PARSE_FAILURE);
-	if (!ft_istoken(s) || !ft_issymbol(s))
-		return (PARSE_FAILURE);
-	length = get_token_length(tag);
-	if (length <= 0)
-		return (PARSE_FAILURE);
-	return (length);
-}
-
 int	get_content_length(char *s)
 {
 	int	length;

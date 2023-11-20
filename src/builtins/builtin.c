@@ -12,7 +12,8 @@ bool	fire_builtin(t_shell *shell, char **argv)
 	argc = 0;
 	if (!does_builtin_exist(shell, *argv))
 		return (false);
-	while (i < shell->builtins_size && ft_strcmp(shell->builtins[i].command, *argv))
+	while (i < shell->builtins_size
+		&& ft_strcmp(shell->builtins[i].command, *argv))
 		i++;
 	while (argv[argc])
 		argc++;
