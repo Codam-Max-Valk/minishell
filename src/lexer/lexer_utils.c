@@ -19,7 +19,7 @@ int	get_quote_length(char *s)
 		length++;
 	}
 	if (!hit)
-		return (ft_printf("> Unclosed quotes\n"), PARSE_FAILURE);
+		return (ft_printf("error: unclosed quotes\n"), PARSE_FAILURE);
 	return (length);
 }
 
@@ -43,7 +43,7 @@ int	get_redirect_length(char *s)
 		index++;
 	}
 	if (!length)
-		return (ft_printf("> Missing file name\n"), PARSE_FAILURE);
+		return (ft_printf("error: missing file name\n"), PARSE_FAILURE);
 	return (index);
 }
 
@@ -58,21 +58,6 @@ int	get_content_length(char *s)
 		&& !ft_isspace(s[length])
 		&& !ft_issymbol(&s[length]))
 		length++;
-	return (length);
-}
-
-int	get_expander_length(char *s)
-{
-	int	length;
-
-	length = 0;
-	if (!s || !*s)
-		return (PARSE_FAILURE);
-	while (s[length]
-		&& !ft_isspace(s[length])
-		&& !ft_issymbol(&s[length]))
-		length++;
-	printf("Expansion: %s\n", ft_substr(s, 0, length));
 	return (length);
 }
 
