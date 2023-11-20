@@ -23,15 +23,24 @@ void	environment_init(t_shell *shell, char **envp)
 
 void	builtins_init(t_shell *shell)
 {
-	set_builtin(shell, "cd", ft_cd);
-	set_builtin(shell, "pwd", ft_pwd);
-	set_builtin(shell, "exit", ft_exit);
-	set_builtin(shell, "echo", ft_echo);
-	set_builtin(shell, "env", ft_env);
-	set_builtin(shell, "export", ft_export);
-	set_builtin(shell, "unset", ft_unset);
-	set_builtin(shell, "debug", ft_debug);
-	set_builtin(shell, "calc", ft_calc);
+	t_builtin	*map;
+
+	map = ft_calloc(MAX_BUILTIN, sizeof(t_builtin));
+	if (!map)
+	{
+		shell->builtins = NULL;
+		return ;
+	}
+	map[shell->builtins_size++] = (t_builtin){"cd", ft_cd};
+	map[shell->builtins_size++] = (t_builtin){"pwd", ft_pwd};
+	map[shell->builtins_size++] = (t_builtin){"exit", ft_exit};
+	map[shell->builtins_size++] = (t_builtin){"echo", ft_echo};
+	map[shell->builtins_size++] = (t_builtin){"env", ft_env};
+	map[shell->builtins_size++] = (t_builtin){"export", ft_export};
+	map[shell->builtins_size++] = (t_builtin){"unset", ft_unset};
+	map[shell->builtins_size++] = (t_builtin){"debug", ft_debug};
+	map[shell->builtins_size++] = (t_builtin){"calc", ft_calc};
+	shell->builtins = map;
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -50,18 +59,21 @@ int	main(int argc, char **argv, char **envp)
 	history_init();
 	builtins_init(shell);
 	environment_init(shell, envp);
-
+	if (!shell->builtins)
+		return (EXIT_FAILURE);
 	shell->stdin_fd = dup(STDIN_FILENO);
 	shell->stdout_fd = dup(STDOUT_FILENO);
-	ft_printf("[Environment] %s\n", find_pair_content(shell, "PATH"));
+	if (DEBUG)
+	{
+		ft_printf("[Environment] %s\n", find_pair_content(shell, "PATH"));
+		ft_printf("[Debug] %d builtins registered\n", shell->builtins_size);
+	}
 	while (shell->exited)
 	{
 		register_signals();
 		info = ms_readline(shell);
 		if (!info)
-		{
 			continue ;
-		}
 		exec_loop(shell, &info, envp);
 		clean_info(&info);
 	}

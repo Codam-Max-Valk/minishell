@@ -77,11 +77,7 @@ void	set_pairv2(t_shell *shell, char *key, char *value, t_envtype type)
 	else if (value && *value != '$')
 		tmp = value;
 	else if (value && *value == '$')
-	{
-		node = find_pair(shell, &value[1]);
-		if (node)
-			tmp = node->value;
-	}
+		tmp = find_pair_content(shell, &value[1]);
 	node = env_addpair(key, tmp, type);
 	if (!node)
 		return ;

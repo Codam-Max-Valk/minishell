@@ -16,25 +16,8 @@ t_env	*env_addpair(char *key, char *value, t_envtype type)
 		return (free(value), NULL);
 	node->type = type;
 	node->next = NULL;
-	printf("Adding: %s=%s\n", key, value);
 	return (node);
 }
-
-// t_env	*env_lstrepl_value(t_env **lst, char *key, char *value)
-// {
-// 	t_env	*node;
-
-// 	node = *lst;
-// 	while (node && ft_strcmp(node->key, key) == 0)
-// 		node = node->next;
-// 	if (!node)
-// 		return (NULL);
-// 	free(node->value);
-// 	node->value = ft_strdup(value);
-// 	if (!node->value)
-// 		return (env_lstdelone(lst, key), NULL);
-// 	return (node);
-// }
 
 void	env_lstrepl_value(t_env **lst, char *key, char *value)
 {

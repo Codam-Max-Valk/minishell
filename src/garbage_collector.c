@@ -2,14 +2,7 @@
 
 void	cleanup_base(t_shell *shell)
 {
-	int i = 0;
-
-	while (shell->builtins[i] != NULL)
-	{
-		free(shell->builtins[i]->command);
-		free(shell->builtins[i]);
-		i++;
-	}
+	free(shell->builtins);
 	free(shell);
 }
 
