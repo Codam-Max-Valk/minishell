@@ -25,22 +25,21 @@ void	builtins_init(t_shell *shell)
 {
 	t_builtin	*map;
 
-	map = ft_calloc(MAX_BUILTIN, sizeof(t_builtin));
-	if (!map)
+	shell->builtins = ft_calloc(MAX_BUILTIN, sizeof(t_builtin));
+	if (!shell->builtins)
 	{
 		shell->builtins = NULL;
 		return ;
 	}
-	map[shell->builtins_size++] = (t_builtin){"cd", ft_cd};
-	map[shell->builtins_size++] = (t_builtin){"pwd", ft_pwd};
-	map[shell->builtins_size++] = (t_builtin){"exit", ft_exit};
-	map[shell->builtins_size++] = (t_builtin){"echo", ft_echo};
-	map[shell->builtins_size++] = (t_builtin){"env", ft_env};
-	map[shell->builtins_size++] = (t_builtin){"export", ft_export};
-	map[shell->builtins_size++] = (t_builtin){"unset", ft_unset};
-	map[shell->builtins_size++] = (t_builtin){"debug", ft_debug};
-	map[shell->builtins_size++] = (t_builtin){"calc", ft_calc};
-	shell->builtins = map;
+	shell->builtins[shell->builtins_size++] = (t_builtin){"cd", ft_cd};
+	shell->builtins[shell->builtins_size++] = (t_builtin){"pwd", ft_pwd};
+	shell->builtins[shell->builtins_size++] = (t_builtin){"exit", ft_exit};
+	shell->builtins[shell->builtins_size++] = (t_builtin){"echo", ft_echo};
+	shell->builtins[shell->builtins_size++] = (t_builtin){"env", ft_env};
+	shell->builtins[shell->builtins_size++] = (t_builtin){"export", ft_export};
+	shell->builtins[shell->builtins_size++] = (t_builtin){"unset", ft_unset};
+	shell->builtins[shell->builtins_size++] = (t_builtin){"debug", ft_debug};
+	shell->builtins[shell->builtins_size++] = (t_builtin){"calc", ft_calc};
 }
 
 int	main(int argc, char **argv, char **envp)

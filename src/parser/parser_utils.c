@@ -16,7 +16,7 @@ int	sizeof_node(t_token **tokens)
 			|| token->tag == T_EQUALS
 			|| token->tag == T_DOUBLE_QUOTE
 			|| token->tag == T_SINGLE_QUOTE)
-		i++;
+			i++;
 		token = token->next;
 	}
 	return (i);

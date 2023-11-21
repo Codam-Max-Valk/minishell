@@ -1,5 +1,5 @@
-#include "../../include/minishell.h"
-#include "../../include/libft.h"
+#include "minishell.h"
+#include "libft.h"
 
 bool	fire_builtin(t_shell *shell, char **argv)
 {
@@ -35,22 +35,3 @@ bool	does_builtin_exist(t_shell *shell, char *command)
 	return (false);
 }
 
-void	print_builtins(t_shell *shell)
-{
-	int	i;
-
-	i = 0;
-	while (shell->builtins[i].command != NULL)
-	{
-		ft_printf("[Builtin] (%d/%d) command: %s\n",
-			i + 1,
-			MAX_BUILTIN,
-			shell->builtins[i].command);
-		i++;
-	}
-}
-
-void	free_builtin(t_builtin *in)
-{
-	free(in);
-}

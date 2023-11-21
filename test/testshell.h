@@ -1,32 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_safe_strdup.c                                   :+:    :+:            */
+/*   testshell.h                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: cbijman <cbijman@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/09/27 13:56:23 by cbijman       #+#    #+#                 */
-/*   Updated: 2023/11/21 14:40:40 by cbijman       ########   odam.nl         */
+/*   Created: 2023/11/21 14:46:42 by cbijman       #+#    #+#                 */
+/*   Updated: 2023/11/21 14:50:21 by cbijman       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef TESTSHELL_H
+# define TESTSHELL_H
 
-char	*ft_safe_strdup(const char *s1)
+# include <stdio.h>
+# include <stdlib.h>
+# include <limits.h>
+# include <readline/readline.h>
+
+# include "libft.h"
+
+# define PREFIX "MeesGang >> "
+
+typedef	struct s_testshell
 {
-	int		len;
-	char	*str;
+	
+}	t_testshell;
 
-	if (!s1)
-		len = 1;
-	else
-		len = (ft_strlen(s1) + 1);
-	str = (char *)malloc(len * sizeof(char));
-	if (!str)
-		return (NULL);
-	if (!s1)
-		ft_strlcpy(str, "\0", len);
-	else
-		ft_strlcpy(str, (char *)s1, len);
-	return (str);
-}
+char	*ft_readline(void);
+
+
+#endif

@@ -2,6 +2,33 @@
 #include "minishell.h"
 #include "libft.h"
 
+static int	tokenize(t_token **tokens, char *s, t_tag tag, t_token_lengthfunc f)
+{
+	t_token	*token;
+	char	*str;
+	char	*str1;
+	int		length;
+
+	length = f(s);
+	if (length == -1)
+		return (PARSE_FAILURE);
+	if (tag == T_SINGLE_QUOTE || tag == T_DOUBLE_QUOTE)
+	{
+		str = parse_dq(s, length);
+	}
+	str = ft_substr(s, 0, length);
+	if (!str)
+		return (PARSE_FAILURE);
+	str1 = ft_strtrim(str, DELIMITOR);
+	if (!str1)
+		return (free(str), PARSE_FAILURE);
+	token = token_create(str1, tag);
+	if (!token)
+		return (free(str), free(str1), PARSE_FAILURE);
+	token_addback(tokens, token);
+	return (free(str), free(str1), length);
+}
+
 size_t	add_tagged_token(t_token **tokens, char *s, int i, t_tag tag)
 {
 	const int	(*funcmap[11])(char *) = {
@@ -26,31 +53,6 @@ size_t	add_tagged_token(t_token **tokens, char *s, int i, t_tag tag)
 	return (1);
 }
 
-static int	tokenize(t_token **tokens, char *s, t_tag tag, t_token_lengthfunc f)
-{
-	t_token	*token;
-	char	*str;
-	char	*str1;
-	int		length;
-
-	length = f(s);
-	if (length == -1)
-		return (PARSE_FAILURE);
-	if (length < 2 && (tag == T_SINGLE_QUOTE || tag == T_DOUBLE_QUOTE))
-		return (length);
-	str = ft_substr(s, 0, length);
-	if (!str)
-		return (PARSE_FAILURE);
-	str1 = ft_strtrim(str, DELIMITOR);
-	if (!str1)
-		return (free(str), PARSE_FAILURE);
-	token = token_create(str1, tag);
-	if (!token)
-		return (free(str), free(str1), PARSE_FAILURE);
-	token_addback(tokens, token);
-	return (free(str), free(str1), length);
-}
-
 t_token	*tokenizer2(char *s)
 {
 	t_token	*tokens;
@@ -65,10 +67,7 @@ t_token	*tokenizer2(char *s)
 		tag = guess_tag(&s[index]);
 		x = add_tagged_token(&tokens, s, index, tag);
 		if (x >= 1)
-		{
 			index += x;
-			tokens->size++;
-		}
 		else
 			return (token_lstclear(&tokens, token_free), NULL);
 	}
