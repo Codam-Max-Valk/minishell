@@ -50,18 +50,18 @@ int	handle_here(const char *delim)
 
 void	reset_info_fd(t_info *info)
 {
-	if (info->fd_in > 0)
+	if (info->fd_in >= 0)
 		close(info->fd_in);
-	if (info->fd_out > 2)
+	if (info->fd_out >= 0)
 		close(info->fd_out);
-	if (info->pipe_in > 2)
+	if (info->pipe_in >= 0)
 		close(info->pipe_in);
-	if (info->pipe_out > 2)
+	if (info->pipe_out >= 0)
 		close(info->pipe_out);
-	info->fd_in = STDIN_FILENO;
-	info->fd_out = STDOUT_FILENO;
-	info->pipe_in = 0;
-	info->pipe_out = 0;
+	info->fd_in = -1;
+	info->fd_out = -1;
+	info->pipe_in = -1;
+	info->pipe_out = -1;
 }
 
 void	set_redir_in(t_shell *shell, t_info *info, t_token *file)

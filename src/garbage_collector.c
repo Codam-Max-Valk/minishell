@@ -9,8 +9,8 @@ void	cleanup_base(t_shell *shell)
 static void	free_info(t_info *info)
 {
 	free_double_array(info->command);
-	token_lstclear(&info->inf, token_free);
-	token_lstclear(&info->outf, token_free);
+	token_lstclear(&info->red, token_free);
+	token_lstclear(&info->red, token_free);
 }
 
 void	clean_info(t_info **info)

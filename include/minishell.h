@@ -79,13 +79,16 @@ typedef struct s_info
 {
 	pid_t			pid;
 	char			**command;
-	t_token			*inf;
-	t_token			*outf;
+	t_token			*red;
+	// t_token			*inf;
+	// t_token			*outf;
 	int				pipe_in;
 	int				pipe_out;
 	int				pipe_fd[2];
 	int				fd_in;
 	int				fd_out;
+	int				dup_in;
+	int				dup_out;
 	bool			should_x;
 	struct s_info	*next;
 }	t_info;
@@ -148,6 +151,7 @@ void	clean_tokens(t_token **tokens);
 
 //Signals
 void	handle_control_d(t_shell *shell);
+void	child_sig_handle(int code);
 
 //Environment lst utils
 t_env	*env_addpair(char *key, char *value, t_envtype type);

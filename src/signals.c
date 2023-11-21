@@ -13,6 +13,15 @@ void	handle_control_d(t_shell *shell)
 	ft_exit(shell, 0, NULL);
 }
 
+void	child_sig_handle(int code)
+{
+	if (code == SIGINT)
+	{
+		ft_putstr("\n");
+		signal(SIGINT, child_sig_handle);
+	}
+}
+
 void	register_signals(void)
 {
 	signal(SIGINT, handle_control_c);

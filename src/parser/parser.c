@@ -48,9 +48,9 @@ static bool	add_redirect_token(t_info *node, t_token *token)
 	if (!tmp)
 		return (printf("error: cannot duplicate token\n"), false);
 	if (token->tag == T_REDIRECT_IN || token->tag == T_HERE_DOC)
-		token_addback(&node->inf, tmp);
+		token_addback(&node->red, tmp);
 	if (token->tag == T_REDIRECT_OUT || token->tag == T_APPEND)
-		token_addback(&node->outf, tmp);
+		token_addback(&node->red, tmp);
 	return (true);
 }
 
@@ -93,6 +93,9 @@ static t_token	*emplace_tokens(t_shell *shell, t_info **info, t_token *token)
 	node = ft_calloc(1, sizeof(t_info));
 	if (!node)
 		return (NULL);
+	node->fd_in = STDIN_FILENO;
+	node->fd_out = STDOUT_FILENO;
+	node->should_x = true;
 	node->command = ft_calloc(sizeof_node(&token) + 1, sizeof(char *));
 	while (token && token->tag != T_PIPE && token->tag != T_NONE)
 	{
