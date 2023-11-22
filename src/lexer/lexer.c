@@ -12,9 +12,9 @@ static int	tokenize(t_token **tokens, char *s, t_tag tag, t_token_lengthfunc f)
 	length = f(s);
 	if (length == -1)
 		return (PARSE_FAILURE);
-	if (tag == T_SINGLE_QUOTE || tag == T_DOUBLE_QUOTE)
+	if (length == 2 && (tag == T_SINGLE_QUOTE || tag == T_DOUBLE_QUOTE))
 	{
-		str = parse_dq(s, length);
+		return (length);
 	}
 	str = ft_substr(s, 0, length);
 	if (!str)

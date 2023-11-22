@@ -39,7 +39,6 @@ void	builtins_init(t_shell *shell)
 	shell->builtins[shell->builtins_size++] = (t_builtin){"export", ft_export};
 	shell->builtins[shell->builtins_size++] = (t_builtin){"unset", ft_unset};
 	shell->builtins[shell->builtins_size++] = (t_builtin){"debug", ft_debug};
-	shell->builtins[shell->builtins_size++] = (t_builtin){"calc", ft_calc};
 }
 
 int	main(int argc, char **argv, char **envp)

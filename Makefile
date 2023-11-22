@@ -37,7 +37,6 @@ FILES	=	ft_freedoublearray \
 			ft_env \
 			ft_exit \
 			ft_pwd \
-			ft_calc \
 			ft_debug \
 			builtin \
 			executor2 \
@@ -99,5 +98,8 @@ fclean: clean
 	@echo "Cleaning"
 
 re: fclean all
+
+dev:
+	gcc test/main.c test/testshell.h test/print.c -I./include -lft -lreadline -L./libft
 
 .PHONY: all lib clean fclean re
