@@ -18,7 +18,7 @@ void	print_token_list(t_token *token)
 		return ;
 	i = 0;
 	size = *(token[2].size);
-	printf("Token list size: %d\n", *(token[2].size));
+	printf("Token list size: %d\n", *(token[0].size));
 	while (i < size)
 	{
 		printf("Token(%d)\n", i);

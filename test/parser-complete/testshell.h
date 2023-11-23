@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <limits.h>
 # include <readline/readline.h>
+# include <readline/history.h>
 
 # include "libft.h"
 
