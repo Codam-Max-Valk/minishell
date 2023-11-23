@@ -1,4 +1,4 @@
-#include "shell.h"
+#include "include/shell.h"
 
 t_token	*ft_tokennew(const char *content, t_tag tag)
 {
@@ -234,6 +234,23 @@ int	ft_isquote(char c)
 	return (0);
 }
 
+char	*insert_string(char *s1, char *s2, int i)
+{
+	char	*new_str;
+	size_t	len1;
+	size_t	len2;
+
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
+	new_str = ft_calloc(len1 + len2 + 1, sizeof(char));
+	if (!new_str)
+		return (NULL);
+	ft_strlcpy(new_str, s1, i + 1);
+	ft_strlcpy(&new_str[i], s2, len2 + 1);
+	ft_strlcpy(&new_str[len1 + len2 - i], &s1[i], ft_strlen(&s1[i]) + 1);
+	return (new_str);
+}
+
 char	*handle_expansion_raw(char *s, char **envp)
 {
 	size_t	j;
@@ -292,7 +309,6 @@ char	*handle_expansion_raw(char *s, char **envp)
 	return (nstr);
 }
 
-
 int main(int ac, char **av, char **envp)
 {
 	t_list	*lst;
@@ -303,6 +319,7 @@ int main(int ac, char **av, char **envp)
 	printf("Before: %s\n", str);
 	printf("Afterr: %s\n", handle_expansion_raw(str, envp));
 	printf(RESET);
+
 	//while (true)
 	//{
 	//	str = ft_readline();
@@ -310,6 +327,6 @@ int main(int ac, char **av, char **envp)
 	//	print_tokens(lst);
 	//}
 
-	return (1);
+	return (0);
 }
 
