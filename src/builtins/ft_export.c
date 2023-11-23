@@ -1,9 +1,14 @@
 #include "../../include/libft.h"
 #include "../../include/minishell.h"
 
-bool	verify_export(t_env **env, char *key, char *value)
+bool	verify_export(t_shell *shell, char *key, char *value)
 {
-	
+	if (find_pair(shell, key) && value)
+		env_lstrepl_value(&shell->environment, key, value);
+	else if (find_pair(shell, key) && value == NULL)
+		return (true);
+	else
+	env_lstaddback(&shell->environment, env_addpair(key, value, ENVIRONMENT));
 }
 
 int	print_list(t_env *env)
@@ -28,7 +33,7 @@ char	*set_value(char *s)
 
 	i = 0;
 	if (!ft_strchr(s, '='))
-		return (ft_printf("error4\n"), NULL);
+		return (NULL);
 	while (s[i] != '=')
 		i++;
 	if (s[i] == '=')
@@ -48,7 +53,7 @@ char	*set_key(char *s)
 		if (s[i] == '=')
 			return (ft_substr(s, 0, i));
 		if (!(ft_isalnum(s[i]) || s[i] == '_'))
-			return (printf("error3\n"), NULL);
+			return (printf("error2\n"), NULL);
 		i++;
 	}
 	return (ft_strdup(s));
@@ -68,12 +73,11 @@ int	ft_export(t_shell *shell, int argc, char **argv)
 		value = NULL;
 		key = set_key(argv[i]);
 		if (!key)
-			printf("error2\n");
+			printf("error3\n");
 		else
 		{
 			value = set_value(argv[i]);
-			
-			env_lstaddback(&shell->environment, env_addpair(key, value, ENVIRONMENT));
+			verify_export(shell, key, value);
 		}
 		if (key)
 			free(key);
