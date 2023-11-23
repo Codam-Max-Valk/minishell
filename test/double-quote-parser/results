@@ -1,0 +1,42 @@
+Hella Cash >> echo $USER > out | cat -e < infile cat | ls
+Token (0)
+ -> Content: echo
+ -> Length: 4
+ -> Tag: Command/Argument
+Token (1)
+ -> Content: cbijman
+ -> Length: 7
+ -> Tag: Expansions
+Token (2)
+ -> Content: out
+ -> Length: 3
+ -> Tag: Redirect In
+Token (3)
+ -> Content: |
+ -> Length: 1
+ -> Tag: Pipe
+Token (4)
+ -> Content: cat
+ -> Length: 3
+ -> Tag: Command/Argument
+Token (5)
+ -> Content: -e
+ -> Length: 2
+ -> Tag: Command/Argument
+Token (6)
+ -> Content: infile
+ -> Length: 6
+ -> Tag: Redirect In
+Token (7)
+ -> Content: cat
+ -> Length: 3
+ -> Tag: Command/Argument
+Token (8)
+ -> Content: |
+ -> Length: 1
+ -> Tag: Pipe
+Token (9)
+ -> Content: ls
+ -> Length: 2
+ -> Tag: Command/Argument
+Hella Cash >>

@@ -11,6 +11,7 @@
 #include "colors.h"
 
 #define PREFIX "Hella Cash >> "
+#define PARSE_FAILURE -1
 
 typedef enum e_tag
 {
@@ -34,9 +35,6 @@ typedef struct s_token
 	int		length;
 	t_tag	tag;
 }	t_token;
-
-// Constructive utils
-bool		ft_token_addback(t_list **lst, char *str, t_tag tag);
 
 const char	*ft_readline(void);
 void		print_tokens(t_list *lst);
