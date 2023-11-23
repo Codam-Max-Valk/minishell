@@ -44,8 +44,8 @@ size_t	add_tagged_token(t_token **tokens, char *s, int i, t_tag tag)
 		return (tokenize(tokens, &s[i], tag, funcmap[tag]));
 	else if (tag == T_EXPANSION)
 		return (tokenize(tokens, &s[++i], tag, get_content_length) + 1);
-	else if (ft_isexpander(&s[i]))
-		return (tokenize(tokens, &s[i], T_EQUALS, get_expander_length));
+	// else if (ft_isexpander(&s[i]))
+	// 	return (tokenize(tokens, &s[i], T_EQUALS, get_expander_length));
 	else if ((s[i] >= 33 && s[i] <= 126))
 		return (tokenize(tokens, &s[i], T_COMMAND, get_content_length));
 	return (1);

@@ -8,11 +8,13 @@ t_env	*env_addpair(char *key, char *value, t_envtype type)
 	node = malloc(sizeof(t_env));
 	if (!node)
 		return (NULL);
+	node->value = NULL;
 	node->key = ft_strdup(key);
 	if (!node->key)
 		return (free(node), NULL);
-	node->value = ft_safe_strdup(value);
-	if (!node->value)
+	if (value)
+		node->value = ft_safe_strdup(value);
+	if (value && !node->value)
 		return (free(value), NULL);
 	node->type = type;
 	node->next = NULL;
