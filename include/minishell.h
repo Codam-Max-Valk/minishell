@@ -46,6 +46,11 @@ typedef enum e_envtype
 	NONE
 }	t_envtype;
 
+typedef enum	e_code
+{
+	no
+}	t_code;
+
 typedef struct s_builtin
 {
 	char			*command;
@@ -65,7 +70,7 @@ typedef struct s_shell
 	int			stdin_fd;
 	int			stdout_fd;
 	int			exited;
-	int			exit_code;
+	int			exit_code[2];
 	char		*last_command;
 	t_builtin	*builtins;
 	size_t		builtins_size;
@@ -109,7 +114,7 @@ void	register_signals(void);
 void	handle_control_c(int code);
 
 //Executor
-void	error_exit(char *function, int error_num);
+// void	error_exit(char *function, int error_num);
 void	reset_fd(t_shell *shell);
 char	**parse_env(char **envp);
 char	*cmd_path(char **paths, char *cmd, int path_f);
@@ -120,6 +125,9 @@ void	reset_info_fd(t_info *info);
 int		handle_here(const char *delim);
 void	child_cleanup(t_shell *shell, t_info *cmd, char *cmd_p, char **env_p);
 
+//Error
+void	print_mini_err(t_shell *shell, char *func, int code);
+void	update_exit(t_shell *shell);
 
 //History
 int		history_init(void);

@@ -29,7 +29,10 @@ int	ft_echo(t_shell *shell, int ac, char **av)
 	}
 	while (av[i])
 	{
-		printf("%s", av[i]);
+		if (av[i][0] == '?')
+			printf("%d", shell->exit_code[1]);
+		else
+			printf("%s", av[i]);
 		if (i < (ac - 1))
 			printf(" ");
 		i++;

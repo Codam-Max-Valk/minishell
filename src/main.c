@@ -1,6 +1,8 @@
 #include "../include/minishell.h"
 #include "../include/libft.h"
 
+volatile int	g_sig = 0;
+
 void	environment_init(t_shell *shell, char **envp)
 {
 	size_t		i;
@@ -76,6 +78,7 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		exec_loop(shell, &info, envp);
 		clean_info(&info);
+		update_exit(shell);
 	}
 	cleanup_base(shell);
 	return (EXIT_SUCCESS);

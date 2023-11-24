@@ -60,6 +60,7 @@ FILES	=	ft_freedoublearray \
 			parser_lst \
 			garbage_collector \
 			ft_replace \
+			exit_code \
 	
 HEADER	=	./include/minishell.h \
 			./include/colors.h \
